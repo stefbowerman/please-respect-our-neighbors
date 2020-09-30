@@ -1,0 +1,32 @@
+{
+  "name": "please-respect-our-neighbors",
+  "version": "1.0.0",
+  "description": "Website for Please Respect Our Neighbors",
+  "author": "Stefan Bowerman",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "@nuxtjs/prismic": "^1.2.4",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.0.0",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-nuxt": ">=0.4.2",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^10.0.2",
+    "vue-svg-loader": "^0.16.0",
+    "vue-template-compiler": "^2.6.12",
+    "webfontloader": "^1.6.28"
+  }
+}
