@@ -1,27 +1,28 @@
 <template>
-  <div style="background-color: #FD5858">
-    <div>CURRENT PARTNERS</div>
-    <div>Including Collective members</div>
-    <div v-for="partner in partners">
-      <div v-text="$prismic.asText(partner.name)" />
+  <div>
+    <page-header
+      :title="'Current Partners'"
+      :subtitle="'Including collective members'"
+    />
+    <div style="padding: 300px 100px 0; font-size: 78px; line-height: 1.02">
+      <span v-for="partner in partners" v-html="`${$prismic.asText(partner.name)} &nbsp;`" />
     </div>
   </div>
 </template>
 
 <script>
+import pageHeader from '~/components/page/PageHeader'
+
 export default {
+  components: {
+    pageHeader
+  },
   data() {
     partners: []
   },
-  async asyncData({ $prismic, error }) {
-    const data = await $prismic.api.query(
-      $prismic.predicates.at('document.type', 'partner')
-    )
-
-    const partners = data.results.map(partner => partner.data)
-
+  async asyncData({ $prismic, error, store }) {
     return {
-      partners: partners
+      partners: store.state.partners
     }
   }
 }

@@ -28,9 +28,19 @@ export default {
       // "~/styles/fonts.css" // Be sure to turn on the font loader plugin and config it
   ],
   /*
+   ** Load SCSS into each component
+   */
+  styleResources: {
+      scss: [
+        "~/styles/variables.scss",
+        "~/styles/mixins.scss"
+      ]
+  },  
+  /*
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: "~/plugins/web-font-loader.client.js", mode: "client" },
   ],
   /*
   ** Nuxt.js dev-modules

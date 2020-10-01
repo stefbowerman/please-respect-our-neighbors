@@ -1,54 +1,98 @@
 <template>
   <div>
-    <h1>Accumulated Projects</h1>
-    <h4>Collected Works 2018 - 2020</h4>
-    <ul v-for="project in projects">
-      <li>
-        <div>
-          <h4 v-text="$prismic.asText(project.title)" />
-          <div v-html="$prismic.asHtml(project.description)" />
-          <nuxt-link :to="`/projects/${project.uid}`">Go To Project</nuxt-link>
-        </div>
-      </li>
-    </ul>
+    <page-header
+      :title="title"
+      :subtitle="subtitle"
+    />
+
+    <project-listing
+      v-for="(project, i) in projects"
+      :project="project"
+      :key="`project-${i}`"
+    />
   </div>
 </template>
 
 <script>
+import _get from 'lodash/get'
+import _uniq from 'lodash/uniq'
+
+import pageHeader from '~/components/page/PageHeader'
+import projectListing from '~/components/project/ProjectListing'
+
 export default {
-  data() {
-    projects: []
+  components: {
+    pageHeader,
+    projectListing
   },
-  async asyncData({ $prismic, error }) {
-    const data = await $prismic.api.query(
+  data() {
+    return {
+      projects: [],
+      yearsActive: []
+    }
+  },
+  async asyncData({ $prismic, error, store }) {
+    let yearsActive = [] //
+    const projectData = await $prismic.api.query(
       $prismic.predicates.at('document.type', 'project', { orderings: '[my.project.date asc]'})
     )
 
-    const projects = data.results.map(project => {
+    const projects = projectData.results.map(project => {
+      const projectPartnerIds = project.data.partners_involved.map(el => el.partner.id)
+
+      // Pull the full partner info from the store and add it to the project
+      const projectPartners = store.state.partners.filter(p => projectPartnerIds.includes(p.id))
+
       return {
         ...project.data,
-        uid: project.uid
+        uid: project.uid,
+        slices: _get(project, 'data.body', []),
+        partners: projectPartners // Add project property with linked partners
       }
     })
 
     // Sort oldest -> newest
-    projects.sort((a, b) => new Date(a.date) >= new Date(b.date) ? -1 : 1) 
+    // Extract yearsActive while we're doing it
+    projects.sort((a, b) => {
+      const aDate = new Date(a.date)
+      const bDate = new Date(b.date)
+
+      yearsActive.push(aDate.getFullYear())
+      yearsActive.push(bDate.getFullYear())
+
+      return aDate >= bDate ? -1 : 1
+    })
+
+    yearsActive = _uniq(yearsActive.sort(), true)
 
     return {
-      projects
+      projects,
+      yearsActive 
+    }
+  },
+  mounted() {
+    console.log(this.projects)
+  },
+  computed: {
+    title() {
+      return 'Accumulated Projects'
+    },
+    subtitle() {
+      return `Collected Works ${[this.firstYearActive, this.lastYearActive].join(' - ')}`
+    },
+    // @TODO - Could probably do this better
+    firstYearActive() {
+      return this.yearsActive[0]
+    },
+    lastYearActive() {
+      return this.yearsActive[this.yearsActive.length - 1]
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  li {
-    margin: 50px 0;
-  }
+.project-listing {
+  margin: 50px 0;
 }
 </style>
