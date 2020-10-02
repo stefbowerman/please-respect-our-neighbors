@@ -31,6 +31,24 @@ export default {
       yearsActive: []
     }
   },
+  mounted() {
+    console.log(this.projects)
+  },
+  computed: {
+    title() {
+      return 'Accumulated Projects'
+    },
+    subtitle() {
+      return `Collected Works ${[this.firstYearActive, this.lastYearActive].join(' - ')}`
+    },
+    // @TODO - Could probably do this better
+    firstYearActive() {
+      return this.yearsActive[0]
+    },
+    lastYearActive() {
+      return this.yearsActive[this.yearsActive.length - 1]
+    }
+  },
   async asyncData({ $prismic, error, store }) {
     let yearsActive = [] //
     const projectData = await $prismic.api.query(
@@ -69,23 +87,17 @@ export default {
       projects,
       yearsActive 
     }
-  },
-  mounted() {
-    console.log(this.projects)
-  },
-  computed: {
-    title() {
-      return 'Accumulated Projects'
-    },
-    subtitle() {
-      return `Collected Works ${[this.firstYearActive, this.lastYearActive].join(' - ')}`
-    },
-    // @TODO - Could probably do this better
-    firstYearActive() {
-      return this.yearsActive[0]
-    },
-    lastYearActive() {
-      return this.yearsActive[this.yearsActive.length - 1]
+  },  
+  head() {
+    return {
+      title: 'Projects', // @TODO - Pull this from store / API
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'All our work in one place'
+        }
+      ]
     }
   }
 }

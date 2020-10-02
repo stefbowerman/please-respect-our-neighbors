@@ -6,7 +6,9 @@
       <nuxt />
     </main>
 
-    <div class="copyright" v-text="'(C) 2020 PRON'" />
+    <site-footer
+      :text="'(C) 2020 PRON'"
+    />
   </div>
 </template>
 
@@ -15,12 +17,42 @@ import _kebabCase from 'lodash/kebabCase'
 import { decodeHtmlEntities } from '~/utils/tools'
 
 import Navigation from '~/components/Navigation'
+import SiteFooter from '~/components/Footer'
 
 export default {
   components: {
-    Navigation
+    Navigation,
+    SiteFooter
   },
   head() {
+    const meta = [
+      {
+        property: "og:type",
+        content: "website"
+      },
+      {
+        property: "og:site_name",
+        content: this.$store.state.siteSettings.title
+      }
+    ]
+
+    if (this.$store.state.siteSettings.description) {
+      meta.push({
+          hid: "description",
+          name: "description",
+          property: "og:description",
+          content: this.$store.state.siteSettings.description
+      })
+    }   
+
+    if (this.$store.state.siteSettings.imageURL) {
+      meta.push({
+        hid: "og:image",
+        property: "og:image",
+        content: this.$store.state.siteSettings.imageURL
+      })
+    }
+
     return {
       htmlAttrs: {
           lang: "en",
@@ -34,48 +66,13 @@ export default {
         let output      = siteTitle
 
         if (title && siteTitle != title) {
-          output = `${siteTitle} - ${title}`
+          output = `${title} - ${siteTitle}`
         }
 
         return output
       },
-      meta: [
-        {
-          hid: "description",
-          name: "description",
-          property: "og:description",
-          content: this.$store.state.siteSettings.description,
-        },
-        // {
-        //     hid: "og:image",
-        //     property: "og:image",
-        //     content: this.$store.state.siteMeta.themeScreenshotUrl,
-        // },
-        // {
-        //     property: "og:url",
-        //     content: `${this.$store.state.siteMeta.frontendUrl}${this.$route.path}`,
-        // },
-        {
-          property: "og:site_name",
-          content: this.$store.state.siteSettings.title,
-        },
-        {
-          property: "og:type",
-          content: "website",
-        },
-      ],
+      meta: meta
     }
   },  
 }
 </script>
-
-<style lang="scss">
-.copyright {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-family: $font-family-secondary;
-}
-</style>

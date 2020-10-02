@@ -20,6 +20,18 @@ export default {
   data() {
     partners: []
   },
+  head() {
+    return {
+      title: 'Partners', // @TODO - Pull this from store / API
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Our studio is built of core and collective members'
+        }
+      ]
+    }
+  },
   async asyncData({ $prismic, error, store }) {
     return {
       partners: store.state.partners

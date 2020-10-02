@@ -15,6 +15,7 @@
 <style lang="scss" scoped>
 nav {
   position: fixed;
+  z-index: 100;
   top: 55px;
   right: 30px;
   font-family: $font-family-secondary;

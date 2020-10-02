@@ -1,5 +1,6 @@
 
 export default {
+  target: 'static',
   /*
   ** Headers of the page
   */
@@ -22,19 +23,16 @@ export default {
    ** Global CSS
    */
   css: [
-      // "~/styles/css-variables.scss",
-      "~/styles/app.scss",
-      // "~/styles/transitions.scss",
-      // "~/styles/fonts.css" // Be sure to turn on the font loader plugin and config it
+    '~/assets/styles/app.scss'
   ],
   /*
    ** Load SCSS into each component
    */
   styleResources: {
-      scss: [
-        "~/styles/variables.scss",
-        "~/styles/mixins.scss"
-      ]
+    scss: [
+      '~/assets/styles/_variables.scss',
+      '~/assets/styles/_mixins.scss'
+    ]
   },  
   /*
   ** Plugins to load before mounting the App

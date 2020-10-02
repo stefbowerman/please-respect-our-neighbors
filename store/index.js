@@ -1,8 +1,12 @@
+import _get from 'lodash/get'
+
 // Define State defaults
 export const state = () => ({
   siteSettings: {
     title: '',
-    description: ''
+    description: '',
+    imageURL: '',
+    footerText: ''
   },
   partners: []
 })
@@ -28,17 +32,18 @@ export const actions = {
   },
 
   async QUERY_SETTINGS({ dispatch, commit }) {
-      // Get site settings from WordPress and save them to store
-      const response = await this.$prismic.api.getSingle('site_settings')
-      
-      const data = response.data
+    const response = await this.$prismic.api.getSingle('site_settings')
+    
+    const data = response.data
 
-      const settings = {
-        title: this.$prismic.asText(data.title),
-        description: this.$prismic.asText(data.description)
-      }
+    const settings = {
+      title: this.$prismic.asText(data.title),
+      description: this.$prismic.asText(data.description),
+      imageURL: _get(data, 'image.url', ''),
+      footerText: this.$prismic.asText(data.footer_text)
+    }
 
-      commit('SET_SITE_SETTINGS', settings)
+    commit('SET_SITE_SETTINGS', settings)
   },
 
   async QUERY_PARTNERS({ dispatch, commit }) {
@@ -48,10 +53,11 @@ export const actions = {
 
     const partners = data.results.map(partner => {
       const p = {
-          ...partner.data,
-          id: partner.id,
-          uid: partner.uid        
+        ...partner.data,
+        id: partner.id,
+        uid: partner.uid        
       }
+
       return p
     })
 

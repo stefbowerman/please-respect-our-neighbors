@@ -21,7 +21,7 @@ export default {
       subtitle: 'Workplace Process',
       subtitleIndex: 0
     }
-  },
+  },  
   mounted() {
     this.interval = setInterval(this.setSubtitle, 5e3)
   },
@@ -37,6 +37,18 @@ export default {
       }
       
       this.subtitle = SUBTITLES[this.subtitleIndex]
+    }
+  },
+  head() {
+    return {
+      title: 'A Black Letter To Nike', // @TODO - Pull this from store / API
+      meta: [
+        // {
+        //   hid: 'description',
+        //   name: 'description',
+        //   content: 'Our studio is built of core and collective members'
+        // }
+      ]
     }
   }
 }  
