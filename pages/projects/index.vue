@@ -1,10 +1,5 @@
 <template>
   <div>
-    <page-header
-      :title="title"
-      :subtitle="subtitle"
-    />
-
     <project-listing
       v-for="(project, i) in projects"
       :project="project"
@@ -17,12 +12,10 @@
 import _get from 'lodash/get'
 import _uniq from 'lodash/uniq'
 
-import pageHeader from '~/components/page/PageHeader'
 import projectListing from '~/components/project/ProjectListing'
 
 export default {
   components: {
-    pageHeader,
     projectListing
   },
   data() {
@@ -33,11 +26,14 @@ export default {
   },
   mounted() {
     console.log(this.projects)
+    this.$store.commit('SET_THEME', 'black')
+    this.$store.commit('SET_HEADER_TITLE', 'Accumulated Projects')
+    this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)    
+  },
+  beforeDestroy() {
+    this.$store.commit('SET_THEME', '')
   },
   computed: {
-    title() {
-      return 'Accumulated Projects'
-    },
     subtitle() {
       return `Collected Works ${[this.firstYearActive, this.lastYearActive].join(' - ')}`
     },
@@ -104,7 +100,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.project-listing {
-  margin: 50px 0;
-}
+// .project-listing {
+//   margin: 50px 0;
+// }
 </style>

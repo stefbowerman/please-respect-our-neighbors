@@ -18,6 +18,8 @@ footer {
   position: fixed;
   bottom: 30px;
   right: 30px;
+
+  @include theme-text;
   text-transform: uppercase;
   font-weight: bold;
   font-family: $font-family-secondary;

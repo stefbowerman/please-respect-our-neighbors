@@ -53,6 +53,7 @@ export default {
   modules: [
     "@nuxtjs/style-resources",
     "@nuxtjs/prismic",
+    'portal-vue/nuxt'
   ],
   prismic: {
     endpoint: 'https://pron.cdn.prismic.io/api/v2',

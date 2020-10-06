@@ -1,0 +1,26 @@
+// For any text that needs to respond to changes in site theme
+@mixin theme-text {
+  color: var(--text-color);
+  transition: color 0.2s ease-in-out;
+}
+
+
+@mixin text-huge {
+  font-size: 80px;
+  line-height: (70px/80px);
+}
+
+@mixin text-bigger {
+  font-size: 74px;
+  line-height: (65px/74px);
+}
+
+@mixin text-big {
+  font-size: 46px;
+  line-height: (55px/46px); 
+}
+
+@mixin text-large {
+  font-size: 42px;
+  line-height: (50px/42px);
+}

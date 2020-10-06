@@ -1,6 +1,7 @@
 <template>
   <nav>
     <div style="margin: 0 0 20px;">
+      <!-- @TODO - This should be an h1?  or we need to insert an SEO component in the layout -->
       <nuxt-link to="/">Please Respect Our Neighbors Inc.</nuxt-link>
     </div>
     <div class="links">
@@ -19,9 +20,7 @@ nav {
   top: 55px;
   right: 30px;
   font-family: $font-family-secondary;
-  text-transform: uppercase;
   text-align: center;
-  font-size: 21px;
 }
 
 .links {

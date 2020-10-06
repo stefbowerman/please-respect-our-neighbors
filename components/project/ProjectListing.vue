@@ -1,7 +1,5 @@
 <template>
-  <div class="project-listing" style="padding: 0 50px">
-    <h4 v-text="$prismic.asText(project.title)" v-if="false" />
-    
+  <div class="project-listing">
     <div
       v-if="project.slices.length"
       class="project-previewer"
@@ -10,16 +8,36 @@
         v-for="(slice, i) in project.slices"
         :slice="slice"
         :key="`slice-${i}`"
-      />      
+        @click="projectPreviewClick(i)"
+        @mouseenter="hoveredSliceIndex = i"
+        @mouseleave="hoveredSliceIndex = -1"
+      />
     </div>
 
+    <!-- This goes behind the preview -->
     <div class="project-description">
       <div
         class="project-description__text"
         v-html="$prismic.asHtml(project.description)"
       />
-    </div>
+    </div>    
 
+    <!-- These need to go beneath each slice? -->
+    <div class="captions">
+      <div
+        class="caption"
+        v-for="(slice, k) in project.slices"
+        v-show="k === hoveredSliceIndex"
+      >
+        <div
+          v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'"
+          v-text="`1/${slice.items.length}`"
+        />
+        <span v-text="$prismic.asText(slice.primary.detail_title)" />
+      </div>
+    </div>    
+
+    <!--
     <div v-if="false">
       <div v-if="project.partners.length" style="padding: 20px 0;">
         <h6>Partners</h6>
@@ -30,7 +48,19 @@
         </div>
       </div>
     </div>
-    <nuxt-link :to="`/projects/${project.uid}`">Go To Project</nuxt-link>
+
+    <nuxt-link :to="`/projects/${project.uid}`" style="display: none !important;">Go To Project</nuxt-link>
+    -->
+
+    <portal to="overlays">
+      <project-overlay
+        v-for="(slice, j) in project.slices"
+        @close="projectOverlayClose"
+        :key="`project-overlay-${j}`"
+        :show="j == selectedSliceIndex"
+        :slice="slice"
+      />
+    </portal>
   </div>  
 </template>
 
@@ -38,10 +68,12 @@
 import _kebabCase from 'lodash/kebabCase'
 
 import projectPreview from '~/components/project/ProjectPreview'
+import projectOverlay from '~/components/project/ProjectOverlay'
 
 export default {
   components: {
-    projectPreview
+    projectPreview,
+    projectOverlay
   },
   props: {
     project: {
@@ -50,11 +82,26 @@ export default {
       default: () => {}
     }
   },
+  data() {
+    return {
+      hoveredSliceIndex: -1,
+      selectedSliceIndex: -1
+    }
+  },
   methods: {
-    sliceComponentName(slice) {
-      const name = `project-slice-${_kebabCase(slice.slice_type)}`
-      console.log(name)
-      return name
+    // sliceComponentName(slice) {
+    //   const name = `project-slice-${_kebabCase(slice.slice_type)}`
+    //   console.log(name)
+    //   return name
+    // },
+    projectPreviewClick(i) {
+      // console.log('clicked!')
+      // console.log(i)
+      this.selectedSliceIndex = i
+    },
+    projectOverlayClose() {
+      // console.log('closed preview')
+      this.selectedSliceIndex = -1
     }
   }
 }
@@ -64,7 +111,7 @@ export default {
 .project-listing {
   height: 100vh;
   min-height: 500px;
-  max-height: 900px;
+  max-height: 1500px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,21 +138,39 @@ export default {
     margin: 0 auto;
     padding: 0 50px;
   }
-
-  // Do this with component prop?
-  .project-listing:hover & {
-    z-index: 1;
-  }
 }
 
 .project-previewer {
   display: flex;
   width: 100%;
-  margin: 40px 0;
+  height: 100%;
 
   .project-preview {
     flex: 1;
-    margin: 0 50px;
   }
+}
+
+// This is all trash, get using it to get the idea
+.captions {
+  margin-top: 10px;
+  padding: 30px;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 21px;
+  line-height: 30/21;
 }
 </style>

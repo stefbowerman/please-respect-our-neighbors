@@ -1,6 +1,7 @@
 <template>
   <div>
-    <navigation />
+    <site-header />
+    <site-navigation />
 
     <main>
       <nuxt />
@@ -9,6 +10,8 @@
     <site-footer
       :text="'(C) 2020 PRON'"
     />
+
+    <portal-target name="overlays" />
   </div>
 </template>
 
@@ -16,12 +19,14 @@
 import _kebabCase from 'lodash/kebabCase'
 import { decodeHtmlEntities } from '~/utils/tools'
 
-import Navigation from '~/components/Navigation'
+import SiteHeader from '~/components/Header'
+import SiteNavigation from '~/components/Navigation'
 import SiteFooter from '~/components/Footer'
 
 export default {
   components: {
-    Navigation,
+    SiteHeader,
+    SiteNavigation,
     SiteFooter
   },
   head() {
@@ -53,12 +58,24 @@ export default {
       })
     }
 
+    const bodyClasses = [
+      `route-${_kebabCase(this.$route.name)}`
+    ]
+
+    if (this.$store.state.theme) {
+      bodyClasses.push(`theme-${_kebabCase(this.$store.state.theme)}`)
+    }
+
+    if (this.$store.state.overlayOpen) {
+      bodyClasses.push('overlay-open') 
+    }
+
     return {
       htmlAttrs: {
           lang: "en",
       },
       bodyAttrs: {
-          class: `route-${_kebabCase(this.$route.name)}`
+          class: bodyClasses
       },
       titleTemplate: (titleChunk) => {
         const title     = decodeHtmlEntities(titleChunk)

@@ -6,8 +6,15 @@ export const state = () => ({
     title: '',
     description: '',
     imageURL: '',
-    footerText: ''
+    footerText: '',
+    exhibitedProjectID: ''
   },
+  theme: '',
+  header: {
+    title: '',
+    subtitle: ''
+  },
+  overlayOpen: false,
   partners: []
 })
 
@@ -16,6 +23,18 @@ export const mutations = {
   SET_SITE_SETTINGS(state, data) {
     state.siteSettings = data
   },  
+  SET_THEME(state, data) {
+    state.theme = data
+  },
+  SET_HEADER_TITLE(state, data) {
+    state.header.title = data
+  },
+  SET_HEADER_SUBTITLE(state, data) {
+    state.header.subtitle = data
+  },
+  SET_OVERLAY_OPEN(state, data) {
+    state.overlayOpen = data
+  }, 
   SET_PARTNERS(state, data) {
     state.partners = data
   }
@@ -40,7 +59,8 @@ export const actions = {
       title: this.$prismic.asText(data.title),
       description: this.$prismic.asText(data.description),
       imageURL: _get(data, 'image.url', ''),
-      footerText: this.$prismic.asText(data.footer_text)
+      footerText: this.$prismic.asText(data.footer_text),
+      exhibitedProjectID: _get(data, 'exhibited_project.id', '')
     }
 
     commit('SET_SITE_SETTINGS', settings)
