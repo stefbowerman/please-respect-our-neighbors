@@ -4,6 +4,10 @@
   transition: color 0.2s ease-in-out;
 }
 
+@mixin text-massive {
+  font-size: 100px;
+  line-height: (90px/100px);
+}
 
 @mixin text-huge {
   font-size: 80px;

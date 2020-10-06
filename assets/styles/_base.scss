@@ -82,11 +82,19 @@ h1, h2, h3, h4, h5, h6  {
   text-transform: uppercase;
 }
 
+img {
+  max-width: 100%;
+}
+
 main {
   min-height: 100vh; // ? @TODO - Do we need this??
 }
 
 // Text sixes
+.text-massive {
+  @include text-massive
+}
+
 .text-huge {
   @include text-huge;
 }

@@ -1,15 +1,28 @@
 <template>
   <div style="margin-top: 200px;">
     <template v-if="slices.length">
-      <div v-for="(slice, j) in slices" style="padding: 100px 0; border: 1px solid red; border-width: 1px 0;">
-        <template v-if="slice.slice_type === 'text_box'">
-          <div class="container">
-            <div style="margin: 0 150px;">
-              <div class="text-bigger" style="height: 600px; overflow: scroll; border: 1px solid black; text-transform: none;">
-                <div v-if="slice.primary.content_date" v-text="slice.primary.content_date" style="color: white;margin-bottom: 100px;"/>
-                <div v-html="$prismic.asHtml(slice.primary.content)" />
-              </div>
+      <div v-for="(slice, j) in slices" style="padding: 150px 0;">
+        
+        <template v-if="slice.slice_type === 'image_text_box'">
+          <div class="container" style="display: flex; justify-content: space-around">
+            <div style="flex: 1;">
+              <img :src="slice.primary.image.url" :alt="slice.primary.image.alt" />
             </div>
+            <div style="flex: 1;">
+              <text-box
+                  :date="slice.primary.content_date"
+                  :content="$prismic.asHtml(slice.primary.content)"
+              />
+            </div>
+          </div>
+        </template>
+
+        <template v-else-if="slice.slice_type === 'text_box'">
+          <div class="container" style="margin: 0 150px;">
+            <text-box
+                :date="slice.primary.content_date"
+                :content="$prismic.asHtml(slice.primary.content)"
+              />
           </div>
         </template>
 
@@ -20,15 +33,35 @@
         </template>
 
         <template v-else-if="slice.slice_type === 'image_gallery'">
-          <div style="display: flex;">
+          <div class="container" style="display: flex; justify-content: center">
             <div v-for="item in slice.items">
               <img :src="item.image.url" :alt="item.image.alt" />
             </div>
           </div>
         </template>
 
+        <template v-else-if="slice.slice_type === 'image_pair'">
+          <div class="container" style="display: flex; justify-content: space-around">
+            <img :src="slice.primary.first_image.url" :alt="slice.primary.first_image.alt" />
+            <img :src="slice.primary.second_image.url" :alt="slice.primary.second_image.alt" />
+          </div>
+
+          <div class="container" style="max-width: 60%; text-align: center; margin-top: 200px; margin-bottom: 50px;">
+            <p>Left:</p>
+            <p v-text="$prismic.asText(slice.primary.first_image_caption)" />
+            <p>Right:</p>
+            <p v-text="$prismic.asText(slice.primary.second_image_caption)" />
+          </div>
+        </template>
+        <template v-else-if="slice.slice_type === 'zoom_image'">
+          <div class="container" style="position: relative;">
+            <img :src="slice.primary.main_image.url" :alt="slice.primary.main_image.alt" />
+            <img :src="slice.primary.detail_image.url" :alt="slice.primary.detail_image.alt" style="position: absolute; top: 10%; right: 10%; max-width: 25%;" />
+          </div>
+        </template>
+
         <!-- This is the text that gets set as the page subtitle -->
-        <h4 v-text="$prismic.asText(slice.primary.slice_title)" />
+        <div class="container"><h4 v-text="$prismic.asText(slice.primary.slice_title)" /></div>
       </div>
     </template>
 
@@ -43,9 +76,14 @@
 <script>
 import _get from 'lodash/get'
 
+import textBox from '~/components/TextBox'
+
 const SUBTITLES = ['Workplace Process', 'Collaborative Starter Doc', 'Social Media ready Envelope', 'Business Reply Envelopes']
 
 export default {
+  components: {
+    textBox
+  },
   data() {
     return {
       title: '',
