@@ -7,14 +7,16 @@
       v-on:mouseleave="$emit('mouseleave')"
     >
       <template v-if="slice.slice_type === 'detail_gallery'">
-        <prismic-image
-          v-if="slice.items.length"
-          :field="slice.items[0].image"
-        />
+        <div class="detail-gallery">
+          <prismic-image
+            v-if="slice.items.length"
+            :field="slice.items[0].image"
+          />
+        </div>
       </template>
 
       <template v-else-if="slice.slice_type === 'detail_text'">
-        <div class="text-wrap">
+        <div class="detail-text">
           <div
             class="text"
             v-html="$prismic.asHtml(slice.primary.detail_rich_text)"
@@ -23,7 +25,7 @@
       </template>
 
       <template v-else-if="slice.slice_type === 'detail_videos'">
-        <div>
+        <div class="detail-videos">
           <div v-for="item in slice.items">
             <span>{{ item.vimeo_url.url }}</span>
           </div>
@@ -66,7 +68,21 @@ export default {
   overflow: hidden;
 }
 
-.text-wrap {
+// slice.slice_type === 'detail_gallery'
+
+.detail-gallery {
+  height: 100%;
+  position: relative;
+
+  img {
+    @include fill;
+    object-fit: cover;
+  }
+}
+
+// slice.slice_type === 'detail_text'
+
+.detail-text {
   border: 1px solid white;
   color: white;
   background:#2B2B2B;
@@ -79,4 +95,8 @@ export default {
   width: 500px;
   padding: 65px 13px; 
 }
+
+// slice.slice_type === 'detail_videos'
+
+.detail-videos {}
 </style>

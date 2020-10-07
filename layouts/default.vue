@@ -1,7 +1,6 @@
 <template>
   <div>
     <site-header />
-    <site-navigation />
 
     <main>
       <nuxt />

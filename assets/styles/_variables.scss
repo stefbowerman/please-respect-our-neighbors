@@ -4,7 +4,7 @@ $white:     #FFF;
 
 $red:       #FD5858;
 
-$font-family-primary:   'Helvetica', sans-serif;
+$font-family-primary:   'Swiss 721', 'Helvetica', sans-serif;
 $font-family-secondary: 'Roboto', sans-serif;
 
 // $font-size-huge:   80px;
@@ -12,4 +12,8 @@ $font-family-secondary: 'Roboto', sans-serif;
 // $font-size-big:    46px;
 // $font-size-large:  42px;
 
+$font-weight-normal: 400;
+$font-weight-bold:   700;
+
+$z-index-header: 10;
 $zindex-overlay: 100;

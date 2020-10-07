@@ -4,5 +4,8 @@ import WebFont from 'webfontloader'
 WebFont.load({
   google: {
     families: ['Roboto:700']
+  },
+  custom: {
+    families: ['Swiss 721']
   }
 })

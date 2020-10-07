@@ -4,6 +4,14 @@
   transition: color 0.2s ease-in-out;
 }
 
+@mixin fill($position: absolute) {
+  position: $position;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 @mixin text-massive {
   font-size: 100px;
   line-height: (90px/100px);

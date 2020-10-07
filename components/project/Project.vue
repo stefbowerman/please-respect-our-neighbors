@@ -1,5 +1,5 @@
 <template>
-  <div class="project-listing">
+  <div class="project">
     <div
       v-if="project.slices.length"
       class="project-previewer"
@@ -108,7 +108,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.project-listing {
+.project {
   height: 100vh;
   min-height: 500px;
   max-height: 1500px;
@@ -127,11 +127,7 @@ export default {
   text-align: center;
   transform: translateY(-50%);
   pointer-events: none;
-
-  // @TODO - Create text styles out of these things
-  text-transform: uppercase;
-  font-size: 21px;
-  line-height: 25px;
+  font-style: italic;
 
   &__text {
     max-width: 800px;
@@ -168,9 +164,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  text-transform: uppercase;
   text-align: center;
-  font-size: 21px;
-  line-height: 30/21;
+  font-style: italic;
 }
 </style>

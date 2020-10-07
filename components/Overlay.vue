@@ -80,7 +80,6 @@ export default {
   right: 130px;
   font-size: 46px; // @TODO - Var this
   @include theme-text;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
