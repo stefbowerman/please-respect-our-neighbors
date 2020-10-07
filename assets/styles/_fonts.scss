@@ -1,5 +1,13 @@
 @font-face {
   font-family: 'Swiss 721';
+  src: url('/fonts/Swiss721BT-Light.woff2') format('woff2'),
+       url('/fonts/Swiss721BT-Light.woff') format('woff');
+  font-style: normal;
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'Swiss 721';
   src: url('/fonts/Swiss721BT-Roman.woff2') format('woff2'),
        url('/fonts/Swiss721BT-Roman.woff') format('woff');
   font-style: normal;

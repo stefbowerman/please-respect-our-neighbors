@@ -31,10 +31,12 @@ export default {
   computed: {
     formattedDate() {
       const d = new Date(this.date)
-      const year = d.getFullYear().toString().substr(-2);
+      const day = d.getDate().toString()
       const month = (d.getMonth() + 1).toString()
+      const year = d.getFullYear().toString()
+      
 
-      return `${month.length === 1 ? `0${month}` : month}<br />${year}`
+      return `${day.length === 1 ? `0${day}` : day}<br />${month.length === 1 ? `0${month}` : month}<br />${year}`
     }
   }
 }
@@ -58,8 +60,9 @@ export default {
 
 .date {
   @include text-massive;
-  margin-bottom: 100px;
+  margin-bottom: 30px;
   color: $white;
+  font-weight: $font-weight-light;
 }
 
 .content {

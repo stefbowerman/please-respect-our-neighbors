@@ -20,7 +20,7 @@ footer {
   right: 30px;
 
   @include theme-text;
-  font-weight: bold;
+  font-weight: $font-weight-medium;
   font-family: $font-family-secondary;
 }
 </style>

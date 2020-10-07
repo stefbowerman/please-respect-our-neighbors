@@ -13,7 +13,7 @@
               />
             </transition>
 
-            <transition name="fade" mode="out-in">
+            <transition :name="null" mode="out-in">
               <h3
                 class="subtitle"
                 v-text="subtitle"
@@ -73,7 +73,7 @@ header {
 
 .title {
   // @TODO - vw units?
-  @include text-bigger;
+  @include text-huge;
 }
 
 .subtitle {
@@ -85,6 +85,7 @@ header {
 
 nav {
   font-family: $font-family-secondary;
+  font-weight: $font-weight-bold;
 }
 
 .links {

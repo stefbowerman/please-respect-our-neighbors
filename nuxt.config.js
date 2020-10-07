@@ -38,7 +38,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: "~/plugins/web-font-loader.client.js", mode: "client" },
+    { src: '~/plugins/global-directive-loader.js' },
+    { src: '~/plugins/web-font-loader.client.js', mode: 'client' },
   ],
   /*
   ** Nuxt.js dev-modules
