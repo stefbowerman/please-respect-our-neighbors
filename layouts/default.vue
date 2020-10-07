@@ -10,7 +10,7 @@
       :text="'(C) 2020 PRON'"
     />
 
-    <portal-target name="overlays" />
+    <portal-target name="overlays" multiple />
   </div>
 </template>
 

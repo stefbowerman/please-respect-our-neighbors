@@ -56,7 +56,7 @@
       <project-overlay
         v-for="(slice, j) in project.slices"
         @close="projectOverlayClose"
-        :key="`project-overlay-${j}`"
+        :key="`project-overlay-${project.uid}-${j}`"
         :show="j == selectedSliceIndex"
         :slice="slice"
       />
@@ -87,6 +87,9 @@ export default {
       hoveredSliceIndex: -1,
       selectedSliceIndex: -1
     }
+  },
+  mounted() {
+    console.log(this.project)
   },
   methods: {
     // sliceComponentName(slice) {
