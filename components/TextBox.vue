@@ -46,16 +46,25 @@ export default {
 .text-box {
   position: relative;
   padding-right: 29px;
+
+  @include bp-up(lg) {
+    padding-right: 29px;    
+  }
 }
 
 .scroller {
   height: 600px;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 43px;
-  padding-left: 100px;
-  padding-bottom: 100px;
+  padding: 41px;
+  padding-left: 22px;
   border: 1px solid $black;
+
+  @include bp-up(lg) {
+    padding: 43px;
+    padding-left: 100px;
+    padding-bottom: 100px;    
+  }
 }
 
 .date {
@@ -74,8 +83,12 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  bottom: 0;
-  width: 7px;
+  height: 100%;
+  width: 11px;
   background-color: black;
+
+  @include bp-up(lg) {
+    width: 7px;
+  }
 }
 </style>

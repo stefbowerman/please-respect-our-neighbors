@@ -22,5 +22,9 @@ footer {
   @include theme-text;
   font-weight: $font-weight-medium;
   font-family: $font-family-secondary;
+
+  @include bp-down(md) {
+    display: none;
+  }
 }
 </style>

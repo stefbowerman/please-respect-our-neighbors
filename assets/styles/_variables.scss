@@ -14,8 +14,20 @@ $font-family-secondary: 'Roboto', sans-serif;
 
 $font-weight-light: 100;
 $font-weight-normal: 400;
-$font-weight-medium: 400;
+$font-weight-medium: 500;
 $font-weight-bold:   700;
 
-$z-index-header: 10;
+$zindex-header: 10;
+$zindex-mobile-menu: 50;
 $zindex-overlay: 100;
+
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1480px
+);
+
+$container-max-width: 1920px;

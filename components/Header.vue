@@ -62,22 +62,25 @@ export default {
 <style lang="scss" scoped>
 header {
   position: fixed;
-  z-index: $z-index-header;
-  top: 50px;
+  z-index: $zindex-header;
+  top: 73px;
   left: 0;
   right: 0;
   text-align: center;
 
   @include theme-text;
+
+  @include bp-up(lg) {
+    top: 50px;
+  }
 }
 
 .title {
-  // @TODO - vw units?
-  @include text-huge;
+  @include text-title;
 }
 
 .subtitle {
-  @include text-big;
+  @include text-subtitle;
   font-weight: normal;
   font-style: italic;
   margin-top: 2px;
@@ -86,6 +89,12 @@ header {
 nav {
   font-family: $font-family-secondary;
   font-weight: $font-weight-bold;
+
+  display: none;
+
+  @include bp-up(lg) {
+    display: block;
+  }
 }
 
 .links {

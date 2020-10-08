@@ -1,3 +1,6 @@
+@import './mixins/breakpoints';
+@import './mixins/text';
+
 // For any text that needs to respond to changes in site theme
 @mixin theme-text {
   color: var(--text-color);
@@ -10,29 +13,4 @@
   left: 0;
   height: 100%;
   width: 100%;
-}
-
-@mixin text-massive {
-  font-size: 100px;
-  line-height: (90px/100px);
-}
-
-@mixin text-huge {
-  font-size: 80px;
-  line-height: (70px/80px);
-}
-
-@mixin text-bigger {
-  font-size: 74px;
-  line-height: (65px/74px);
-}
-
-@mixin text-big {
-  font-size: 46px;
-  line-height: (55px/46px); 
-}
-
-@mixin text-large {
-  font-size: 42px;
-  line-height: (50px/42px);
 }

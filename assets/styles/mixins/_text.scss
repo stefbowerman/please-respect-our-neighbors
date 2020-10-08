@@ -1,0 +1,67 @@
+@mixin text-massive {
+  font-size: 50px;
+  line-height: (45px/50px);
+
+  @include bp-up(lg) {
+    font-size: 100px;
+    line-height: (90px/100px);
+  }
+}
+
+// Exhibited Project - Large Caption
+@mixin text-huge {
+  font-size: 52px;
+  line-height: (33px/52px);
+
+  @include bp-up(lg) {
+    font-size: 80px;
+    line-height: (70px/80px);
+  }
+}
+
+// Header Title
+@mixin text-bigger {
+  font-size: 27px;
+  line-height: (23px/27px);
+
+  @include bp-up(lg) {
+    font-size: 74px;
+    line-height: (65px/74px);
+  }
+}
+
+// Exhibited Project - Medium Caption
+@mixin text-big {
+  font-size: 27px;
+  line-height: (23px/27px);
+
+  @include bp-up(lg) {
+    font-size: 46px;
+    line-height: (55px/46px);
+  }
+}
+
+@mixin text-large {
+  font-size: 42px;
+  line-height: (50px/42px);
+}
+
+@mixin text-title {
+  @include text-bigger;
+
+  // text-huge above lg
+  @include bp-up(lg) {
+    font-size: 80px;
+    line-height: (70px/80px);
+  }
+}
+
+@mixin text-subtitle {
+  @include text-big;
+
+  // text-bigger above lg
+  @include bp-down(md) {
+    font-size: 15px;
+    line-height: (18px/15px);
+  }
+}

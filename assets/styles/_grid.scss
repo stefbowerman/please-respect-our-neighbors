@@ -1,0 +1,56 @@
+.container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+
+  @include bp-up(lg) {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+// Is there an easier way to do this without a container AND row AND column
+.row {
+  display: flex;
+  flex-direction: column;
+  margin-left: -6px;
+  margin-right: -6px;
+
+  @include bp-up(lg) {
+    flex-direction: row;
+    margin-left: -25px;
+    margin-right: -25px;
+  }
+}
+
+.primary-column,
+.secondary-column {
+  width: 100%;
+  padding: 0 6px;
+  flex-basis: 0;
+  flex-grow: 1;
+
+  @include bp-up(lg) {
+    padding: 0 25px;
+  }
+
+  &.gutter-less {
+    padding: 0;
+  }
+}
+
+@include bp-up(lg) {
+  .primary-column {
+    flex: 0 0 60%;
+    max-width: 60%;
+    width: 60%;
+  }
+  .secondary-column {
+    flex: 0 0 40%;
+    max-width: 40%;
+    width: 40%;
+  }  
+}

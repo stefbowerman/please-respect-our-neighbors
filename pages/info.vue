@@ -1,21 +1,25 @@
 <template>
   <div style="margin-top: 500px; margin-bottom: 100px;">
-    <div class="container" style="width: 60vw">
-      <div class="block">
-        <div
-          class="text-field text-big"
-          v-if="this.description.length"
-          v-html="this.description"
-        />
-      </div>
+    <div class="container">
+      <div class="row">
+        <div class="primary-column">
+          <div class="block">
+            <div
+              class="text-field text-big"
+              v-if="this.description.length"
+              v-html="this.description"
+            />
+          </div>
 
-      <div
-        class="block"
-        v-for="(slice, i) in slices"
-      >
-        <h3 v-text="$prismic.asText(slice.primary.block_title)" />
-        <div class="text-big" v-html="$prismic.asHtml(slice.primary.block_content)"></div>
-      </div>     
+          <div
+            class="block"
+            v-for="(slice, i) in slices"
+          >
+            <h3 v-text="$prismic.asText(slice.primary.block_title)" />
+            <div class="text-big" v-html="$prismic.asHtml(slice.primary.block_content)"></div>
+          </div>
+        </div>
+      </div>   
     </div>
   </div>
 </template>
@@ -97,5 +101,9 @@ export default {
 h3 {
   @include text-huge;
   margin-bottom: 3px;
+}
+
+.text-big {
+  font-weight: $font-weight-medium; // @TODO - Is this for all .text-big ?
 }
 </style>

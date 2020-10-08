@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Overlay from '@/components/overlay'
+import Overlay from '~/components/Overlay'
 
 export default {
   components: {

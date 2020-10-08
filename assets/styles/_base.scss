@@ -2,6 +2,7 @@
   --background-color: #{$white};
   --text-color: #{$black};
   --link-color: #{$black};
+  --unit-100vh: 100vh;
 }
 
 // Themes
@@ -62,7 +63,8 @@ body {
   }
 }
 
-body.overlay-open {
+body.overlay-open,
+body.mobile-menu-open {
   overflow: hidden;
 }
 

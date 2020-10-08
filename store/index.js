@@ -15,6 +15,7 @@ export const state = () => ({
     subtitle: ''
   },
   overlayOpen: false,
+  mobileMenuOpen: false,
   partners: []
 })
 
@@ -34,7 +35,10 @@ export const mutations = {
   },
   SET_OVERLAY_OPEN(state, data) {
     state.overlayOpen = data
-  }, 
+  },
+  SET_MOBILE_MENU_OPEN(state, data) {
+    state.mobileMenuOpen = data
+  },  
   SET_PARTNERS(state, data) {
     state.partners = data
   }

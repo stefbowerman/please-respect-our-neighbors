@@ -13,7 +13,7 @@
           <slot name="body" />
         </div>
       </div>
-      <span class="close" @click="close">Exit</span>
+      <span class="close" @click="close">Exit Viewer</span>
     </div>
   </transition>
 </template>
@@ -77,10 +77,17 @@ export default {
 .close {
   position: fixed;
   top: 77px;
-  right: 130px;
-  font-size: 46px; // @TODO - Var this
+  right: 11px;
+  font-size: 15px; // @TODO - Var this
+  font-weight: $font-weight-light;
   @include theme-text;
   cursor: pointer;
+  font-weight: light;
+
+  @include bp-up(md) {
+    right: 53px;
+    font-size: 46px; // @TODO - Var this
+  }
 }
 
 .overlay-body {
