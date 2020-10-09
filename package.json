@@ -15,7 +15,8 @@
     "@nuxtjs/prismic": "^1.2.4",
     "lodash": "^4.17.20",
     "nuxt": "^2.0.0",
-    "portal-vue": "^2.1.7"
+    "portal-vue": "^2.1.7",
+    "swiper": "^6.3.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.11.0",

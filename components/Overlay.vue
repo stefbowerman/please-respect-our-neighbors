@@ -2,6 +2,7 @@
   <transition
     name="fade"
     v-on:enter="enter"
+    v-on:afterLeave="afterLeave"
   >
     <div class="overlay" v-show="show">
       <div
@@ -41,15 +42,34 @@ export default {
     close() {
       this.$emit('close')
     },
+    leftKey() {
+      this.$emit('left-key')
+    },
+    rightKey() {
+      this.$emit('right-key')
+    },
     keydownHandler(e) {
-      if (this.show && e.keyCode == 27) {
-        this.close()
+      if (!this.show) return
+
+      switch (e.keyCode) {
+        case 27:
+          this.close()
+          break
+        case 37:
+          this.leftKey()
+          break
+        case 39:
+          this.rightKey()
+          break        
       }
     },
     enter(el) {
       // Make sure we're always scrolled to the top
       this.$refs.dialog.scrollTop = 0
       this.$emit('enter')
+    },
+    afterLeave() {
+      this.$emit('after-leave')
     }
   }
 }
@@ -76,13 +96,13 @@ export default {
 
 .close {
   position: fixed;
+  z-index: 1;
   top: 77px;
   right: 11px;
   font-size: 15px; // @TODO - Var this
   font-weight: $font-weight-light;
   @include theme-text;
   cursor: pointer;
-  font-weight: light;
 
   @include bp-up(md) {
     right: 53px;

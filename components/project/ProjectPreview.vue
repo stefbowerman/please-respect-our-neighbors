@@ -25,10 +25,11 @@
       </template>
 
       <template v-else-if="slice.slice_type === 'detail_videos'">
-        <div class="detail-videos">
-          <div v-for="item in slice.items">
-            <span>{{ item.vimeo_url.url }}</span>
-          </div>
+        <div class="detail-gallery">
+          <prismic-image
+            v-if="slice.primary.detail_featured_image.url"
+            :field="slice.primary.detail_featured_image"
+          />
         </div>
       </template>
     </div>
