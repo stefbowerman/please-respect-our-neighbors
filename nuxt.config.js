@@ -84,32 +84,32 @@ export default {
   router: {
 
   },
-  generate: {
-    routes() {
-      // Prismic.api('https://pron.cdn.prismic.io/api/v2', (err, api) => {
-      //   api.query('').then(response => {
-      //     const routes = response.documents.map((doc) => linkResolver(doc))
-      //     console.log(routes)
-      //   })
-      // })
-      // Figure out how to do this
-      // Prismic.api('https://pron.cdn.prismic.io/api/v2', (err, api) => {
-      //   api.query(Prismic.Predicates.at('document.type', 'blog-post'),, options, function(err, response) { // An empty query will return all the documents
-      //     if (err) {
-      //       console.log("Something went wrong: ", err);
-      //     }
-      //     console.log("Documents: ", response.documents);
-      //   });
-      // })
+  // generate: {
+  //   routes() {
+  //     // Prismic.api('https://pron.cdn.prismic.io/api/v2', (err, api) => {
+  //     //   api.query('').then(response => {
+  //     //     const routes = response.documents.map((doc) => linkResolver(doc))
+  //     //     console.log(routes)
+  //     //   })
+  //     // })
+  //     // Figure out how to do this
+  //     // Prismic.api('https://pron.cdn.prismic.io/api/v2', (err, api) => {
+  //     //   api.query(Prismic.Predicates.at('document.type', 'blog-post'),, options, function(err, response) { // An empty query will return all the documents
+  //     //     if (err) {
+  //     //       console.log("Something went wrong: ", err);
+  //     //     }
+  //     //     console.log("Documents: ", response.documents);
+  //     //   });
+  //     // })
 
 
-      // const projectsData = await this.$prismic.api.query(
-      //   this.$prismic.predicates.at('document.type', 'project')
-      // )
+  //     // const projectsData = await this.$prismic.api.query(
+  //     //   this.$prismic.predicates.at('document.type', 'project')
+  //     // )
 
-      // const routes = projectsData.results.map(project => `/project/${project.uid}`)
+  //     // const routes = projectsData.results.map(project => `/project/${project.uid}`)
 
-      // return []
-    }
-  }
+  //     // return []
+  //   }
+  // }
 }
