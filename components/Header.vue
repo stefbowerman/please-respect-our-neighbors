@@ -82,7 +82,6 @@ header {
 .subtitle {
   @include text-subtitle;
   font-weight: normal;
-  font-style: italic;
   margin-top: 2px;
 }
 

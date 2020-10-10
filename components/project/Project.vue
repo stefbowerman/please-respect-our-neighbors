@@ -130,7 +130,6 @@ export default {
   text-align: center;
   transform: translateY(-50%);
   pointer-events: none;
-  font-style: italic;
 
   &__text {
     max-width: 800px;
