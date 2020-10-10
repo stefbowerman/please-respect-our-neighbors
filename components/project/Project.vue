@@ -33,7 +33,7 @@
           v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'"
           v-text="`1/${slice.items.length}`"
         />
-        <span v-text="$prismic.asText(slice.primary.detail_title)" />
+        <div v-html="$prismic.asHtml(slice.primary.detail_title)" />
       </div>
     </div>    
 
@@ -146,13 +146,12 @@ export default {
 
 .project-description {
   position: absolute;
-  // z-index: -1;
-  z-index: 1;
+  z-index: -1;
   top: 50%;
   left: 0;
   right: 0;
-  text-align: center;
   transform: translateY(-50%);
+  text-align: center;
   pointer-events: none;
   font-weight: $font-weight-medium;
 
@@ -188,5 +187,9 @@ export default {
 .caption {
   @include fill;
   text-align: center;
+
+  /deep/ a {
+    border-bottom: 2px solid;
+  }
 }
 </style>

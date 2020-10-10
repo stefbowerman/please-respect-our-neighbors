@@ -31,10 +31,9 @@ export default {
   computed: {
     formattedDate() {
       const d = new Date(this.date)
-      const day = d.getDate().toString()
+      const day   = d.getDate().toString()
       const month = (d.getMonth() + 1).toString()
-      const year = d.getFullYear().toString()
-      
+      const year  = d.getFullYear().toString()
 
       return `${day.length === 1 ? `0${day}` : day}<br />${month.length === 1 ? `0${month}` : month}<br />${year}`
     }

@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-
+    <div v-if="$store.state.indexViewed">
+      Random thing goes here
+    </div>
   </div>
 </template>
 
@@ -9,6 +11,9 @@ export default {
   mounted() {
     this.$store.commit('SET_HEADER_TITLE', '')
     this.$store.commit('SET_HEADER_SUBTITLE', '')
+  },
+  beforeDestroy() {
+    this.$store.commit('SET_INDEX_VIEWED', true)
   }
 }
 </script>

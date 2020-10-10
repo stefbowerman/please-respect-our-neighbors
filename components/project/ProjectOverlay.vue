@@ -11,7 +11,7 @@
       <div
         :class="[
           'viewer',
-          { 'hide-cursor' : hideCursor }
+          { 'show-progress' : showProgress }
         ]"
         @mousemove="onMousemove"
       >
@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       progressText: '',
-      hideCursor: false // Temp to check the page without a cursor
+      showProgress: false // Temp var?  Maybe a better way to do this?
     }
   },
   mounted() {
@@ -123,7 +123,7 @@ export default {
     }
 
     if (this.$refs.progress) {
-      this.hideCursor = true
+      this.showProgress = true
     }
   },
   beforeDestroy() {
@@ -157,6 +157,17 @@ export default {
       // console.log(e)
 
       if (!this.$refs.progress) return
+
+      // Figure out a much better way to do this
+      if (e.target && (e.target.classList.contains('arrow') || e.target.classList.contains('close'))) {
+        this.showProgress = false
+      }
+      else {
+        this.showProgress = true
+      }
+
+      // If e.position is out of bounds
+      // showProgress = false; return;
 
       const x = e.clientX - this.$refs.progress.clientWidth/2
       const y = e.clientY - this.$refs.progress.clientHeight/2
@@ -192,8 +203,7 @@ export default {
   height: var(--unit-100vh);
   width: 100%;
 
-  &.hide-cursor,
-  &.hide-cursor .arrow {
+  &.show-progress {
     cursor: none;
   }
 
@@ -281,5 +291,13 @@ export default {
   left: 0;
   font-weight: $font-weight-medium;
   font-size: 80px;
+
+  opacity: 0;
+  // transition: opacity 0.1s ease-in-out;
+
+  .show-progress & {
+    opacity: 1;
+    // transition-duration: 0.25s;
+  }
 }
 </style>

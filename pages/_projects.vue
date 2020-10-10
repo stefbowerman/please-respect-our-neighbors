@@ -4,6 +4,7 @@
       v-for="(project, i) in projects"
       :project="project"
       :key="`project-${i}`"
+      :ref="`project-${project.uid}`"
     />
   </div>
 </template>
@@ -30,8 +31,14 @@ export default {
     this.$store.commit('SET_HEADER_TITLE', 'Accumulated Projects')
     this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)
 
+    // @TODO - Testing to see if this works...
     if (this.selectedProject) {
-      console.log(`scroll to -> ${this.selectedProject}`)
+      setTimeout(() => {
+        window.scrollTo({
+          top: this.$refs[`project-${this.selectedProject}`][0].$el.offsetTop,
+          behavior: 'smooth'
+        });
+      }, 1000)
     }  
   },
   beforeDestroy() {
@@ -88,6 +95,9 @@ export default {
 
     yearsActive = _uniq(yearsActive.sort(), true)
     selectedProject = Boolean(route.params.uid) ? route.params.uid : null
+
+    // @TODO - If route.params.uid and no project exists with that UID, redirect to /projects?
+    // Don't want bad SEO
 
     return {
       projects,

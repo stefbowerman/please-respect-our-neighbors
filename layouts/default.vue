@@ -16,7 +16,7 @@
     </main>
 
     <site-footer
-      :text="'(C) 2020 PRON'"
+      :text="$store.state.footerText"
     />
 
     <portal-target name="overlays" multiple />
@@ -71,7 +71,6 @@ export default {
     },
     linkClick(uri) {
       this.showMenu = false
-      console.log(uri)
       this.$router.push(uri)
     }
   },
@@ -87,6 +86,10 @@ export default {
         content: "website"
       },
       {
+        property: "og:title",
+        content: this.$store.state.siteSettings.title
+      },      
+      {
         property: "og:site_name",
         content: this.$store.state.siteSettings.title
       }
@@ -94,10 +97,10 @@ export default {
 
     if (this.$store.state.siteSettings.description) {
       meta.push({
-          hid: "description",
-          name: "description",
-          property: "og:description",
-          content: this.$store.state.siteSettings.description
+        hid: "description",
+        name: "description",
+        property: "og:description",
+        content: this.$store.state.siteSettings.description
       })
     }   
 

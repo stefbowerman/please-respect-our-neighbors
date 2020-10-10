@@ -1,5 +1,8 @@
 <template>
-  <footer v-text="text" />
+  <footer
+    v-if="text"
+    v-text="text"
+  />
 </template>
 
 <script>

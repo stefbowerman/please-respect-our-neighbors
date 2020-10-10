@@ -16,6 +16,7 @@ export const state = () => ({
   },
   overlayOpen: false,
   mobileMenuOpen: false,
+  indexViewed: false,
   partners: []
 })
 
@@ -38,7 +39,10 @@ export const mutations = {
   },
   SET_MOBILE_MENU_OPEN(state, data) {
     state.mobileMenuOpen = data
-  },  
+  },
+  SET_INDEX_VIEWED(state, data) {
+    state.indexViewed = data
+  },    
   SET_PARTNERS(state, data) {
     state.partners = data
   }

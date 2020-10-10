@@ -26,15 +26,23 @@
 
         <div class="secondary-column">
           <nav>
-            <div style="margin: 0 0 20px;">
-              <!-- @TODO - This should be an h1?  or we need to insert an SEO component in the layout -->
-              <nuxt-link to="/">Please Respect Our Neighbors Inc.</nuxt-link>
-            </div>
             <div class="links">
-              <nuxt-link to="/projects">Accumulated Projects</nuxt-link>
-              <nuxt-link to="/info">Office Info</nuxt-link>
-              <nuxt-link to="/partners">Current Partners</nuxt-link>
-              <nuxt-link to="/exhibited-project">Exhibited Project</nuxt-link>
+              <!-- @TODO - This should be an h1?  or we need to insert an SEO component in the layout -->
+              <nuxt-link to="/">
+                <span>Please Respect Our Neighbors Inc.</span>
+              </nuxt-link><br />              
+              <nuxt-link to="/projects">
+                <span>Accumulated Projects</span>
+              </nuxt-link>
+              <nuxt-link to="/info">
+                <span>Office Info</span>
+              </nuxt-link>
+              <nuxt-link to="/partners">
+                <span>Current Partners</span>
+              </nuxt-link>
+              <nuxt-link to="/exhibited-project">
+                <span>Exhibited Project</span>
+              </nuxt-link>
             </div>
           </nav>
         </div>
@@ -100,6 +108,14 @@ nav {
   a {
     display: inline-block;
     margin: 0 16px 20px;
+
+    span {
+      border: 1px solid transparent;
+    }
+
+    &:hover span {
+      border-color: var(--text-color);
+    }
   }
 }
 </style>
