@@ -12,7 +12,7 @@
               <img
                 :src="slice.primary.image.url"
                 :alt="slice.primary.image.alt"
-                style="width: 700px; margin: 0 auto; display: block;"
+                style="width: 700px; margin: 0 auto; display: block; border: 1px solid black;"
               />
             </div>
             <div class="secondary-column">
@@ -60,10 +60,18 @@
         <div class="container">
           <div class="row">
             <div class="primary-column" style="text-align: center">
-              <img :src="slice.primary.first_image.url" :alt="slice.primary.first_image.alt" />
+              <img
+                :src="slice.primary.first_image.url"
+                :alt="slice.primary.first_image.alt"
+                style="border: 1px solid black"
+              />
             </div>
             <div class="secondary-column" style="text-align: center">
-              <img :src="slice.primary.second_image.url" :alt="slice.primary.second_image.alt" />
+              <img
+                :src="slice.primary.second_image.url"
+                :alt="slice.primary.second_image.alt"
+                style="border: 1px solid black"
+              />
             </div>   
           </div>
         </div>
