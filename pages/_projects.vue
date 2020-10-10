@@ -39,7 +39,10 @@ export default {
   },
   computed: {
     subtitle() {
-      return `Collected Works ${[this.firstYearActive, this.lastYearActive].join(' - ')}`
+      // const dates = this.firstYearActive === this.lastYearActive ? '' : [this.firstYearActive, this.lastYearActive].join('—')
+      const dates = [2018, 2020].join('—') // @TODO - Finish computing this from array of 'start' and 'end' dates... or just let them set the page subtitle?
+
+      return `Collected Works ${dates}`
     },
     // @TODO - Could probably do this better
     firstYearActive() {
@@ -54,7 +57,7 @@ export default {
     let selectedProject
 
     const projectData = await $prismic.api.query(
-      $prismic.predicates.at('document.type', 'project', { orderings: '[my.project.date asc]'})
+      $prismic.predicates.at('document.type', 'project')
     )
 
     const projects = projectData.results.map(project => {
@@ -71,11 +74,11 @@ export default {
       }
     })
 
-    // Sort oldest -> newest
+    // Sort oldest -> newest based on project end_date (or start date if end isn't supplied)
     // Extract yearsActive while we're doing it
     projects.sort((a, b) => {
-      const aDate = new Date(a.date)
-      const bDate = new Date(b.date)
+      const aDate = new Date(a.end_date || a.start_date)
+      const bDate = new Date(a.end_date || a.start_date)
 
       yearsActive.push(aDate.getFullYear())
       yearsActive.push(bDate.getFullYear())

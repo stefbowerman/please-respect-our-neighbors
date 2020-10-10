@@ -18,7 +18,7 @@
     <div class="project-description">
       <div
         class="project-description__text"
-        v-html="$prismic.asHtml(project.description)"
+        v-html="fullDescription"
       />
     </div>    
 
@@ -70,6 +70,8 @@ import _kebabCase from 'lodash/kebabCase'
 import projectPreview from '~/components/project/ProjectPreview'
 import projectOverlay from '~/components/project/ProjectOverlay'
 
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
 export default {
   components: {
     projectPreview,
@@ -91,15 +93,36 @@ export default {
   mounted() {
     console.log(this.project)
   },
+  computed: {
+    fullDescription() {
+      const title = this.$prismic.asText(this.project.title)
+      const desc = this.$prismic.asText(this.project.description)
+      const partners = this.project.partners.map(p => this.$prismic.asText(p.name)).join(', ')
+      const dates = [];
+
+      if (this.project.start_date) {
+        dates.push(`Initiated ${this.formatDate(this.project.start_date)}`)
+      }
+
+      if (this.project.end_date) {
+        dates.push(`Completed ${this.formatDate(this.project.end_date)}`)
+      }
+
+      // @TODO - make sure this is working for project without description, without partners, etc...
+      return `${title} ${desc && `— ${desc}`} <br /> ${dates.join(', ')} ${partners && `— ${partners}`}`
+    }
+  },
   methods: {
     // sliceComponentName(slice) {
     //   const name = `project-slice-${_kebabCase(slice.slice_type)}`
     //   console.log(name)
     //   return name
     // },
+    formatDate(_d) {
+      const d = new Date(_d)
+      return `${months[d.getMonth()]} ${d.getFullYear()}`
+    },
     projectPreviewClick(i) {
-      // console.log('clicked!')
-      // console.log(i)
       this.selectedSliceIndex = i
     },
     projectOverlayClose() {
@@ -123,17 +146,19 @@ export default {
 
 .project-description {
   position: absolute;
-  z-index: -1;
+  // z-index: -1;
+  z-index: 1;
   top: 50%;
-  left:0;
+  left: 0;
   right: 0;
   text-align: center;
   transform: translateY(-50%);
   pointer-events: none;
+  font-weight: $font-weight-medium;
 
   &__text {
-    max-width: 800px;
-    margin: 0 auto;
+    // max-width: 800px;
+    // margin: 0 auto;
     padding: 0 50px;
   }
 }
@@ -161,12 +186,7 @@ export default {
 }
 
 .caption {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  @include fill;
   text-align: center;
-  font-style: italic;
 }
 </style>
