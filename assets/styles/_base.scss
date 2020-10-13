@@ -48,19 +48,19 @@ body {
   line-height: 25/21;
   text-transform: uppercase;
 
-  &.route-index,
-  &.route-info,
-  &.route-exhibited-project {
-    background-image: linear-gradient(0deg, $off-white, $white);
-  }
-
-  // &.route-partners {
-  //   background-color: $red;
+  // &.route-index,
+  // &.route-info,
+  // &.route-exhibited-project {
+  //   background-image: linear-gradient(0deg, $off-white, $white);
   // }
 
-  &.route-projects {
-    background-image: linear-gradient(180deg, #393939, $black);
-  }
+  // // &.route-partners {
+  // //   background-color: $red;
+  // // }
+
+  // &.route-projects {
+  //   background-image: linear-gradient(180deg, #393939, $black);
+  // }
 }
 
 body.overlay-open,
@@ -90,6 +90,8 @@ img {
 
 main {
   min-height: 100vh; // ? @TODO - Do we need this??
+  position: relative;
+  z-index: $zindex-main;
 }
 
 // Text sixes

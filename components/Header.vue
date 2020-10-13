@@ -71,7 +71,7 @@ export default {
 header {
   position: fixed;
   z-index: $zindex-header;
-  top: 73px;
+  top: 72px;
   left: 0;
   right: 0;
   text-align: center;
@@ -89,8 +89,8 @@ header {
 
 .subtitle {
   @include text-subtitle;
-  font-weight: normal;
-  margin-top: 2px;
+  font-weight: $font-weight-medium;
+  margin: 2px 0 0;
 }
 
 nav {

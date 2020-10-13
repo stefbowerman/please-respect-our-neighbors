@@ -44,7 +44,7 @@ export default {
 <style lang="scss" scoped>
 .text-box {
   position: relative;
-  padding-right: 29px;
+  padding-right: 22px;
 
   @include bp-up(lg) {
     padding-right: 29px;    
@@ -76,6 +76,11 @@ export default {
 .content {
   @include text-bigger;
   text-transform: none;
+
+  @include bp-down(lg) {
+    font-size: 35px;
+    line-height: 1;
+  }
 }
 
 .scroll-bar {

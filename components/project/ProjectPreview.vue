@@ -45,7 +45,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.slice)
+    // console.log(this.slice)
   },
   methods: {
     click() {
@@ -59,6 +59,7 @@ export default {
 .project-preview {
   // cursor: pointer;
   padding: 0 50px;
+  padding: 0 3vw;
 }
 
 .frame {
@@ -86,7 +87,7 @@ export default {
 .detail-text {
   border: 1px solid white;
   color: white;
-  background:#2B2B2B;
+  background: #2B2B2B;
   white-space: nowrap;
 }
 

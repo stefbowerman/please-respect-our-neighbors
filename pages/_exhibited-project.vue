@@ -3,99 +3,38 @@
     <div
       v-for="(slice, j) in slices"
       ref="slices"
-      class="exhibit-slice"
+      :class="sliceClasses(slice)"
     >
-      <template v-if="slice.slice_type === 'image_text_box'">
-        <div class="container">
-          <div class="row">
-            <div class="primary-column">
-              <img
-                :src="slice.primary.image.url"
-                :alt="slice.primary.image.alt"
-                style="width: 700px; margin: 0 auto; display: block; border: 1px solid black;"
-              />
-            </div>
-            <div class="secondary-column">
-              <text-box
-                :date="slice.primary.content_date"
-                :content="$prismic.asHtml(slice.primary.content)"
-              />
-            </div>
-          </div>
-        </div>
-      </template>
+      <ExhibitedProjectSliceImageTextBox
+        v-if="slice.slice_type === 'image_text_box'"
+        :slice="slice"
+      />
 
-      <template v-else-if="slice.slice_type === 'text_box'">
-        <div class="container">
-          <div style="max-width: 80%; margin: 0 auto">
-            <text-box
-              :date="slice.primary.content_date"
-              :content="$prismic.asHtml(slice.primary.content)"
-            />
-          </div>
-        </div>
-      </template>
+      <ExhibitedProjectSliceAccentImage
+        v-else-if="slice.slice_type === 'accent_image'"
+        :slice="slice"
+      />
 
-      <template v-else-if="slice.slice_type === 'accent_image'">
-        <div style="background-color: #FD5858; padding: 80px 0; flex: 1; display: flex; align-items: center;">
-          <div class="container">
-            <div class="row">
-              <div class="primary-column gutter-less">
-                <img :src="slice.primary.image.url" :alt="slice.primary.image.alt" style="position: relative; z-index: 11" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
+      <ExhibitedProjectSliceImageGallery
+        v-else-if="slice.slice_type === 'image_gallery'"
+        :slice="slice"
+      />
 
-      <template v-else-if="slice.slice_type === 'image_gallery'">
-        <div class="container" style="display: flex; justify-content: center">
-          <div v-for="item in slice.items">
-            <img :src="item.image.url" :alt="item.image.alt" />
-          </div>
-        </div>
-      </template>
+      
+      <ExhibitedProjectSliceImagePair
+        v-else-if="slice.slice_type === 'image_pair'"
+        :slice="slice"
+      />
 
-      <template v-else-if="slice.slice_type === 'image_pair'">
-        <div class="container">
-          <div class="row">
-            <div class="primary-column" style="text-align: center">
-              <img
-                :src="slice.primary.first_image.url"
-                :alt="slice.primary.first_image.alt"
-                style="border: 1px solid black"
-              />
-            </div>
-            <div class="secondary-column" style="text-align: center">
-              <img
-                :src="slice.primary.second_image.url"
-                :alt="slice.primary.second_image.alt"
-                style="border: 1px solid black"
-              />
-            </div>   
-          </div>
-        </div>
+      <ExhibitedProjectSliceZoomImage
+        v-else-if="slice.slice_type === 'zoom_image'"
+        :slice="slice"
+      />
 
-        <div class="container">
-          <div class="row">
-            <div class="primary-column">
-              <div style="font-family: 'Roboto'; text-align: center; margin-top: 30px; margin-bottom: 50px;">
-                <p>Left:</p>
-                <p v-text="$prismic.asText(slice.primary.first_image_caption)" />
-                <p style="margin-top: 3rem;">Right:</p>
-                <p v-text="$prismic.asText(slice.primary.second_image_caption)" />
-              </div>              
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <template v-else-if="slice.slice_type === 'zoom_image'">
-        <div class="container" style="position: relative;">
-          <img :src="slice.primary.main_image.url" :alt="slice.primary.main_image.alt" />
-          <img :src="slice.primary.detail_image.url" :alt="slice.primary.detail_image.alt" style="position: absolute; top: 10%; right: 10%; max-width: 25%; border-radius: 50%;" />
-        </div>
-      </template>
+      <ExhibitedProjectSliceTextBox
+        v-else-if="slice.slice_type === 'text_box'"
+        :slice="slice"
+      />     
     </div>
       
     <div class="captions container">
@@ -115,12 +54,23 @@
 import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
+import _kebabCase from 'lodash/kebabCase'
 
-import TextBox from '~/components/TextBox'
+import ExhibitedProjectSliceZoomImage from '~/components/exhibitedProject/ExhibitedProjectSliceZoomImage'
+import ExhibitedProjectSliceImagePair from '~/components/exhibitedProject/ExhibitedProjectSliceImagePair'
+import ExhibitedProjectSliceAccentImage from '~/components/exhibitedProject/ExhibitedProjectSliceAccentImage'
+import ExhibitedProjectSliceImageGallery from '~/components/exhibitedProject/ExhibitedProjectSliceImageGallery'
+import ExhibitedProjectSliceImageTextBox from '~/components/exhibitedProject/ExhibitedProjectSliceImageTextBox'
+import ExhibitedProjectSliceTextBox from '~/components/exhibitedProject/ExhibitedProjectSliceTextBox'
 
 export default {
   components: {
-    TextBox
+    ExhibitedProjectSliceZoomImage,
+    ExhibitedProjectSliceImagePair,
+    ExhibitedProjectSliceAccentImage,
+    ExhibitedProjectSliceImageGallery,
+    ExhibitedProjectSliceImageTextBox,
+    ExhibitedProjectSliceTextBox
   },
   data() {
     return {
@@ -147,6 +97,12 @@ export default {
     window.removeEventListener('resize', this.throttledOnResize)
   },
   methods: {
+    sliceClasses(slice) {
+      return [
+        'exhibit-slice',
+        _kebabCase(slice.slice_type)
+      ]
+    },
     setCurrentSlice() {
       const winH = window.innerHeight
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop
@@ -242,7 +198,7 @@ export default {
   right: 0;
   pointer-events: none;
   text-align: center;
-  font-weight: $font-weight-bold;
+  font-weight: $font-weight-medium;
 
   @include bp-up(md) {
     bottom: 14px;
@@ -256,7 +212,6 @@ export default {
 
     @include bp-down(md) {
       font-size: 13px;
-      font-weight: $font-weight-medium;
     }
   }
 

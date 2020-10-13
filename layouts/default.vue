@@ -16,9 +16,10 @@
     </main>
 
     <site-footer
-      :text="$store.state.footerText"
+      :text="$store.state.siteSettings.footerText"
     />
-
+    <site-background />
+    
     <portal-target name="overlays" multiple />
   </div>
 </template>
@@ -31,12 +32,14 @@ import { decodeHtmlEntities } from '~/utils/tools'
 import SiteHeader from '~/components/Header'
 import SiteFooter from '~/components/Footer'
 import SiteMobileMenu from '~/components/MobileMenu'
+import SiteBackground from '~/components/Background'
 
 export default {
   components: {
     SiteHeader,
     SiteFooter,
-    SiteMobileMenu
+    SiteMobileMenu,
+    SiteBackground
   },
   data() {
     return {
@@ -58,6 +61,10 @@ export default {
     },
     onScroll() {
       this.set100vh();
+
+      // @TODO - set body background-color based on scroll position
+      // If scrolling down, set the background-color equal to bottom gradient color
+      // If scrolling up, set to the top gradient color
     },
     set100vh() {
       const v = window.innerWidth <= 1024 ? `${window.innerHeight}px` : ''
