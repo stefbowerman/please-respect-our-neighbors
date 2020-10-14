@@ -1,4 +1,5 @@
 $black:     #000;
+$off-black: #101010;
 $off-white: #E1E1E1;
 $white:     #FFF;
 
@@ -33,3 +34,6 @@ $breakpoints: (
 );
 
 $container-max-width: 1920px;
+
+$easing-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+$easing-ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);

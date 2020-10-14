@@ -1,18 +1,18 @@
 <template>
   <div class="text-box">
-    <div class="scroller">
+    <div class="text-box-scroller">
       <div
         v-if="formattedDate"
         v-html="formattedDate"
-        class="date"
+        class="text-box-date"
       />
       <div
         v-if="content"
         v-html="content"
-        class="content"
+        class="text-box-content"
       />      
     </div>
-    <div class="scroll-bar" />
+    <div class="text-box-scroll-bar" />
   </div>
 </template>
 
@@ -30,6 +30,8 @@ export default {
   },
   computed: {
     formattedDate() {
+      if (!this.date) return null
+        
       const d = new Date(this.date)
       const day   = d.getDate().toString()
       const month = (d.getMonth() + 1).toString()
@@ -41,7 +43,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .text-box {
   position: relative;
   padding-right: 22px;
@@ -51,7 +53,7 @@ export default {
   }
 }
 
-.scroller {
+.text-box-scroller {
   height: 600px;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
@@ -66,14 +68,14 @@ export default {
   }
 }
 
-.date {
+.text-box-date {
   @include text-massive;
   margin-bottom: 30px;
   color: $white;
   font-weight: $font-weight-light;
 }
 
-.content {
+.text-box-content {
   @include text-bigger;
   text-transform: none;
 
@@ -81,9 +83,28 @@ export default {
     font-size: 35px;
     line-height: 1;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: $font-weight-normal;
+    margin-bottom: 1em;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin-left: 1em;
+    }
+  }
+
+  ul + p {
+    margin-top: 1em;
+  }
 }
 
-.scroll-bar {
+.text-box-scroll-bar {
   position: absolute;
   top: 0;
   right: 0;

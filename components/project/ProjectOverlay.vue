@@ -11,69 +11,63 @@
       <div
         :class="[
           'viewer',
-          { 'show-progress' : showProgress }
+          { 'show-progress': showProgress },
+          { 'has-arrows': hasArrows }
         ]"
         @mousemove="onMousemove"
       >
-        <template v-if="slice.slice_type === 'detail_gallery'">
-          <!-- include ProjectOverlayImageSlideshow ? -->
-          <!-- if slice.items.length == 1 -> single image viewer -->
-
+        <template v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'">
           <div class="swiper-container" ref="swiper">
-            <div class="swiper-wrapper">
-              <div
+            <div
+              class="swiper-wrapper"
+              @click="next"
+              @mouseenter="showProgress = true"
+              @mouseleave="showProgress = false"              
+            >
+              <slideshow-slide
                 v-for="(item, j) in slice.items"
                 :key="`slide-${j}`"
-                class="swiper-slide"
-              >
-                <div class="image-slide">
-                  <prismic-image
-                    :field="item.image"
-                  />
-                </div>
-              </div>
+                :type="slice.slice_type"
+                :item="item"
+                ref="slides"
+              />
             </div>        
           </div>
+
+          <!-- @TODO - Throw the caption in here and then make sure the swiper container resizes based on caption height? -->
+
+          <template
+            v-if="slice.items.length > 1"
+          >
+            <div class="arrow-slot left">
+              <div class="arrow" @click="prev">
+                <svg-slide-arrow />
+              </div>
+            </div>
+            <div class="arrow-slot right">
+              <div class="arrow" @click="next">
+                <svg-slide-arrow />
+              </div>
+            </div>
+
+            <span class="progress" ref="progress" v-text="progressText" />
+          </template>          
         </template>
 
         <template v-else-if="slice.slice_type === 'detail_text'">
-          <div style="height: 100%; padding: 150px 50px; max-width: 80vw; margin: 0 auto">
-            <div style="font-size: 50px; line-height: 53px; border: 1px solid white; color: white; background-image: linear-gradient(0deg, rgb(82 82 82), rgb(53 53 53)); padding: 40px 15px; height: 100%; text-transform: none; overflow: scroll;" v-html="$prismic.asHtml(slice.primary.detail_rich_text)" />
+          <div class="project-overlay-text-box">
+            <TextBox
+              :content="$prismic.asHtml(slice.primary.detail_rich_text)"
+            />
           </div>
         </template>
 
-        <template v-else-if="slice.slice_type === 'detail_videos'">
-          <!-- include ProjectOverlayVideoSlideshow ? -->
-          <div class="swiper-container" ref="swiper">
-            <div class="swiper-wrapper">
-              <div
-                v-for="(item, j) in slice.items"
-                :key="`slide-${j}`"
-                class="swiper-slide"
-              >
-                <div class="image-slide">
-                  <!-- Need to do some data validation here, possibly pull the ID and contruct the URL ourselves -->
-                  <iframe
-                    :src="`${item.vimeo_url.url}?byline=false&color=FD5858&fun=false&portrait=false&title=false`"
-                    frameborder="0"
-                    allow="autoplay; fullscreen"
-                    allowfullscreen
-                  />                  
-                </div>          
-              </div>
-            </div>
-          </div>
-        </template>
-
-        <template
-          v-if="(slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos') && slice.items.length > 1"
-        >
-          <div class="arrows" v-if="slice.items.length > 1">
-            <div class="arrow" @click="prev" />
-            <div class="arrow" @click="next" />
-          </div>        
-          <span class="progress" ref="progress" v-text="progressText" />
-        </template>
+        <div class="caption">
+          <div
+            class="container"
+            v-html="$prismic.asHtml(slice.primary.detail_title)"
+          />
+        </div>
       </div>
     </template>
   </overlay>
@@ -82,11 +76,18 @@
 <script>
 import Swiper from 'swiper';
 import _padStart from 'lodash/padStart'
+
 import Overlay from '~/components/Overlay'
+import TextBox from '~/components/TextBox'
+import SvgSlideArrow from '~/assets/svg/slide-arrow.svg'
+import SlideshowSlide from '~/components/slideshow/SlideshowSlide'
 
 export default {
   components: {
-    Overlay
+    Overlay,
+    TextBox,
+    SvgSlideArrow,
+    SlideshowSlide
   },
   props: {
     show: {
@@ -121,14 +122,15 @@ export default {
 
       this.swiper.init()
     }
-
-    if (this.$refs.progress) {
-      this.showProgress = true
-    }
   },
   beforeDestroy() {
     this.$nextTick(this.destroySwiper)
-  },  
+  },
+  computed: {
+    hasArrows() {
+      return (this.slice.slice_type === 'detail_gallery' || this.slice.slice_type === 'detail_videos') && this.slice.items.length > 1
+    }
+  },
   methods: {
     onInit(swiper) {
       // console.log('init')
@@ -154,30 +156,18 @@ export default {
       this.setProgress()
     },
     onMousemove(e) {
-      // console.log(e)
-
       if (!this.$refs.progress) return
-
-      // Figure out a much better way to do this
-      if (e.target && (e.target.classList.contains('arrow') || e.target.classList.contains('close'))) {
-        this.showProgress = false
-      }
-      else {
-        this.showProgress = true
-      }
-
-      // If e.position is out of bounds
-      // showProgress = false; return;
 
       const x = e.clientX - this.$refs.progress.clientWidth/2
       const y = e.clientY - this.$refs.progress.clientHeight/2
 
-      this.$refs.progress.style.transform = `translate(${x}px, ${y}px)`
+      this.$refs.progress.style.transform = `translate(${x}px, ${y}px)` // better to do this with a computed prop?
     },
     prev() {
       this.swiper && this.swiper.slidePrev()
     },
     next() {
+      // @TODO - This is broken if you click on the first slide?
       this.swiper && this.swiper.slideNext()
     },
     destroySwiper() {
@@ -214,72 +204,70 @@ export default {
   .swiper-wrapper {
     transition-timing-function: cubic-bezier(0.5, 0.1, 0, 0.99) !important; // @TODO - Only do this for non-touch screens
   }
-}
 
-.image-slide {
-  height: 100%;
-  width: 100%;
-  padding: 100px;
+  // Need to figure out what to do with this...
+  // Pass hasArrows as a prop?
 
-  img,
-  iframe {
-    height: 100%;
-    width: 100%;
-    object-fit: contain;
+  &.has-arrows /deep/ .slide-inner {
+    @include bp-up(lg) {
+      padding-left: 21.25%;
+      padding-right: 21.25%;
+    }
   }
 }
 
-.arrows {
+.arrow-slot {
   pointer-events: none;
   position: absolute;
-  z-index: 1;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
   display: flex;
-  justify-content: space-between;
-  padding: 0 50px;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  width: 21.25%; // @TODO - Variablize this
+  padding-left: 52px;
+  padding-right: 52px;
+  // background-color: transparentize(green, 0.5);
+
+  // This is only needed on the overlay to avoid overlapping the close button on short screens
+  padding-top: 132px;
+  padding-bottom: 132px;
+
+  &.left {
+    left: 0;
+  }
+
+  &.right {
+    right: 0;
+  }
 }
 
 .arrow {
   pointer-events: auto;
   cursor: pointer;
-  position: relative;
-  height: 543px;
-  height: 50vh;
-  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 550px;
+  max-height: 80%;
+  width: 100%;
+  padding: 20px 15px;
   border: 1px solid var(--text-color);
 
-  // &:before,
-  // &:after {
-  //   content: '';
-  //   position: absolute;
-  //   height: 100px;
-  //   width: 100px;
-  //   border: 1px solid var(--text-color);
-  //   border-width: 0 0 0 1px;
-  // }
+  .arrow-slot.left & {
+    transform: scaleX(-1);
+  }
 
-  // &:before {
-  //   transform: rotate(200deg);
-  // }
-
-  // &:after {
-  //   transform: rotate(-20deg);
-  // }
-}
-
-.responsive-player {
-  height: 100vh;
-  width: 70vw;
-  margin: 0 auto;
-  padding: 8vh 0;
-
-  iframe {
+  svg {
     height: 100%;
-    width: 100%;
-    object-fit: contain;
+    width: auto;
+    max-height: 300px;
+
+    g {
+      stroke: $red;
+      stroke-width: 2px;
+    }
   }
 }
 
@@ -293,11 +281,45 @@ export default {
   font-size: 80px;
 
   opacity: 0;
-  // transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 
   .show-progress & {
     opacity: 1;
-    // transition-duration: 0.25s;
+  }
+}
+
+.caption {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+</style>
+
+<style lang="scss">
+.project-overlay-text-box {
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 90px 50px;
+  max-width: 1200px;
+  color: $white;
+
+  .text-box,
+  .text-box-scroller {
+    height: 100%;
+  }
+
+  .text-box-scroller {
+    border: 1px solid $white;
+    background-color: $off-black;
+  }
+
+  .text-box-scroll-bar {
+    background-color: $red;
   }
 }
 </style>

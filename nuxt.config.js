@@ -76,6 +76,28 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+      // Remove SVG from default Nuxt webpack rules
+      const svgRule = config.module.rules.find((rule) =>
+          rule.test.test(".svg")
+      )
+      svgRule.test = /\.(png|jpe?g|gif|webp)$/i
+
+      // Use SVG loader for .svg files
+      config.resolve.extensions.push(".svg")
+      config.module.rules.push({
+        test: /\.svg$/,
+        use: [
+          "babel-loader",
+          {
+            loader: "vue-svg-loader",
+            options: {
+              svgo: {
+                plugins: [{ removeViewBox: false }],
+              },
+            },
+          },
+        ],
+      })      
     }
   },
   /*
