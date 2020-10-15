@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 500px; margin-bottom: 100px;">
+  <div style="padding-top: 100px; margin-bottom: 100px;">
     <div class="container">
       <div class="row">
         <div class="primary-column">

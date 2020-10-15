@@ -6,16 +6,18 @@
 }
 
 // Themes
-body.theme-black {
-  --background-color: #{$black};
-  --text-color: #{$red};
-  --link-color: #{$red};
+body.scrolling-down {
+  --background-color: #{$light-gradient-bottom};
 }
 
 body.theme-black {
-  --background-color: #{$black};
+  --background-color: #{$dark-gradient-top};
   --text-color: #{$red};
   --link-color: #{$red};
+
+  &.scrolling-down {
+    --background-color: #{$dark-gradient-bottom};
+  }
 }
 
 body.theme-red {
@@ -47,20 +49,6 @@ body {
   font-size: 1.3125rem; // 21px 
   line-height: 25/21;
   text-transform: uppercase;
-
-  // &.route-index,
-  // &.route-info,
-  // &.route-exhibited-project {
-  //   background-image: linear-gradient(0deg, $off-white, $white);
-  // }
-
-  // // &.route-partners {
-  // //   background-color: $red;
-  // // }
-
-  // &.route-projects {
-  //   background-image: linear-gradient(180deg, #393939, $black);
-  // }
 }
 
 body.overlay-open,

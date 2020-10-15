@@ -73,11 +73,11 @@ export default {
   .route-index &,
   .route-info &,
   .route-exhibited-project & {
-    background-image: linear-gradient(0deg, #D8D8D8, $white);
+    background-image: linear-gradient(0deg, $light-gradient-bottom, $light-gradient-top);
   }
 
   .route-projects & {
-    background-image: linear-gradient(180deg, #393939, $black);
+    background-image: linear-gradient(0deg, $dark-gradient-bottom, $dark-gradient-top);
   }
 }
 </style>

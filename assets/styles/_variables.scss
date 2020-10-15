@@ -1,9 +1,17 @@
-$black:     #000;
-$off-black: #101010;
-$off-white: #E1E1E1;
-$white:     #FFF;
+$black:      #000;
+$off-black:  #101010;
+$dark-grey:  #393939;
+$light-grey: #D8D8D8;
+$off-white:  #E1E1E1;
+$white:      #FFF;
 
-$red:       #FD5858;
+$red:        #FD5858;
+
+$dark-gradient-top:     $dark-grey;
+$dark-gradient-bottom:  $black;
+
+$light-gradient-top:    $white;
+$light-gradient-bottom: $light-grey;
 
 $font-family-primary:   'Swiss 721', 'Helvetica', sans-serif;
 $font-family-secondary: 'Roboto', sans-serif;
@@ -19,7 +27,9 @@ $font-weight-medium: 500;
 $font-weight-bold:   700;
 
 $zindex-background:  -100;
-$zindex-main:        1;
+$zindex-accent-bg:   -99;
+$zindex-page-title:  -1;
+$zindex-main:        auto; // 1;
 $zindex-header:      10;
 $zindex-mobile-menu: 50;
 $zindex-overlay:     100;

@@ -3,25 +3,7 @@
     <div class="container">
       <div class="row">
         <div class="primary-column">
-          <div v-show="show">
-            <transition :name="null" mode="out-in">
-              <h1
-                class="title"
-                v-text="title"
-                v-if="title && title.length"
-                :key="title"
-              />
-            </transition>
-
-            <transition :name="null" mode="out-in">
-              <h3
-                class="subtitle"
-                v-text="subtitle"
-                v-if="subtitle && subtitle.length"
-                :key="subtitle"
-              />
-            </transition>
-          </div>
+          <!-- -->
         </div>
 
         <div class="secondary-column">
@@ -51,22 +33,6 @@
   </header>
 </template>
 
-<script>
-export default {
-  computed: {
-    show() {
-      return this.title || this.subtitle
-    },
-    title() {
-      return this.$store.state.header.title
-    },
-    subtitle() {
-      return this.$store.state.header.subtitle
-    }
-  }
-}
-</script>
-
 <style lang="scss" scoped>
 header {
   position: fixed;
@@ -81,16 +47,6 @@ header {
   @include bp-up(lg) {
     top: 50px;
   }
-}
-
-.title {
-  @include text-title;
-}
-
-.subtitle {
-  @include text-subtitle;
-  font-weight: $font-weight-medium;
-  margin: 2px 0 0;
 }
 
 nav {

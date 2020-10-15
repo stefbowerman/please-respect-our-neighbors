@@ -1,15 +1,17 @@
 <template>
   <div>
-    <div class="logo">
-      <span @click="toggleMenu">Please Respect Our Neighbors INC.</span>
-    </div>
-
-    <site-header />
     <site-mobile-menu
       :show="showMenu"
       @close="closeMenu"
       @link-click="linkClick"
     />
+
+    <div class="logo">
+      <span @click="toggleMenu">Please Respect Our Neighbors INC.</span>
+    </div>
+
+    <site-header />
+    <site-page-title />
 
     <main>
       <nuxt />
@@ -30,6 +32,7 @@ import _throttle from 'lodash/throttle'
 import { decodeHtmlEntities, isTouch } from '~/utils/tools'
 
 import SiteHeader from '~/components/Header'
+import SitePageTitle from '~/components/PageTitle'
 import SiteFooter from '~/components/Footer'
 import SiteMobileMenu from '~/components/MobileMenu'
 import SiteBackground from '~/components/Background'
@@ -37,13 +40,16 @@ import SiteBackground from '~/components/Background'
 export default {
   components: {
     SiteHeader,
+    SitePageTitle,
     SiteFooter,
     SiteMobileMenu,
     SiteBackground
   },
   data() {
     return {
-      showMenu: false
+      showMenu: false,
+      scrollTop: 0,
+      scrollDirection: 'down'
     }
   },
   mounted() {
@@ -62,11 +68,11 @@ export default {
       this.set100vh();
     },
     onScroll() {
-      this.set100vh();
+      const s = window.pageYOffset || document.documentElement.scrollTop
 
-      // @TODO - set body background-color based on scroll position
-      // If scrolling down, set the background-color equal to bottom gradient color
-      // If scrolling up, set to the top gradient color
+      this.scrollDirection = s > this.scrollTop ? 'down' : 'up'
+      this.scrollTop = s
+      this.set100vh();
     },
     set100vh() {
       const v = window.innerWidth <= 1024 ? `${window.innerHeight}px` : ''
@@ -123,6 +129,7 @@ export default {
 
     const bodyClasses = [
       `route-${_kebabCase(this.$route.name)}`,
+      `scrolling-${this.scrollDirection}`
     ]
 
     if (this.$store.state.theme) {

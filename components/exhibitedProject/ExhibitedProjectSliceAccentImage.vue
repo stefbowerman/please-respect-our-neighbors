@@ -13,6 +13,7 @@
         </div>
       </div>
     </div>
+    <div class="bg" />
   </div>  
 </template>
 
@@ -40,7 +41,7 @@ export default {
 
 <style lang="scss" scoped>
 .accent {
-  background-color: $red;
+  position: relative;
   padding: 80px 0;
   flex: 1;
   display: flex;
@@ -49,11 +50,15 @@ export default {
 
 .accent-image {
   padding: 0 5px;
-  position: relative;
-  z-index: $zindex-header + 1;
 
   @include bp-up(md) {
     padding: 0;
   }
+}
+
+.bg {
+  @include fill;
+  background-color: $red;
+  z-index: $zindex-accent-bg;
 }
 </style>
