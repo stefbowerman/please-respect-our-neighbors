@@ -36,5 +36,6 @@ $breakpoints: (
 
 $container-max-width: 1920px;
 
+$easing-ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
 $easing-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 $easing-ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);

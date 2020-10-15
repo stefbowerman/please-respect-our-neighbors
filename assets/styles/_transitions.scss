@@ -7,3 +7,43 @@
 .fade-leave-active {
   transition: opacity 1s $easing-ease-out-quart;
 }
+
+// Overlay
+.overlay-enter,
+.overlay-leave-to {
+  opacity: 0;
+}
+.overlay-enter-active {
+  transition: opacity 0.7s $easing-ease-out-cubic;
+}
+
+.overlay-leave-active {
+  transition: opacity 0.5s $easing-ease-out-cubic;
+}
+
+// Overlay Close
+.overlay-close-enter,
+.overlay-close-leave-to {
+  opacity: 0;
+}
+.overlay-close-enter-active,
+.overlay-close-leave-active {
+  transition: opacity 0.5s $easing-ease-out-cubic 0.5s;
+}
+
+// Slideshow arrows, right comes in first
+.arrow-left-fade-enter,
+.arrow-left-fade-leave-to,
+.arrow-right-fade-enter,
+.arrow-right-fade-leave-to {
+  opacity: 0;
+}
+
+.arrow-right-fade-enter-active,
+.arrow-left-fade-enter-active {
+  transition: opacity 0.5s $easing-ease-out-cubic;
+}
+
+.arrow-left-fade-enter-active {
+  transition-delay: 0.25s;
+}

@@ -1,6 +1,7 @@
 <template>
   <overlay
     @enter="onEnter"
+    @after-enter="onAfterEnter"
     @after-leave="onAfterLeave"
     @left-key="prev"
     @right-key="next"
@@ -9,49 +10,57 @@
   >
     <template slot="body">
       <div
-        :class="[
-          'viewer',
-          { 'show-floating-progress': showFloatingProgress },
-          { 'has-arrows': hasArrows }
-        ]"
+        class="viewer"
         @mousemove="onMousemove"
       >
         <template v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'">
-          <div class="swiper-container" ref="swiper">
-            <div
-              class="swiper-wrapper"
-              @click="next"
-              @mouseenter="onSwiperMouseenter"
-              @mouseleave="onSwiperMouseleave"              
+          <div
+            :class="[
+              'slideshow',
+              { 'show-floating-progress': showFloatingProgress },
+              { 'has-arrows': hasArrows }              
+            ]"
+          >          
+            <div class="swiper-container" ref="swiper">
+              <div
+                class="swiper-wrapper"
+                @click="next"
+                @mouseenter="onSwiperMouseenter"
+                @mouseleave="onSwiperMouseleave"              
+              >
+                <slideshow-slide
+                  v-for="(item, j) in slice.items"
+                  :key="`slide-${j}`"
+                  :type="slice.slice_type"
+                  :item="item"
+                  ref="slides"
+                />
+              </div>        
+            </div>
+
+            <!-- @TODO - Throw the caption in here and then make sure the swiper container resizes based on caption height? -->
+
+            <template
+              v-if="slice.items.length > 1"
             >
-              <slideshow-slide
-                v-for="(item, j) in slice.items"
-                :key="`slide-${j}`"
-                :type="slice.slice_type"
-                :item="item"
-                ref="slides"
-              />
-            </div>        
-          </div>
+              <transition name="arrow-left-fade">
+                <div class="arrow-slot left" v-show="isFullyVisible">
+                  <div class="arrow" @click="prev">
+                    <svg-slide-arrow />
+                  </div>
+                </div>
+              </transition>
+              <transition name="arrow-right-fade">
+                <div class="arrow-slot right" v-show="isFullyVisible">
+                  <div class="arrow" @click="next">
+                    <svg-slide-arrow />
+                  </div>
+                </div>
+              </transition>
 
-          <!-- @TODO - Throw the caption in here and then make sure the swiper container resizes based on caption height? -->
-
-          <template
-            v-if="slice.items.length > 1"
-          >
-            <div class="arrow-slot left">
-              <div class="arrow" @click="prev">
-                <svg-slide-arrow />
-              </div>
-            </div>
-            <div class="arrow-slot right">
-              <div class="arrow" @click="next">
-                <svg-slide-arrow />
-              </div>
-            </div>
-
-            <span class="floating-progress" ref="floatingProgress" v-text="progressText" />
-          </template>          
+              <span class="floating-progress" ref="floatingProgress" v-text="progressText" />
+            </template>
+          </div>       
         </template>
 
         <template v-else-if="slice.slice_type === 'detail_text'">
@@ -62,12 +71,15 @@
           </div>
         </template>
 
-        <div class="caption">
-          <div
-            class="container"
-            v-html="$prismic.asHtml(slice.primary.detail_title)"
-          />
-        </div>
+        <transition name="fade">
+          <div class="caption" v-show="isFullyVisible">
+            <div class="caption-progress" v-text="progressText" />
+            <div
+              class="container"
+              v-html="$prismic.asHtml(slice.primary.detail_title)"
+            />
+          </div>
+        </transition>
       </div>
     </template>
   </overlay>
@@ -103,7 +115,8 @@ export default {
   data() {
     return {
       progressText: '',
-      showFloatingProgress: false // Temp var?  Maybe a better way to do this?
+      isFullyVisible: false,
+      swiperHovered: false
     }
   },
   mounted() {
@@ -139,6 +152,9 @@ export default {
       }
       
       return flag
+    },
+    showFloatingProgress() {
+      return this.isFullyVisible && this.swiperHovered && this.hasArrows && !this.$store.state.isTouch
     }
   },
   methods: {
@@ -152,9 +168,13 @@ export default {
       this.swiper.update()
       // this.setProgress(this.swiper.activeIndex)
     },
+    onAfterEnter() {
+      this.isFullyVisible = true
+    },
     onAfterLeave() {
       // this.swiper && this.swiper.slideTo(, 0)
       // this.setProgress()
+      this.isFullyVisible = false
     },
     onSlideNextTransitionStart(swiper) {
       // Update progress text here?
@@ -166,14 +186,10 @@ export default {
       this.setProgress()
     },
     onSwiperMouseenter() {
-      if (this.$store.state.isTouch || !this.hasArrows) return
-
-      this.showFloatingProgress = true
+      this.swiperHovered = true
     },
     onSwiperMouseleave() {
-      if (this.$store.state.isTouch) return
-
-      this.showFloatingProgress = false
+      this.swiperHovered = false
     },
     onMousemove(e) {
       if (!this.$refs.floatingProgress) return
@@ -208,54 +224,60 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$arrow-slot-width-sm: 10.5%;
+$arrow-slot-width-md: 21.25%;
+$arrow-slot-width-xxxl: 450px;
+
 .viewer {
   height: 100vh;
   height: var(--unit-100vh);
   width: 100%;
 
-  &.show-progress {
-    cursor: none;
-  }
-
+  .slideshow,
   .swiper-container {
     height: 100%;
   }
 
   body:not(.is-touch) & .swiper-wrapper {
     transition-timing-function: cubic-bezier(0.5, 0.1, 0, 0.99) !important;
-  }
+  } 
+}
 
-  // Need to figure out what to do with this...
-  // Pass hasArrows as a prop?
-
-  // @TODO - Use var
+.swiper-container {
+  // @TODO - Use var for the container
   /deep/ .slide-inner {
     padding-left: 12px;
     padding-right: 12px;
   }
 
-  &.has-arrows /deep/ .slide-inner {
-    padding-left: 10.5%;
-    padding-right: 10.5%;
+  .slideshow.show-floating-progress & {
+    cursor: none;
+  }
 
-    @include bp-up(md) {
-      padding-left: 21.25%;
-      padding-right: 21.25%;      
+  .slideshow.has-arrows & {
+    /deep/ .slide-inner {
+      padding-left: $arrow-slot-width-sm;
+      padding-right: $arrow-slot-width-sm;
+
+      @include bp-up(md) {
+        padding-left: $arrow-slot-width-md;
+        padding-right: $arrow-slot-width-md;
+      }
+
+      @include bp-up(xxxl) {
+        padding-left: $arrow-slot-width-xxxl;
+        padding-right: $arrow-slot-width-xxxl;
+      }
     }
-
-    @include bp-up(xxxl) {
-      padding-left: 450px;
-      padding-right: 450px;
-    }    
   }
 
   // In this case we don't show arrows so reset the padding back to the small version
-  body.is-touch & {
+  body.is-touch & /deep/ .slide-inner {
     @include bp-down(md) {
       padding-left: 12px;
       padding-right: 12px;
     }
-  }  
+  }   
 }
 
 .arrow-slot {
@@ -267,23 +289,22 @@ export default {
   z-index: 1;
   top: 0;
   bottom: 0;
-  width: 10.5%;
+  width: $arrow-slot-width-sm;
   padding-left: 8px;
   padding-right: 8px;
-  // background-color: transparentize(green, 0.5);
 
   // This is only needed on the overlay to avoid overlapping the close button on short screens
   padding-top: 132px;
   padding-bottom: 132px;
 
   @include bp-up(md) {
-    width: 21.25%;
+    width: $arrow-slot-width-md;
     padding-left: 52px;
     padding-right: 52px;
   }  
 
   @include bp-up(xxxl) {
-    width: 450px;
+    width: $arrow-slot-width-xxxl;
   }
 
   &.left {
@@ -359,7 +380,7 @@ export default {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 
-  .show-floating-progress & {
+  .slideshow.show-floating-progress & {
     opacity: 1;
   }
 }
@@ -367,11 +388,29 @@ export default {
 .caption {
   position: absolute;
   z-index: 1;
-  pointer-events: none;
   bottom: 20px;
   left: 0;
   right: 0;
   text-align: center;
+  font-weight: $font-weight-medium;
+
+  .container {
+    max-width: 900px; // ?
+  }
+
+  /deep/ a {
+    border-bottom: 2px solid; // Duplicated across Project.vue
+  }
+}
+
+.caption-progress {
+  @include bp-up(md) {
+    display: none;
+  }
+
+  body.no-touch {
+    display: none;
+  }
 }
 </style>
 

@@ -1,8 +1,9 @@
 <template>
   <transition
-    name="fade"
+    name="overlay"
     v-on:enter="enter"
-    v-on:afterLeave="afterLeave"
+    v-on:after-enter="afterEnter"
+    v-on:after-leave="afterLeave"
   >
     <div class="overlay" v-show="show">
       <div
@@ -14,7 +15,17 @@
           <slot name="body" />
         </div>
       </div>
-      <span class="close" @click="close">Exit Viewer</span>
+      <transition
+        name="overlay-close"
+      >
+        <div
+          class="close"
+          @click="close"
+          v-show="show"
+        >
+          Exit Viewer
+        </div>
+      </transition>
     </div>
   </transition>
 </template>
@@ -68,6 +79,9 @@ export default {
       this.$refs.dialog.scrollTop = 0
       this.$emit('enter')
     },
+    afterEnter() {
+      this.$emit('after-enter')
+    },
     afterLeave() {
       this.$emit('after-leave')
     }
@@ -96,17 +110,22 @@ export default {
 
 .close {
   position: fixed;
+  display: inline-block;
   z-index: 1;
   top: 77px;
   right: 11px;
   font-size: 15px; // @TODO - Var this
   font-weight: $font-weight-light;
-  @include theme-text;
   cursor: pointer;
 
   @include bp-up(md) {
     right: 53px;
     font-size: 46px; // @TODO - Var this
+  }
+
+  // Need this here so we can apply the transition to .close
+  span {
+    @include theme-text;
   }
 }
 
