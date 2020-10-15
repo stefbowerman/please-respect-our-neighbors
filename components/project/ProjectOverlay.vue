@@ -11,7 +11,7 @@
       <div
         :class="[
           'viewer',
-          { 'show-progress': showProgress },
+          { 'show-floating-progress': showFloatingProgress },
           { 'has-arrows': hasArrows }
         ]"
         @mousemove="onMousemove"
@@ -50,7 +50,7 @@
               </div>
             </div>
 
-            <span class="progress" ref="progress" v-text="progressText" />
+            <span class="floating-progress" ref="floatingProgress" v-text="progressText" />
           </template>          
         </template>
 
@@ -103,7 +103,7 @@ export default {
   data() {
     return {
       progressText: '',
-      showProgress: false // Temp var?  Maybe a better way to do this?
+      showFloatingProgress: false // Temp var?  Maybe a better way to do this?
     }
   },
   mounted() {
@@ -166,22 +166,22 @@ export default {
       this.setProgress()
     },
     onSwiperMouseenter() {
-      if (this.$store.state.isTouch) return
+      if (this.$store.state.isTouch || !this.hasArrows) return
 
-      this.showProgress = true
+      this.showFloatingProgress = true
     },
     onSwiperMouseleave() {
       if (this.$store.state.isTouch) return
 
-      this.showProgress = false
+      this.showFloatingProgress = false
     },
     onMousemove(e) {
-      if (!this.$refs.progress) return
+      if (!this.$refs.floatingProgress) return
 
-      const x = e.clientX - this.$refs.progress.clientWidth/2
-      const y = e.clientY - this.$refs.progress.clientHeight/2
+      const x = e.clientX - this.$refs.floatingProgress.clientWidth/2
+      const y = e.clientY - this.$refs.floatingProgress.clientHeight/2
 
-      this.$refs.progress.style.transform = `translate(${x}px, ${y}px)` // better to do this with a computed prop?
+      this.$refs.floatingProgress.style.transform = `translate(${x}px, ${y}px)` // better to do this with a computed prop?
     },
     prev() {
       this.swiper && this.swiper.slidePrev()
@@ -347,7 +347,7 @@ export default {
   }
 }
 
-.progress {
+.floating-progress {
   position: fixed;
   pointer-events: none;
   z-index: 1;
@@ -359,7 +359,7 @@ export default {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 
-  .show-progress & {
+  .show-floating-progress & {
     opacity: 1;
   }
 }
