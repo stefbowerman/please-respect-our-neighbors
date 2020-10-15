@@ -16,8 +16,9 @@ export const state = () => ({
   },
   overlayOpen: false,
   mobileMenuOpen: false,
+  isTouch: false,
   indexViewed: false,
-  partners: []
+  partners: [],
 })
 
 // Define mutations
@@ -39,6 +40,9 @@ export const mutations = {
   },
   SET_MOBILE_MENU_OPEN(state, data) {
     state.mobileMenuOpen = data
+  },
+  SET_IS_TOUCH(state, data) {
+    state.isTouch = !!data
   },
   SET_INDEX_VIEWED(state, data) {
     state.indexViewed = data

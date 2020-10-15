@@ -27,7 +27,7 @@
 <script>
 import _kebabCase from 'lodash/kebabCase'
 import _throttle from 'lodash/throttle'
-import { decodeHtmlEntities } from '~/utils/tools'
+import { decodeHtmlEntities, isTouch } from '~/utils/tools'
 
 import SiteHeader from '~/components/Header'
 import SiteFooter from '~/components/Footer'
@@ -47,6 +47,8 @@ export default {
     }
   },
   mounted() {
+    this.$store.commit('SET_IS_TOUCH', isTouch())
+
     // Throttle common events
     window.addEventListener('resize', _throttle(this.onResize, 250))
     window.addEventListener('scroll', _throttle(this.onScroll, 16))
@@ -120,7 +122,7 @@ export default {
     }
 
     const bodyClasses = [
-      `route-${_kebabCase(this.$route.name)}`
+      `route-${_kebabCase(this.$route.name)}`,
     ]
 
     if (this.$store.state.theme) {
@@ -133,7 +135,11 @@ export default {
 
     if (this.$store.state.mobileMenuOpen) {
       bodyClasses.push('mobile-menu-open') 
-    }    
+    }
+
+    if (this.$store.state.isTouch) {
+      bodyClasses.push('is-touch')  
+    }
 
     return {
       htmlAttrs: {

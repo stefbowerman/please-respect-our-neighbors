@@ -7,3 +7,19 @@ export const decodeHtmlEntities = (string = "") => {
         return String.fromCharCode(dec)
     })
 }
+
+export const isTouch = () => {
+  if (typeof window === 'undefined')
+    return false
+
+  if ('ontouchstart' in window)
+      return true;
+
+  if (window.DocumentTouch && document instanceof DocumentTouch)
+      return true;
+
+  const prefixes = ["", "-webkit-", "-moz-", "-o-", "-ms-"];
+  const queries = prefixes.map(prefix => `(${prefix}touch-enabled)`);
+
+  return window.matchMedia(queries.join(",")).matches;
+}

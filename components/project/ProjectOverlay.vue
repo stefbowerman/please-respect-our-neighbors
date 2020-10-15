@@ -21,8 +21,8 @@
             <div
               class="swiper-wrapper"
               @click="next"
-              @mouseenter="showProgress = true"
-              @mouseleave="showProgress = false"              
+              @mouseenter="onSwiperMouseenter"
+              @mouseleave="onSwiperMouseleave"              
             >
               <slideshow-slide
                 v-for="(item, j) in slice.items"
@@ -128,7 +128,17 @@ export default {
   },
   computed: {
     hasArrows() {
-      return (this.slice.slice_type === 'detail_gallery' || this.slice.slice_type === 'detail_videos') && this.slice.items.length > 1
+      let flag = false
+
+      if (
+        (this.slice.slice_type === 'detail_gallery' || this.slice.slice_type === 'detail_videos') &&
+        this.slice.items.length > 1 &&
+        this.$store.state.isTouch === false
+      ) {
+        flag = true
+      }
+      
+      return flag
     }
   },
   methods: {
@@ -154,6 +164,16 @@ export default {
     },
     onSlideChangeTransitionEnd() {
       this.setProgress()
+    },
+    onSwiperMouseenter() {
+      if (this.$store.state.isTouch) return
+
+      this.showProgress = true
+    },
+    onSwiperMouseleave() {
+      if (this.$store.state.isTouch) return
+
+      this.showProgress = false
     },
     onMousemove(e) {
       if (!this.$refs.progress) return
@@ -201,19 +221,41 @@ export default {
     height: 100%;
   }
 
-  .swiper-wrapper {
-    transition-timing-function: cubic-bezier(0.5, 0.1, 0, 0.99) !important; // @TODO - Only do this for non-touch screens
+  body:not(.is-touch) & .swiper-wrapper {
+    transition-timing-function: cubic-bezier(0.5, 0.1, 0, 0.99) !important;
   }
 
   // Need to figure out what to do with this...
   // Pass hasArrows as a prop?
 
-  &.has-arrows /deep/ .slide-inner {
-    @include bp-up(lg) {
-      padding-left: 21.25%;
-      padding-right: 21.25%;
-    }
+  // @TODO - Use var
+  /deep/ .slide-inner {
+    padding-left: 12px;
+    padding-right: 12px;
   }
+
+  &.has-arrows /deep/ .slide-inner {
+    padding-left: 10.5%;
+    padding-right: 10.5%;
+
+    @include bp-up(md) {
+      padding-left: 21.25%;
+      padding-right: 21.25%;      
+    }
+
+    @include bp-up(xxxl) {
+      padding-left: 450px;
+      padding-right: 450px;
+    }    
+  }
+
+  // In this case we don't show arrows so reset the padding back to the small version
+  body.is-touch & {
+    @include bp-down(md) {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }  
 }
 
 .arrow-slot {
@@ -225,14 +267,24 @@ export default {
   z-index: 1;
   top: 0;
   bottom: 0;
-  width: 21.25%; // @TODO - Variablize this
-  padding-left: 52px;
-  padding-right: 52px;
+  width: 10.5%;
+  padding-left: 8px;
+  padding-right: 8px;
   // background-color: transparentize(green, 0.5);
 
   // This is only needed on the overlay to avoid overlapping the close button on short screens
   padding-top: 132px;
   padding-bottom: 132px;
+
+  @include bp-up(md) {
+    width: 21.25%;
+    padding-left: 52px;
+    padding-right: 52px;
+  }  
+
+  @include bp-up(xxxl) {
+    width: 450px;
+  }
 
   &.left {
     left: 0;
@@ -240,6 +292,13 @@ export default {
 
   &.right {
     right: 0;
+  }
+
+  // Arrow visibility is dependent on whether we have arrows (.has-arrows), screen size, and touch enabled-ness
+  body.is-touch & {
+    @include bp-down(md) {
+      display: none;  
+    }
   }
 }
 
@@ -249,14 +308,23 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 550px;
+  height: 110px;
   max-height: 80%;
   width: 100%;
-  padding: 20px 15px;
+  padding: 11px;
   border: 1px solid var(--text-color);
 
   .arrow-slot.left & {
     transform: scaleX(-1);
+  }
+
+  @include bp-up(md) {
+    height: 550px;
+    padding: 20px 15px;
+  }
+
+  @include bp-up(lg) {
+    padding: 74px 32px;
   }
 
   svg {
@@ -266,7 +334,15 @@ export default {
 
     g {
       stroke: $red;
-      stroke-width: 2px;
+      stroke-width: 5px;
+
+      @include bp-up(md) {
+        stroke-width: 3px;
+      }
+
+      @include bp-up(xl) {
+        stroke-width: 2px;
+      }      
     }
   }
 }
