@@ -41,6 +41,7 @@ export default {
 <style lang="scss" scoped>
 .text-box-wrapper {
   margin: 0 auto;
+  height: 80vh;
 
   @include bp-up(lg) {
     max-width: 80%;

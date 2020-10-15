@@ -1,6 +1,9 @@
 <template>
-  <div class="text-box">
-    <div class="text-box-scroller">
+  <simplebar
+    class="text-box"
+    data-simplebar-auto-hide="false"
+  >
+    <div class="text-box-inner">
       <div
         v-if="formattedDate"
         v-html="formattedDate"
@@ -10,14 +13,18 @@
         v-if="content"
         v-html="content"
         class="text-box-content"
-      />      
-    </div>
-    <div class="text-box-scroll-bar" />
-  </div>
+      />
+    </div>      
+  </simplebar>
 </template>
 
 <script>
+import simplebar from 'simplebar-vue'
+
 export default {
+  components: {
+    simplebar
+  },
   props: {
     date: {
       type: String,
@@ -45,21 +52,29 @@ export default {
 
 <style lang="scss">
 .text-box {
-  position: relative;
-  padding-right: 22px;
+  height: 100%;
 
-  @include bp-up(lg) {
-    padding-right: 29px;    
+  .simplebar-wrapper {
+    margin-right: 17px !important;
+    border: 1px solid var(--text-color);
+  }
+
+  .simplebar-track {
+    border: 1px solid var(--text-color);
+  }
+
+  .simplebar-scrollbar {
+    background-color: var(--text-color);
+
+    &:before {
+      display: none;
+    }
   }
 }
 
-.text-box-scroller {
-  height: 600px;
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
+.text-box-inner {
   padding: 41px;
   padding-left: 22px;
-  border: 1px solid $black;
 
   @include bp-up(lg) {
     padding: 43px;
