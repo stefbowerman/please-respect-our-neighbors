@@ -59,6 +59,12 @@ export default {
     border: 1px solid var(--text-color);
   }
 
+  // Need this otherwise the text overflows on top of the border
+  .simplebar-mask {
+    top: 1px;
+    bottom: 1px;
+  }
+
   .simplebar-track {
     border: 1px solid var(--text-color);
   }

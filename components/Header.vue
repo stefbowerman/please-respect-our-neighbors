@@ -9,22 +9,12 @@
         <div class="secondary-column">
           <nav>
             <div class="links">
-              <!-- @TODO - This should be an h1?  or we need to insert an SEO component in the layout -->
-              <nuxt-link to="/">
-                <span>Please Respect Our Neighbors Inc.</span>
-              </nuxt-link><br />              
-              <nuxt-link to="/projects">
-                <span>Accumulated Projects</span>
-              </nuxt-link>
-              <nuxt-link to="/info">
-                <span>Office Info</span>
-              </nuxt-link>
-              <nuxt-link to="/partners">
-                <span>Current Partners</span>
-              </nuxt-link>
-              <nuxt-link to="/exhibited-project">
-                <span>Exhibited Project</span>
-              </nuxt-link>
+              <header-link to="/" text="Please Respect Our Neighbors Inc."/>
+              <br />
+              <header-link to="/projects" text="Accumulated Projects"/>
+              <header-link to="/info" text="Office Info"/>
+              <header-link to="/partners" text="Current Partners"/>
+              <header-link to="/exhibited-project" text="Exhibited Project"/>
             </div>
           </nav>
         </div>
@@ -33,11 +23,21 @@
   </header>
 </template>
 
+<script>
+import HeaderLink from '~/components/HeaderLink'
+
+export default {
+  components: {
+    HeaderLink
+  }
+}
+</script>
+
 <style lang="scss" scoped>
 header {
   position: fixed;
   z-index: $zindex-header;
-  top: 72px;
+  top: 62px;
   left: 0;
   right: 0;
   text-align: center;
@@ -45,7 +45,7 @@ header {
   @include theme-text;
 
   @include bp-up(lg) {
-    top: 50px;
+    top: 40px;
   }
 }
 
@@ -57,21 +57,6 @@ nav {
 
   @include bp-up(lg) {
     display: block;
-  }
-}
-
-.links {
-  a {
-    display: inline-block;
-    margin: 0 16px 20px;
-
-    span {
-      border: 1px solid transparent;
-    }
-
-    &:hover span {
-      border-color: var(--text-color);
-    }
   }
 }
 </style>

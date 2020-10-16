@@ -58,7 +58,12 @@
                 </div>
               </transition>
 
-              <span class="floating-progress" ref="floatingProgress" v-text="progressText" />
+              <span
+                class="floating-progress"
+                :style="{ transform: floatingProgressTransform }"
+                ref="floatingProgress"
+                v-text="progressText"
+              />
             </template>
           </div>       
         </template>
@@ -88,6 +93,7 @@
 <script>
 import Swiper from 'swiper';
 import _padStart from 'lodash/padStart'
+import _round from 'lodash/round'
 
 import Overlay from '~/components/Overlay'
 import TextBox from '~/components/TextBox'
@@ -116,7 +122,9 @@ export default {
     return {
       progressText: '',
       isFullyVisible: false,
-      swiperHovered: false
+      swiperHovered: false,
+      floatingProgressTransX: 0,
+      floatingProgressTransY: 0
     }
   },
   mounted() {
@@ -155,6 +163,14 @@ export default {
     },
     showFloatingProgress() {
       return this.isFullyVisible && this.swiperHovered && this.hasArrows && !this.$store.state.isTouch
+    },
+    floatingProgressTransform() {
+      if (this.floatingProgressTransX === 0 && this.floatingProgressTransY === 0) {
+        return 'none'
+      }
+      else {
+        return `translate(${this.floatingProgressTransX}px, ${this.floatingProgressTransY }px)`
+      }
     }
   },
   methods: {
@@ -192,12 +208,15 @@ export default {
       this.swiperHovered = false
     },
     onMousemove(e) {
-      if (!this.$refs.floatingProgress) return
+      if (!this.$refs.floatingProgress || this.$store.state.isTouch) return
 
-      const x = e.clientX - this.$refs.floatingProgress.clientWidth/2
-      const y = e.clientY - this.$refs.floatingProgress.clientHeight/2
+      const { height, width } = this.$refs.floatingProgress.getBoundingClientRect()
 
-      this.$refs.floatingProgress.style.transform = `translate(${x}px, ${y}px)` // better to do this with a computed prop?
+      const x = e.clientX - width/2
+      const y = e.clientY - height/2
+
+      this.floatingProgressTransX = _round(x, 2)
+      this.floatingProgressTransY = _round(y, 2)
     },
     prev() {
       this.swiper && this.swiper.slidePrev()

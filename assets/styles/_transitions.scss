@@ -1,3 +1,13 @@
+// Page
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.75s $easing-ease-in-out-quart;
+}
+.page-enter,
+.page-leave-active {
+  opacity: 0;
+}
+
 // Fade
 .fade-enter,
 .fade-leave-to {

@@ -64,7 +64,7 @@ export default {
   @include fill;
 
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 1s ease-in-out;
 
   &.visible {
     opacity: 1;

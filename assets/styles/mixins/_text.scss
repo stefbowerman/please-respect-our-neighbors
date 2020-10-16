@@ -65,3 +65,13 @@
     line-height: (18px/15px);
   }
 }
+
+// Normal on most screens
+// Smaller on small screens
+@mixin text-shrink {
+
+  @include bp-down(sm) {
+    font-size: 12px;
+    line-height: 14px;
+  }
+}

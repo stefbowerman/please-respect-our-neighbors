@@ -142,6 +142,7 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
+  z-index: 1;
 }
 
 .project-description {
@@ -154,6 +155,7 @@ export default {
   text-align: center;
   pointer-events: none;
   font-weight: $font-weight-medium;
+  @include text-shrink;
 
   &__text {
     // max-width: 800px;
