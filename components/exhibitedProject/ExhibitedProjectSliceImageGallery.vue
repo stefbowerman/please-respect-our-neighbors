@@ -1,17 +1,19 @@
 <template>
-  <div>
-    <div class="container" style="display: flex; justify-content: center">
-      <div v-for="item in slice.items">
-        <img :src="item.image.url" :alt="item.image.alt" />
-      </div>
-    </div>
+  <div class="ex-gallery">
+    <Slideshow
+      :slice="slice"
+      ref="slideshow"
+    />
   </div>
 </template>
 
 <script>
-import _get from 'lodash/get'
+import Slideshow from '~/components/Slideshow'
 
 export default {
+  components: {
+    Slideshow
+  },
   props: {
     slice: {
       type: Object,
@@ -25,5 +27,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.ex-gallery {
+  height: 100vh;
+}
 </style>

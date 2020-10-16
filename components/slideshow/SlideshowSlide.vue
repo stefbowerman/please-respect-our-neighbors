@@ -7,7 +7,7 @@
         @mouseenter="$emit('mouseenter')"
         @mouseleave="$emit('mouseleave')"
       >
-        <template v-if="type === 'detail_gallery'">
+        <template v-if="type === 'detail_gallery' || type === 'image_gallery'">
           <prismic-image
             :field="item.image"
           />
