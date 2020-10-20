@@ -53,6 +53,7 @@
 
 <script>
 import Swiper from 'swiper'
+// import VimeoPlayer from '@vimeo/player'
 import _padStart from 'lodash/padStart'
 import _round from 'lodash/round'
 
@@ -84,6 +85,9 @@ export default {
     }
   },
   mounted() {
+    const VimeoPlayer = require('@vimeo/player').default
+
+    this.vimeoPlayers = []
     this.swiper = new Swiper(this.$refs.swiper, {
       init: false,
       loop: true,
@@ -94,14 +98,29 @@ export default {
         // init: this.onInit,
         // slidePrevTransitionStart: this.onSlidePrevTransitionStart,
         // slideNextTransitionStart: this.onSlideNextTransitionStart,
+        slideChange: this.onSlideChange,
+        slideChangeTransitionStart: this.onSlideChangeTransitionStart,
         slideChangeTransitionEnd: this.onSlideChangeTransitionEnd
       }
     })
 
     this.swiper.init()
+
+    this.vimeoPlayers = [...this.swiper.el.querySelectorAll('iframe')].map(iframe => {
+      if (String(iframe.src).includes('vimeo.com')) {
+        return new VimeoPlayer(iframe)
+      }
+    })
   },
   beforeDestroy() {
     this.$nextTick(this.destroySwiper)
+  },
+  watch: {
+    fullyVisible(newViz, oldViz) {
+      if (newViz === false) {
+        this.pauseVimeoPlayers()
+      }
+    }
   },
   computed: {  
     hasArrows() {
@@ -139,7 +158,14 @@ export default {
     // onSlidePrevTransitionStart(swiper) {
     //   // updateProgress text here?
     // },
+    onSlideChange() {
+      // console.log('slide change')
+    },
+    onSlideChangeTransitionStart() {
+      this.pauseVimeoPlayers();
+    },
     onSlideChangeTransitionEnd() {
+      // console.log('transition end')
       this.setProgress()
     },
     onSwiperMouseenter() {
@@ -185,6 +211,9 @@ export default {
       this.progressText = `${i}/${total}`
 
       this.$emit('progress', this.progressText)
+    },
+    pauseVimeoPlayers() {
+      this.vimeoPlayers && this.vimeoPlayers.forEach(player => player.pause())
     }
   }
 }

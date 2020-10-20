@@ -22,12 +22,14 @@
       />
     </div>    
 
-    <!-- These need to go beneath each slice? -->
-    <div class="captions">
+    <div class="captions" :style="{ height: `${captionsHeight}px` }">
       <div
-        class="caption"
         v-for="(slice, k) in project.slices"
-        v-show="k === hoveredSliceIndex"
+        :class="[
+          'caption',
+          { 'is-visible': k === hoveredSliceIndex }
+        ]"
+        ref="captions"
       >
         <div
           v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'"
@@ -36,21 +38,6 @@
         <div v-html="$prismic.asHtml(slice.primary.detail_title)" />
       </div>
     </div>    
-
-    <!--
-    <div v-if="false">
-      <div v-if="project.partners.length" style="padding: 20px 0;">
-        <h6>Partners</h6>
-        <div>
-          <p v-for="partner in project.partners">
-            <nuxt-link :to="`/partners/${partner.uid}`" v-text="$prismic.asText(partner.name)" />
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <nuxt-link :to="`/projects/${project.uid}`" style="display: none !important;">Go To Project</nuxt-link>
-    -->
 
     <portal to="overlays">
       <project-overlay
@@ -87,11 +74,18 @@ export default {
   data() {
     return {
       hoveredSliceIndex: -1,
-      selectedSliceIndex: -1
+      selectedSliceIndex: -1,
+      captionsHeight: 0
     }
   },
   mounted() {
     console.log(this.project)
+    window.addEventListener('resize', this.onResize)
+
+    this.onResize()
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize) 
   },
   computed: {
     fullDescription() {
@@ -128,6 +122,10 @@ export default {
     projectOverlayClose() {
       // console.log('closed preview')
       this.selectedSliceIndex = -1
+    },
+    onResize() {
+      const heights = this.$refs.captions.map(el => el.clientHeight)
+      this.captionsHeight = Math.max(...heights);
     }
   }
 }
@@ -176,19 +174,25 @@ export default {
 
 // This is all trash, get using it to get the idea
 .captions {
+  flex: none; // Might not need this when we re-do how the container
   margin-top: 10px;
-  padding: 30px;
-  height: 100px;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
 }
 
 .caption {
-  @include fill;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   text-align: center;
+  opacity: 0;
+  pointer-events: none;
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   /deep/ a {
     border-bottom: 2px solid;

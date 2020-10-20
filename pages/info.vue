@@ -35,7 +35,9 @@ export default {
       slices: []
     }
   },
-  // @TODO - Do this in before create?
+  beforeCreate() {
+    this.$store.commit('SET_THEME', 'light')
+  },  
   mounted() {
     this.$store.commit('SET_HEADER_TITLE', this.title)
     this.$store.commit('SET_HEADER_SUBTITLE', null)

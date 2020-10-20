@@ -60,8 +60,7 @@ export default {
   ],
   prismic: {
     endpoint: 'https://pron.cdn.prismic.io/api/v2',
-    // linkResolver: '@/plugins/link-resolver',
-    // htmlSerializer: '@/plugins/html-serializer',
+    linkResolver: linkResolver,
     preview: process.env.NODE_ENV !== 'production'
   },
   /*
@@ -106,32 +105,27 @@ export default {
   router: {
 
   },
-  // generate: {
-  //   routes() {
-  //     // Prismic.api('https://pron.cdn.prismic.io/api/v2', (err, api) => {
-  //     //   api.query('').then(response => {
-  //     //     const routes = response.documents.map((doc) => linkResolver(doc))
-  //     //     console.log(routes)
-  //     //   })
-  //     // })
-  //     // Figure out how to do this
-  //     // Prismic.api('https://pron.cdn.prismic.io/api/v2', (err, api) => {
-  //     //   api.query(Prismic.Predicates.at('document.type', 'blog-post'),, options, function(err, response) { // An empty query will return all the documents
-  //     //     if (err) {
-  //     //       console.log("Something went wrong: ", err);
-  //     //     }
-  //     //     console.log("Documents: ", response.documents);
-  //     //   });
-  //     // })
+  generate: {
+    routes() {
+      const projects = Prismic.getApi('https://pron.cdn.prismic.io/api/v2').then((api) => {
+        return api
+          .query(Prismic.Predicates.at('document.type', 'project'))
+          .then(response => {
+            return response.results.map(doc => linkResolver(doc))
+          })
+      })
 
+      const exhibitedProjects = Prismic.getApi('https://pron.cdn.prismic.io/api/v2').then((api) => {
+        return api
+          .query(Prismic.Predicates.at('document.type', 'exhibited_project'))
+          .then(response => {
+            return response.results.map(doc => linkResolver(doc))
+          })
+      })       
 
-  //     // const projectsData = await this.$prismic.api.query(
-  //     //   this.$prismic.predicates.at('document.type', 'project')
-  //     // )
-
-  //     // const routes = projectsData.results.map(project => `/project/${project.uid}`)
-
-  //     // return []
-  //   }
-  // }
+      return Promise.all([projects, exhibitedProjects]).then(values => {
+        return [...values[0], ...values[1]]
+      })      
+    }
+  }
 }

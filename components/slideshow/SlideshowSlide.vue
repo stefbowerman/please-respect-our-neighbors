@@ -3,7 +3,6 @@
     <div class="slide-inner">
       <div
         class="slide-content-frame"
-        @click="$emit('click')"
         @mouseenter="$emit('mouseenter')"
         @mouseleave="$emit('mouseleave')"
       >
@@ -12,10 +11,9 @@
             :field="item.image"
           />
         </template>
-        <template v-else-if="type === 'detail_videos'">
-          <!-- Need to do some data validation here, possibly pull the ID and contruct the URL ourselves -->
+        <template v-else-if="type === 'detail_videos' && item.vimeo_url.url">
           <iframe
-            :src="`${item.vimeo_url.url}?byline=false&color=FD5858&fun=false&portrait=false&title=false`"
+            :src="iFrameSrc"
             ref="iframe"
             frameborder="0"
             allow="autoplay; fullscreen"
@@ -39,7 +37,15 @@ export default {
       default: () => {}      
     }
   },
-  // watch props.active ?
+  computed: {
+    iFrameSrc() {
+      if (this.type !== 'detail_videos' || !this.item.vimeo_url) return ''
+
+      const base = this.item.vimeo_url.url.replace('https://vimeo.com/', 'https://player.vimeo.com/video/')
+
+      return `${base}?byline=false&color=FD5858&fun=false&portrait=false&title=false`
+    }
+  }
 }
 </script>
 
@@ -49,7 +55,6 @@ export default {
   width: 100%;
   padding-top: 35px;
   padding-bottom: 35px;
-  // background-color: transparentize(red, 0.5);
 }
 
 .slide-content-frame {

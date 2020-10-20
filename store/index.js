@@ -18,7 +18,7 @@ export const state = () => ({
   mobileMenuOpen: false,
   isTouch: false,
   indexViewed: false,
-  partners: [],
+  projects: []
 })
 
 // Define mutations
@@ -46,10 +46,10 @@ export const mutations = {
   },
   SET_INDEX_VIEWED(state, data) {
     state.indexViewed = data
-  },    
-  SET_PARTNERS(state, data) {
-    state.partners = data
-  }
+  },
+  SET_PROJECTS(state, data) {
+    state.projects = data
+  },  
 }
 
 // Define actions
@@ -58,7 +58,8 @@ export const actions = {
     // Make all requests in parallel
     const data = await Promise.all([
       store.dispatch('QUERY_SETTINGS'),
-      store.dispatch('QUERY_PARTNERS')
+      store.dispatch('QUERY_PROJECTS'),
+      // store.dispatch('QUERY_PARTNERS')
     ])
   },
 
@@ -78,21 +79,45 @@ export const actions = {
     commit('SET_SITE_SETTINGS', settings)
   },
 
-  async QUERY_PARTNERS({ dispatch, commit }) {
-    const data = await this.$prismic.api.query(
+  async QUERY_PROJECTS({ dispatch, commit }) {
+    const projectsData = await this.$prismic.api.query(
+      this.$prismic.predicates.at('document.type', 'project')
+    )
+
+    const partnersData = await this.$prismic.api.query(
       this.$prismic.predicates.at('document.type', 'partner')
     )
 
-    const partners = data.results.map(partner => {
-      const p = {
+    const partners = partnersData.results.map(partner => {
+      return {
         ...partner.data,
         id: partner.id,
         uid: partner.uid        
       }
-
-      return p
     })
 
-    commit("SET_PARTNERS", partners)
-  },    
+    const projects = projectsData.results.map(project => {
+      const projectPartnerIds = project.data.partners_involved.map(item => item.partner.id)
+
+      // Pull the full partner info from the store and add it to the project
+      const projectPartners = partners.filter(p => projectPartnerIds.includes(p.id))
+
+      return {
+        ...project.data,
+        uid: project.uid,
+        slices: _get(project, 'data.body', []),
+        partners: projectPartners // Add project property with linked partners
+      }
+    })
+
+    // Sort oldest -> newest based on project end_date (or start date if end isn't supplied)
+    projects.sort((a, b) => {
+      const aDate = new Date(a.end_date || a.start_date)
+      const bDate = new Date(a.end_date || a.start_date)
+
+      return aDate >= bDate ? -1 : 1
+    })    
+
+    commit('SET_PROJECTS', projects)
+  }
 }

@@ -79,7 +79,10 @@ export default {
       triggerPointDistance: 0,
       currentSliceIndex: 0 // @TODO - Make this just currentSlice? {} instead of int?
     }
-  },  
+  },
+  beforeCreate() {
+    this.$store.commit('SET_THEME', 'light')
+  },
   mounted() {
     this.$store.commit('SET_HEADER_TITLE', this.title)
 

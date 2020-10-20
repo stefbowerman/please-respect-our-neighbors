@@ -4,7 +4,7 @@ export default function(doc) {
   }
 
   if (doc.type === 'project') {
-    return `/project/${doc.uid}`
+    return `/projects/${doc.uid}`
   }
   
   return '/'

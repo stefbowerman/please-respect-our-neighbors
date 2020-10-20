@@ -47,7 +47,7 @@ export default {
 <style lang="scss" scoped>
 .page-title {
   position: sticky;
-  z-index: $zindex-main + 1;
+  z-index: 1;
   top: 72px;
   left: 0;
   right: 0;
@@ -60,7 +60,8 @@ export default {
     z-index: $zindex-page-title;
   }
 
-  .route-info & {
+  .route-info &,
+  .route-partners & {
     position: relative;
   }
 }

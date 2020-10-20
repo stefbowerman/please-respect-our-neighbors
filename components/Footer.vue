@@ -19,6 +19,7 @@ export default {
 <style lang="scss" scoped>
 footer {
   position: fixed;
+  z-index: $zindex-footer;
   bottom: 30px;
   right: 30px;
 

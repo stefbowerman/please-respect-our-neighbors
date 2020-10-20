@@ -12,6 +12,9 @@ export default {
     this.$store.commit('SET_HEADER_TITLE', '')
     this.$store.commit('SET_HEADER_SUBTITLE', '')
   },
+  beforeCreate() {
+    this.$store.commit('SET_THEME', 'light')
+  },  
   beforeDestroy() {
     this.$store.commit('SET_INDEX_VIEWED', true)
   }

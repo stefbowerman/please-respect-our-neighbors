@@ -1,28 +1,51 @@
 <template>
   <div class="container">
-
     <div class="wall">
-      <p><strong>A Black Letter to Nike. A semi manifesto written to Nike. 2020. Kendall Henderson, Bijan Berahimi.</strong> Collaborative starter doc — Inspired by the genuine group who came who started their careers involved with Nike. <strong>Undefeated. Website and e-commerce redesign. 2020. Kendall Henderson, Dinesh Dave.</strong> Undefeated semi initial correspondence, containing initial brief document and Asset plan. A Black Letter to Nike. A semi manifesto written to Nike. 2020. Kendall Henderson, Bijan Berahimi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.venenatis nec varius sed, congue ultrices turpis. Duis pulvinar quam vel diam cursus, sit amet mollis enim. <strong>A Black Letter to Nike. A semi manifesto written to Nike. 2020. Kendall Henderson, Bijan Berahimi.</strong> Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. A Black Letter to Nike. A semi manifesto written to Nike. 2020. Kendall henderson, Bijan Berahimi. Nulla viverra orci sapien, vitae laoreet neque posuere eget. A congue ultrices turpis. <strong>Commodo ac metus eget rhoncus. Duis ex mauris, venenatis nec varius sed, Duis. A Black Letter to Nike. A semi manifesto written to Nike. 2020. Kendall henderson, Bijan Berahimi.</strong> Nulla viverra orci sapien, vitae laoreet neque posuere eget. A congue ultrices turpis. Commodo ac metus eget rhoncus. Duis ex mauris, venenatis nec varius sed, congue ultrices turpis. Lorem ipsum dolor sit amet. A Black Letter to Nike. A semi manifesto written to Nike. 2020. Kendall henderson, Bijan Berahimi. commodo ac metus eget rhoncus.</p>
-      
-      <span v-for="partner in partners" v-html="`${$prismic.asText(partner.name)}&nbsp;`" />
+      <partners-project
+        v-for="(project, i) in projects"
+        :key="`project-${i}`"
+        :project="project"
+        :activePartnerUID="activePartnerUID"
+        @partner-click="onPartnerClick"
+        @partner-mouseenter="onPartnerMouseenter"
+        @partner-mouseleave="onPartnerMouseleave"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import PartnersProject from '~/components/PartnersProject'
+
 export default {
+  components: {
+    PartnersProject
+  },
   data() {
-    partners: []
+    return {
+      partners: [],
+      activePartnerUID: null
+    }
+  },
+  beforeCreate() {
+    this.$store.commit('SET_THEME', 'red')
   },
   // Is there a way to do this with a mixin?  Mounted calls setTheme, beforeDestroy called unsetTheme?
   // Also, do the theme stuff beforeCreate?  How early can we run it?
   mounted() {
-    this.$store.commit('SET_THEME', 'red')
     this.$store.commit('SET_HEADER_TITLE', 'Current Partners')
     this.$store.commit('SET_HEADER_SUBTITLE', 'Including collective members')
   },
-  beforeDestroy() {
-    this.$store.commit('SET_THEME', '')
+  methods: {
+    onPartnerClick(partnerName) {
+      console.log(`Clicked ${partnerName}`)
+    },
+    onPartnerMouseenter(partnerUID) {
+      this.activePartnerUID = partnerUID
+    },
+    onPartnerMouseleave() {
+      this.activePartnerUID = null
+    }
   },
   head() {
     return {
@@ -37,8 +60,10 @@ export default {
     }
   },
   async asyncData({ $prismic, error, store }) {
+    // store.state.projects.forEach(p => console.log(p))
+
     return {
-      partners: store.state.partners
+      projects: store.state.projects
     }
   }
 }
@@ -64,9 +89,5 @@ export default {
     padding-left: 20px;
     padding-right: 20px;    
   }
-
-  strong {
-    font-weight: $font-weight-medium;
-  }  
 }
 </style>
