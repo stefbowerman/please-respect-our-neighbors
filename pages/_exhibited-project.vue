@@ -19,7 +19,6 @@
         v-else-if="slice.slice_type === 'image_gallery'"
         :slice="slice"
       />
-
       
       <ExhibitedProjectSliceImagePair
         v-else-if="slice.slice_type === 'image_pair'"
@@ -93,9 +92,6 @@ export default {
     window.addEventListener('resize', this.throttledOnResize)
   },
   beforeDestroy() {
-    this.$store.commit('SET_HEADER_TITLE', '')
-    this.$store.commit('SET_HEADER_SUBTITLE', )
-
     window.removeEventListener('scroll', this.throttledOnScroll)
     window.removeEventListener('resize', this.throttledOnResize)
   },

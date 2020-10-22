@@ -1,12 +1,12 @@
 <template>
   <div class="background">
     <!-- @TODO - May need to turn the gradient into it's own component so we can re-use it on the mobile menu -->
-    <div :class="gradientClasses" :style="gradientStyles" />
+    <div class="gradient" :style="gradientStyles" />
   </div>
 </template>
 
 <script>
-import { animate, linear } from "popmotion"
+import { animate, linear, easeInOut } from 'popmotion'
 
 const themeColorPalettes = {
   LIGHT: { top: '#FFFFFF', bottom: '#D8D8D8'},
@@ -21,27 +21,15 @@ export default {
       gradientBottomColor: null
     }
   },
+  mounted() {
+    const themeColors = themeColorPalettes[this.$store.state.theme.toUpperCase()]
+    
+    if (themeColors) {
+      this.gradientTopColor = themeColors.top
+      this.gradientBottomColor = themeColors.bottom
+    }
+  },
   computed: {
-    showGradient() {
-      let show = false
-
-      switch (this.$route.name) {
-          case "index":
-          case "info":
-          case "exhibited-project":
-          case "projects":
-              show = true
-              break;
-      }
-      
-      return show
-    },
-    gradientClasses() {
-      return [
-        'gradient',
-        { 'visible': this.showGradient }
-      ]
-    },
     gradientStyles() {
       const styles = {}
 
@@ -65,7 +53,7 @@ export default {
           from: this.gradientTopColor,
           to: themeColors.top,
           duration: 1300,
-          ease: linear,
+          ease: easeInOut, // linear,
           onUpdate: (color) => {
             this.gradientTopColor = color
           }
@@ -81,7 +69,7 @@ export default {
           from: this.gradientBottomColor,
           to: themeColors.bottom,
           duration: 1300,
-          ease: linear,
+          ease: easeInOut, // linear,
           onUpdate: (color) => {
             this.gradientBottomColor = color
           }
@@ -99,28 +87,25 @@ export default {
   height: var(--unit-100vh);
   background-color: var(--background-color);
   pointer-events: none;
-
-  transition: background-color 1.3s linear;
 }
 
 .gradient {
   @include fill;
 
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-
-  &.visible {
-    opacity: 1;
-  }
-
   .route-index &,
   .route-info &,
-  .route-exhibited-project & {
-    background-image: linear-gradient(0deg, $light-gradient-bottom, $light-gradient-top);
+  .route-exhibited-project &,
+  .route-exhibited-project-uid & {
+    background-image: $light-gradient;
   }
 
-  .route-projects & {
-    background-image: linear-gradient(0deg, $dark-gradient-bottom, $dark-gradient-top);
+  .route-projects &,
+  .route-projects-uid & {
+    background-image: $dark-gradient;
+  }
+
+  .route-partners & {
+    background-image: $red-gradient;
   }
 }
 </style>

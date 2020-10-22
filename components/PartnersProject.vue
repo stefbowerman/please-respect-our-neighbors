@@ -1,10 +1,16 @@
 <template>
-  <span>
+  <span class="partners-project">
     <span class="main">
-      <span
-        v-text="`${$prismic.asText(project.title)}.`"
-        @mouseenter="onProjectTitleMouseenter"
+      <PartnersProjectLinkPreviewer
+        v-if="projectPreviewUrl"
+        :url="projectPreviewUrl"
+        :text="`${$prismic.asText(project.title)}.`"
       />
+      <span
+        v-else
+        v-text="`${$prismic.asText(project.title)}.`"
+      />
+
       <span v-text="`${$prismic.asText(project.description)}.`" />
       <span
         v-if="projectYear"
@@ -44,7 +50,12 @@
 <script>
 import _get from 'lodash/get'
 
+import PartnersProjectLinkPreviewer from '~/components/PartnersProjectLinkPreviewer'
+
 export default {
+  components: {
+    PartnersProjectLinkPreviewer
+  },
   props: {
     project: {
       type: Object,
@@ -62,6 +73,9 @@ export default {
       const d = new Date(this.project.end_date || this.project.start_date)
 
       return `${d.getFullYear()}.`
+    },
+    projectPreviewUrl() {
+      return this.project.website_url && this.project.website_url.link_type === 'Web' ? this.project.website_url.url : null
     },
     detailTitles() {
       if (!this.project.body) return []
