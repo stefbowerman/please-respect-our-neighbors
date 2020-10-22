@@ -47,7 +47,7 @@ body {
   color: var(--text-color);
   font-family: $font-family-primary;
   font-size: 1.3125rem; // 21px 
-  line-height: 25/21;
+  line-height: (25/21);
   text-transform: uppercase;
 }
 
@@ -80,6 +80,16 @@ main {
   min-height: 100vh; // ? @TODO - Do we need this??
   position: relative;
   z-index: $zindex-main;
+}
+
+::-moz-selection {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+::selection {
+  background-color: var(--text-color);
+  color: var(--background-color);
 }
 
 // Text sixes

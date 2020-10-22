@@ -35,7 +35,10 @@
           v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'"
           v-text="`1/${slice.items.length}`"
         />
-        <div v-html="$prismic.asHtml(slice.primary.detail_title)" />
+        <div
+          class="container"
+          v-html="$prismic.asHtml(slice.primary.detail_title)"
+        />
       </div>
     </div>    
 
@@ -196,6 +199,10 @@ export default {
 
   /deep/ a {
     border-bottom: 2px solid;
+  }
+
+  .container {
+    max-width: 900px; // ?
   }
 }
 </style>

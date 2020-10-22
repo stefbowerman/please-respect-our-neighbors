@@ -31,7 +31,6 @@ export default {
     this.$store.commit('SET_THEME', 'dark')
   },  
   mounted() {
-
     this.$store.commit('SET_HEADER_TITLE', 'Accumulated Projects')
     this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)
 

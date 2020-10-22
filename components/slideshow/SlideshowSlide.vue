@@ -53,8 +53,6 @@ export default {
 .slide-inner {
   height: 100%;
   width: 100%;
-  padding-top: 35px;
-  padding-bottom: 35px;
 }
 
 .slide-content-frame {

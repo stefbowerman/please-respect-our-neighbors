@@ -76,6 +76,22 @@ export default {
       display: none;
     }
   }
+
+  // Prevent scrolling for small touch devices
+  // Force them to drag the scrollbar up and down
+  // @TODO - This doesn't work :-/  Need to map touch events to mousepointer events
+  // https://github.com/createlogic/map-touch-events-to-mouse-handlers
+  
+  // body.is-touch & {
+  //   @include bp-down(md) {
+  //     .simplebar-mask {
+  //       pointer-events: none;
+  //     }
+  //     .simplebar-track {
+  //       pointer-events: auto;
+  //     }
+  //   }
+  // }
 }
 
 .text-box-inner {

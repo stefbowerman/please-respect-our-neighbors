@@ -18,37 +18,49 @@
             :fully-visible="fullyVisible"
             @progress="onSlideshowProgress"
             ref="slideshow"
+            class="viewer-content"
+            :style="viewerContentStyle"
           />
         </template>
 
         <template v-else-if="slice.slice_type === 'detail_text'">
-          <div class="project-overlay-text-box">
+          <div
+            class="viewer-content project-overlay-text-box"
+            :style="viewerContentStyle"
+          >
             <TextBox
               :content="$prismic.asHtml(slice.primary.detail_rich_text)"
             />
           </div>
         </template>
 
-      
-        <transition name="fade">
-          <div class="caption" v-show="fullyVisible">
-            <div
-              class="caption-progress"
-              v-if="progressText"
-              v-text="progressText"
-            />
-            <div
-              class="container"
-              v-html="$prismic.asHtml(slice.primary.detail_title)"
-            />
-          </div>
-        </transition>
+        <div
+          :class="[
+            'caption',
+            { 'is-visible': fullyVisible }
+          ]"
+          ref="caption"
+        >
+          <div
+            class="caption-progress"
+            v-if="progressText"
+            v-text="progressText"
+          />
+          <div
+            class="container"
+            v-if="captionHtml"
+            v-html="captionHtml"
+          />
+        </div>
       </div>
     </template>
   </overlay>
 </template>
 
 <script>
+import _get from 'lodash/get'
+import _throttle from 'lodash/throttle'
+
 import Overlay from '~/components/Overlay'
 import TextBox from '~/components/TextBox'
 import Slideshow from '~/components/Slideshow'
@@ -73,12 +85,40 @@ export default {
   data() {
     return {
       progressText: '',
-      fullyVisible: false
+      fullyVisible: false,
+      captionHeight: 0
+    }
+  },
+  mounted() {
+    this.throttledResize = _throttle(this.onResize, 150)
+    
+    window.addEventListener('resize', this.throttledResize)
+    
+    this.onResize()
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.throttledResize)
+  },
+  computed: {
+    captionHtml() {
+      return this.$prismic.asHtml(_get(this.slice, 'primary.detail_title', []))
+    },
+    viewerContentStyle() {
+      if (this.captionHeight == 0) return {}
+
+      return {
+        paddingTop: `${this.captionHeight}px`,
+        paddingBottom: `${this.captionHeight}px`
+      }
     }
   },
   methods: {
+    onResize() {
+      this.captionHeight = this.$refs.caption ? this.$refs.caption.clientHeight : 0
+    },
     onEnter() {
       this.$refs.slideshow && this.$refs.slideshow.update()
+      this.onResize()
     },
     onAfterEnter() {
       this.fullyVisible = true
@@ -107,14 +147,27 @@ export default {
   width: 100%;
 }
 
+.viewer-content {
+  padding-top: 35px;
+  padding-bottom: 35px;
+}
+
 .caption {
   position: absolute;
   z-index: 1;
-  bottom: 20px;
+  bottom: 0;
   left: 0;
   right: 0;
+  padding: 25px 0;
   text-align: center;
   font-weight: $font-weight-medium;
+
+  opacity: 0;
+  transition: opacity 1s $easing-ease-out-quart;
+
+  &.is-visible {
+    opacity: 1;
+  }
 
   .container {
     max-width: 900px; // ?
