@@ -119,11 +119,11 @@ export default {
       })
     }   
 
-    if (this.$store.state.siteSettings.imageURL) {
+    if (this.$store.state.siteSettings.imageUrl) {
       meta.push({
         hid: "og:image",
         property: "og:image",
-        content: this.$store.state.siteSettings.imageURL
+        content: this.$store.state.siteSettings.imageUrl
       })
     }
 

@@ -54,6 +54,7 @@ import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
 import _kebabCase from 'lodash/kebabCase'
+import { stripTags } from '~/utils/tools'
 
 import ExhibitedProjectSliceZoomImage from '~/components/exhibitedProject/ExhibitedProjectSliceZoomImage'
 import ExhibitedProjectSliceImagePair from '~/components/exhibitedProject/ExhibitedProjectSliceImagePair'
@@ -75,6 +76,7 @@ export default {
     return {
       title: '',
       slices: [],
+      meta: {},
       triggerPointDistance: 0,
       currentSliceIndex: 0 // @TODO - Make this just currentSlice? {} instead of int?
     }
@@ -156,27 +158,42 @@ export default {
     }
 
     const response = await $prismic.api.getByUID('exhibited_project', projectUID)
+    const data = response.data
 
-    // console.log(response.data)
-
-    const title = $prismic.asText(_get(response, 'data.title', []))
-    const slices = _get(response, 'data.body', [])
+    const title = $prismic.asText(_get(data, 'title', []))
+    const slices = _get(data, 'body', [])
+    const meta = {
+      title: $prismic.asText(_get(data, 'meta_title', [])),
+      description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
+      imageUrl: _get(data, 'meta_image.url')
+    }
 
     return {
       title,
-      slices
+      slices,
+      meta
     }
   },
   head() {
+    const meta = [
+      {
+        hid: 'description',
+        name: 'description',
+        content: stripTags(this.meta.description)
+      }
+    ]
+
+    if (this.meta.imageUrl) {
+      meta.push({
+        hid: 'og:image',
+        property: 'og:image',
+        content: this.meta.imageUrl
+      })
+    }    
+
     return {
-      title: this.title,
-      meta: [
-        // {
-        //   hid: 'description',
-        //   name: 'description',
-        //   content: 'Our studio is built of core and collective members'
-        // }
-      ]
+      title: this.meta.title || this.title,
+      meta
     }
   }
 }  

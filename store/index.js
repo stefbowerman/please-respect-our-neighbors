@@ -5,7 +5,7 @@ export const state = () => ({
   siteSettings: {
     title: '',
     description: '',
-    imageURL: '',
+    imageUrl: '',
     footerText: '',
     exhibitedProjectUID: ''
   },
@@ -71,7 +71,7 @@ export const actions = {
     const settings = {
       title: this.$prismic.asText(data.title),
       description: this.$prismic.asText(data.description),
-      imageURL: _get(data, 'image.url', ''),
+      imageUrl: _get(data, 'image.url', ''),
       footerText: this.$prismic.asText(data.footer_text),
       exhibitedProjectUID: _get(data, 'exhibited_project.uid', '')
     }

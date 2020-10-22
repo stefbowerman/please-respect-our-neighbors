@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import _get from 'lodash/get'
+import { stripTags } from '~/utils/tools'
+
 import PartnersProject from '~/components/PartnersProject'
 
 export default {
@@ -23,18 +26,19 @@ export default {
   },
   data() {
     return {
+      title: '',
+      subtitle: '',
       partners: [],
-      activePartnerUID: null
+      activePartnerUID: null,
+      meta: {}
     }
   },
   beforeCreate() {
     this.$store.commit('SET_THEME', 'red')
   },
-  // Is there a way to do this with a mixin?  Mounted calls setTheme, beforeDestroy called unsetTheme?
-  // Also, do the theme stuff beforeCreate?  How early can we run it?
   mounted() {
-    this.$store.commit('SET_HEADER_TITLE', 'Current Partners')
-    this.$store.commit('SET_HEADER_SUBTITLE', 'Including collective members')
+    this.$store.commit('SET_HEADER_TITLE', this.title)
+    this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)
   },
   methods: {
     onPartnerClick(partnerName) {
@@ -47,23 +51,45 @@ export default {
       this.activePartnerUID = null
     }
   },
-  head() {
-    return {
-      title: 'Partners', // @TODO - Pull this from store / API
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'Our studio is built of core and collective members'
-        }
-      ]
-    }
-  },
   async asyncData({ $prismic, error, store }) {
-    // store.state.projects.forEach(p => console.log(p))
+    const response = await $prismic.api.getSingle('partners_page')
+    const data = response.data
+
+    const title = $prismic.asText(_get(data, 'title', []))
+    const subtitle = $prismic.asText(_get(data, 'subtitle', []))
+    const meta = {
+      title: $prismic.asText(_get(data, 'meta_title', [])),
+      description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
+      imageUrl: _get(data, 'meta_image.url')
+    }    
 
     return {
-      projects: store.state.projects
+      title,
+      subtitle,
+      projects: store.state.projects,
+      meta
+    }
+  },
+  head() {
+    const meta = [
+      {
+        hid: 'description',
+        name: 'description',
+        content: stripTags(this.meta.description)
+      }
+    ]
+
+    if (this.meta.imageUrl) {
+      meta.push({
+        hid: 'og:image',
+        property: 'og:image',
+        content: this.meta.imageUrl
+      })
+    }
+
+    return {
+      title: this.meta.title || this.title,
+      meta
     }
   }
 }

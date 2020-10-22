@@ -14,6 +14,7 @@ import _get from 'lodash/get'
 import _uniq from 'lodash/uniq'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
+import { stripTags } from '~/utils/tools'
 
 import project from '~/components/project/Project'
 
@@ -97,7 +98,7 @@ export default {
       return `Collected Works ${dates}`
     }
   },
-  async asyncData({ $prismic, error, store, route }) {
+  async asyncData({ $prismic, store, route }) {
     const projects = store.state.projects
     const selectedProject = Boolean(route.params.uid) ? route.params.uid : null
 
@@ -111,7 +112,7 @@ export default {
   },  
   head() {
     return {
-      title: 'Projects', // @TODO - Pull this from store / API
+      title: 'Accumulated Projects'.toUpperCase(),
       meta: [
         {
           hid: 'description',

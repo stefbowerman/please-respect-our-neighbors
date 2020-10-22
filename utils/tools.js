@@ -8,6 +8,13 @@ export const decodeHtmlEntities = (string = "") => {
     })
 }
 
+/*
+ * Takes a string and stipes HTML tags from it
+ */
+export const stripTags = (str) => {
+  return str.replace(/<[^>]*>?/gm, "")
+}
+
 export const isTouch = () => {
   if (typeof window === 'undefined')
     return false

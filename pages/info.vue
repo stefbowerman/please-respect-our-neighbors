@@ -26,12 +26,14 @@
 
 <script>
 import _get from 'lodash/get'
+import { stripTags } from '~/utils/tools'
 
 export default {
   data() {
     return {
       title: '',
       description: '',
+      meta: {},
       slices: []
     }
   },
@@ -44,27 +46,44 @@ export default {
   },
   async asyncData({ $prismic }) {
     const response = await $prismic.api.getSingle('about_page')
+    const data = response.data
 
-    const title = $prismic.asText(_get(response, 'data.title', []))
-    const description = $prismic.asHtml(_get(response, 'data.description', []))
-    const slices = _get(response, 'data.body', [])
+    const title = $prismic.asText(_get(data, 'title', []))
+    const description = $prismic.asHtml(_get(data, 'description', []))
+    const slices = _get(data, 'body', [])
+    const meta = {
+      title: $prismic.asText(_get(data, 'meta_title', [])),
+      description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
+      imageUrl: _get(data, 'meta_image.url')
+    }
 
     return {
       title,
       description,
-      slices
+      slices,
+      meta
     }
   },
   head() {
+    const meta = [
+      {
+        hid: 'description',
+        name: 'description',
+        content: stripTags(this.meta.description || this.description)
+      }
+    ]
+
+    if (this.meta.imageUrl) {
+      meta.push({
+        hid: 'og:image',
+        property: 'og:image',
+        content: this.meta.imageUrl
+      })
+    }
+
     return {
-      title: 'Info', // @TODO - Pull this from store / API?  Do we need SEO title?
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'When a GOOD friend comes into view in a crowd of acquaintances.'
-        }
-      ]
+      title: this.meta.title || this.title,
+      meta
     }
   },
 }  
