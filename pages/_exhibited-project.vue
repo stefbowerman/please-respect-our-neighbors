@@ -216,6 +216,7 @@ export default {
 
 .captions {
   position: fixed;
+  z-index: -1;
   bottom: 21px;
   left: 0;
   right: 0;

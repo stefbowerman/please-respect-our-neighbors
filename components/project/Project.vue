@@ -9,8 +9,7 @@
         :slice="slice"
         :key="`slice-${i}`"
         @click="projectPreviewClick(i)"
-        @mouseenter="hoveredSliceIndex = i"
-        @mouseleave="hoveredSliceIndex = -1"
+        @mouseenter="activeSliceIndex = i"
       />
     </div>
 
@@ -27,7 +26,7 @@
         v-for="(slice, k) in project.slices"
         :class="[
           'caption',
-          { 'is-visible': k === hoveredSliceIndex }
+          { 'is-visible': k === activeSliceIndex }
         ]"
         ref="captions"
       >
@@ -76,7 +75,7 @@ export default {
   },
   data() {
     return {
-      hoveredSliceIndex: -1,
+      activeSliceIndex: -1,
       selectedSliceIndex: -1,
       captionsHeight: 0
     }
