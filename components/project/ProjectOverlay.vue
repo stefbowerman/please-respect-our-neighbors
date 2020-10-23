@@ -15,6 +15,7 @@
         >
           <Slideshow
             :slice="slice"
+            :visible="visible"
             :fully-visible="fullyVisible"
             @progress="onSlideshowProgress"
             ref="slideshow"
@@ -85,6 +86,7 @@ export default {
   data() {
     return {
       progressText: '',
+      visible: false,
       fullyVisible: false,
       captionHeight: 0
     }
@@ -117,6 +119,7 @@ export default {
       this.captionHeight = this.$refs.caption ? this.$refs.caption.clientHeight : 0
     },
     onEnter() {
+      this.visible = true
       this.$refs.slideshow && this.$refs.slideshow.update()
       this.onResize()
     },
@@ -124,6 +127,7 @@ export default {
       this.fullyVisible = true
     },
     onAfterLeave() {
+      this.visible = false
       this.fullyVisible = false
       this.$refs.slideshow && this.$refs.slideshow.reset()
     },

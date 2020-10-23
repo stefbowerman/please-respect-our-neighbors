@@ -8,11 +8,7 @@
     @mousemove="onMousemove"
   >          
     <div class="swiper-container" ref="swiper">
-      <div
-        class="swiper-wrapper"
-        @mouseenter="onSwiperMouseenter"
-        @mouseleave="onSwiperMouseleave"              
-      >
+      <div class="swiper-wrapper">
         <slideshow-slide
           v-for="(item, j) in slice.items"
           :key="`slide-${j}`"
@@ -22,8 +18,6 @@
         />
       </div>        
     </div>
-
-    <!-- @TODO - Throw the caption in here and then make sure the swiper container resizes based on caption height? -->
 
     <template v-if="hasArrows">
       <transition name="arrow-left-fade">
@@ -53,9 +47,10 @@
 
 <script>
 import Swiper from 'swiper'
-// import VimeoPlayer from '@vimeo/player'
 import _padStart from 'lodash/padStart'
 import _round from 'lodash/round'
+import _throttle from 'lodash/throttle'
+import { contain } from 'intrinsic-scale'
 
 import SlideshowSlide from '~/components/slideshow/SlideshowSlide'
 import SvgSlideArrow from '~/assets/svg/slide-arrow.svg'
@@ -70,6 +65,11 @@ export default {
       type: Object,
       required: false
     },
+    visible: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     fullyVisible: {
       type: Boolean,
       required: false,
@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       progressText: '',
-      swiperHovered: false,
+      slideContentHovered: false,
       floatingProgressTransX: 0,
       floatingProgressTransY: 0
     }
@@ -95,10 +95,6 @@ export default {
       simulateTouch: false,
       watchOverflow: true,
       on: {
-        // init: this.onInit,
-        // slidePrevTransitionStart: this.onSlidePrevTransitionStart,
-        // slideNextTransitionStart: this.onSlideNextTransitionStart,
-        slideChange: this.onSlideChange,
         slideChangeTransitionStart: this.onSlideChangeTransitionStart,
         slideChangeTransitionEnd: this.onSlideChangeTransitionEnd
       }
@@ -106,16 +102,36 @@ export default {
 
     this.swiper.init()
 
+    // Add a mouseenter, leave and mouse listener to each slide's interactive area
+    // Nuxt is mad if we don't assign to a var
+    const evts = [...this.swiper.el.querySelectorAll('.slide-content-interactive-area')].map(el => {
+      el.addEventListener('mouseenter', e => this.slideContentHovered = true)
+      el.addEventListener('mouseleave', e => this.slideContentHovered = false)
+      el.addEventListener('click', this.onSlideContentInteractiveAreaClick)
+    })
+
+    // Initialize all the iframes
     this.vimeoPlayers = [...this.swiper.el.querySelectorAll('iframe')].map(iframe => {
       if (String(iframe.src).includes('vimeo.com')) {
-        return new VimeoPlayer(iframe)
+        const player = new VimeoPlayer(iframe)
+        player.on('loaded', () => iframe.classList.add('is-loaded'))
+        return player
       }
     })
+
+    this.throttledResize = _throttle(this.onResize, 250)  
+
+    window.addEventListener('resize', this.throttledResize)
+    this.onResize()
   },
   beforeDestroy() {
     this.$nextTick(this.destroySwiper)
+    window.removeEventListener('resize', this.throttledResize)
   },
   watch: {
+    visible(newViz, oldViz) {
+      this.onResize()
+    },
     fullyVisible(newViz, oldViz) {
       if (newViz === false) {
         this.pauseVimeoPlayers()
@@ -132,12 +148,12 @@ export default {
       
       return flag
     },
-    // Might not need this computed property...
+    // @TODO - Might not need this computed property...
     showArrows() {
       return this.fullyVisible
     },
     showFloatingProgress() {
-      return this.fullyVisible && this.swiperHovered && this.hasArrows
+      return this.fullyVisible && this.slideContentHovered && this.hasArrows
     },
     floatingProgressTransform() {
       if (this.floatingProgressTransX === 0 && this.floatingProgressTransY === 0) {
@@ -146,33 +162,21 @@ export default {
       else {
         return `translate(${this.floatingProgressTransX}px, ${this.floatingProgressTransY }px)`
       }
-    },
+    }
   },
   methods: {
-    // onInit(swiper) {
-    //   this.setProgress(swiper.activeIndex)
-    // },
-    // onSlideNextTransitionStart(swiper) {
-    //   // Update progress text here?
-    // },
-    // onSlidePrevTransitionStart(swiper) {
-    //   // updateProgress text here?
-    // },
-    onSlideChange() {
-      // console.log('slide change')
-    },
     onSlideChangeTransitionStart() {
       this.pauseVimeoPlayers();
     },
     onSlideChangeTransitionEnd() {
-      // console.log('transition end')
       this.setProgress()
     },
-    onSwiperMouseenter() {
-      this.swiperHovered = true
-    },
-    onSwiperMouseleave() {
-      this.swiperHovered = false
+    onSlideContentInteractiveAreaClick(e) {
+      if (this.$store.state.isTouch) return
+
+      // Since we're only showing one image at a time in the center of the screen
+      // we can just check which half of the window they clicked on
+      e.screenX >= window.innerWidth/2 ? this.next() : this.prev()
     },
     onMousemove(e) {
       if (!this.$refs.floatingProgress || this.$store.state.isTouch) return
@@ -184,6 +188,23 @@ export default {
 
       this.floatingProgressTransX = _round(x, 2)
       this.floatingProgressTransY = _round(y, 2)
+    },
+    onResize() {
+      if (!this.visible) return
+
+      this.swiper.slides.forEach(slide => {
+        const contentFrame = slide.querySelector('.slide-content-frame')
+        const img          = slide.querySelector('.slide-image')
+
+        if (contentFrame && img) {
+          const imgHeight    = parseInt(img.dataset.height)
+          const imgWidth     = parseInt(img.dataset.width)          
+          const { width, height } = contain(contentFrame.clientWidth, contentFrame.clientHeight, imgWidth, imgHeight)
+          
+          img.style.height = `${parseInt(height)}px`
+          img.style.width  = `${parseInt(width)}px`
+        }
+      })
     },
     update() {
       this.swiper.update()
