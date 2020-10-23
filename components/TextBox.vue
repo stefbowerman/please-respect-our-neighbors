@@ -57,6 +57,7 @@ export default {
   .simplebar-wrapper {
     margin-right: 17px !important;
     border: 1px solid var(--text-color);
+    background-color: $off-white;
   }
 
   // Need this otherwise the text overflows on top of the border

@@ -195,5 +195,10 @@ export default {
   padding: 90px 50px;
   max-width: 1200px;
   color: $white;
+
+  /deep/ .simplebar-wrapper {
+    background-color: $off-black;
+    background-image: $dark-gradient;
+  }
 }
 </style>
