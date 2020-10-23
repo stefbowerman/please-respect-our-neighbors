@@ -97,32 +97,32 @@ export default {
   head() {
     const meta = [
       {
-        property: "og:type",
-        content: "website"
+        property: 'og:type',
+        content: 'website'
       },
       {
-        property: "og:title",
+        property: 'og:title',
         content: this.$store.state.siteSettings.title
       },      
       {
-        property: "og:site_name",
+        property: 'og:site_name',
         content: this.$store.state.siteSettings.title
       }
     ]
 
     if (this.$store.state.siteSettings.description) {
       meta.push({
-        hid: "description",
-        name: "description",
-        property: "og:description",
+        hid: 'description',
+        name: 'description',
+        property: 'og:description',
         content: this.$store.state.siteSettings.description
       })
     }   
 
     if (this.$store.state.siteSettings.imageUrl) {
       meta.push({
-        hid: "og:image",
-        property: "og:image",
+        hid: 'og:image',
+        property: 'og:image',
         content: this.$store.state.siteSettings.imageUrl
       })
     }
@@ -150,7 +150,7 @@ export default {
 
     return {
       htmlAttrs: {
-          lang: "en",
+          lang: 'en',
       },
       bodyAttrs: {
           class: bodyClasses
@@ -168,7 +168,7 @@ export default {
       },
       meta: meta
     }
-  },  
+  }
 }
 </script>
 

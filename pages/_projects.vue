@@ -111,15 +111,24 @@ export default {
     }
   },  
   head() {
+    const title = 'Accumulated Projects'.toUpperCase()
+    const meta = [
+      {
+        hid: 'title',
+        property: 'og:title',
+        content: title
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        property: 'og:description',
+        content: 'All our work in one place'
+      }
+    ]
+
     return {
-      title: 'Accumulated Projects'.toUpperCase(),
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'All our work in one place'
-        }
-      ]
+      title,
+      meta
     }
   }
 }

@@ -47,8 +47,7 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    // '@nuxtjs/eslint-module'
+    '@aceforth/nuxt-netlify'
   ],
   /*
   ** Nuxt.js modules
@@ -62,6 +61,9 @@ export default {
     endpoint: 'https://pron.cdn.prismic.io/api/v2',
     linkResolver: linkResolver,
     preview: process.env.NODE_ENV !== 'production'
+  },
+  netlify: { 
+    mergeSecurityHeaders: true 
   },
   /*
   ** Build configuration

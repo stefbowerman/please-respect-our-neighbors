@@ -65,10 +65,17 @@ export default {
     }
   },
   head() {
+    const title = this.meta.title || this.title
     const meta = [
+      {
+        hid: 'title',
+        property: 'og:title',
+        content: title
+      },    
       {
         hid: 'description',
         name: 'description',
+        property: 'og:description',
         content: stripTags(this.meta.description || this.description)
       }
     ]
@@ -82,7 +89,7 @@ export default {
     }
 
     return {
-      title: this.meta.title || this.title,
+      title,
       meta
     }
   },

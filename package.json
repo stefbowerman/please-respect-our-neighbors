@@ -24,6 +24,7 @@
     "swiper": "^6.3.2"
   },
   "devDependencies": {
+    "@aceforth/nuxt-netlify": "^1.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
     "@nuxtjs/eslint-config": "^2.0.0",
     "@nuxtjs/eslint-module": "^1.0.0",
