@@ -92,6 +92,9 @@ export default {
   watch: {
     '$route'(to, from) {
         this.showMenu = false              
+    },
+    '$store.state.pageTitle.height'(height) {
+      document.documentElement.style.setProperty('--page-title-height', `${height}px`)
     }
   },  
   head() {

@@ -1,42 +1,43 @@
 <template>
   <div class="project">
-    <div
-      v-if="project.slices.length"
-      class="project-previewer"
-    >
-      <project-preview
-        v-for="(slice, i) in project.slices"
-        :slice="slice"
-        :key="`slice-${i}`"
-        @click="projectPreviewClick(i)"
-        @mouseenter="activeSliceIndex = i"
-      />
-    </div>
-
-    <!-- This goes behind the preview -->
-    <div class="project-description">
+    <div :style="{ position: 'relative', width: '100%'}">
       <div
-        class="project-description__text"
-        v-html="fullDescription"
-      />
-    </div>    
+        v-if="project.slices.length"
+        class="project-previewer"
+      >
+        <project-preview
+          v-for="(slice, i) in project.slices"
+          :slice="slice"
+          :key="`slice-${i}`"
+          @click="projectPreviewClick(i)"
+          @mouseenter="activeSliceIndex = i"
+        />
+      </div>
 
-    <div class="captions" :style="{ height: `${captionsHeight}px` }">
+      <!-- This goes behind the previewer -->
+      <div class="project-description">
+        <div
+          class="project-description__text"
+          v-html="fullDescription"
+        />
+      </div>
+    </div>  
+
+    <div
+      class="captions"
+      :style="captionsStyle"
+    >
       <div
         v-for="(slice, k) in project.slices"
         :class="[
-          'caption',
+          'caption-holder',
           { 'is-visible': k === activeSliceIndex }
         ]"
         ref="captions"
       >
-        <div
-          v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'"
-          v-text="`1/${slice.items.length}`"
-        />
-        <div
-          class="container"
-          v-html="$prismic.asHtml(slice.primary.detail_title)"
+        <Caption
+          :progress="slice.items.length && `1/${slice.items.length}`"
+          :caption-html="$prismic.asHtml(slice.primary.detail_title)"
         />
       </div>
     </div>    
@@ -46,7 +47,7 @@
         v-for="(slice, j) in project.slices"
         @close="projectOverlayClose"
         :key="`project-overlay-${project.uid}-${j}`"
-        :show="j == selectedSliceIndex"
+        :show="j === selectedSliceIndex"
         :slice="slice"
       />
     </portal>
@@ -56,15 +57,17 @@
 <script>
 import _kebabCase from 'lodash/kebabCase'
 
-import projectPreview from '~/components/project/ProjectPreview'
-import projectOverlay from '~/components/project/ProjectOverlay'
+import ProjectPreview from '~/components/project/ProjectPreview'
+import ProjectOverlay from '~/components/project/ProjectOverlay'
+import Caption from '~/components/Caption'
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 export default {
   components: {
-    projectPreview,
-    projectOverlay
+    ProjectPreview,
+    ProjectOverlay,
+    Caption
   },
   props: {
     project: {
@@ -106,6 +109,9 @@ export default {
 
       // @TODO - make sure this is working for project without description, without partners, etc...
       return `${title} ${desc && `— ${desc}`} <br /> ${dates.join(', ')} ${partners && `— ${partners}`}`
+    },
+    captionsStyle() {
+      return { height: `${this.captionsHeight}px`}
     }
   },
   methods: {
@@ -122,7 +128,6 @@ export default {
       this.selectedSliceIndex = i
     },
     projectOverlayClose() {
-      // console.log('closed preview')
       this.selectedSliceIndex = -1
     },
     onResize() {
@@ -135,14 +140,19 @@ export default {
 
 <style lang="scss" scoped>
 .project {
-  height: 100vh;
-  min-height: 500px;
-  max-height: 1500px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   z-index: 1;
+
+  @include bp-up(lg) {
+    min-height: none;
+    // height: 100vh;
+    // min-height: 500px;
+    // max-height: 1500px;    
+  }
 }
 
 .project-description {
@@ -167,7 +177,12 @@ export default {
 .project-previewer {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 800px;
+  height: 75vh;
+
+  @include bp-up(lg) {
+    // height: 100%;
+  }
 
   .project-preview {
     flex: 1;
@@ -182,26 +197,17 @@ export default {
   position: relative;
 }
 
-.caption {
+.caption-holder {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  text-align: center;
   opacity: 0;
   pointer-events: none;
 
   &.is-visible {
     opacity: 1;
     pointer-events: auto;
-  }
-
-  /deep/ a {
-    border-bottom: 2px solid;
-  }
-
-  .container {
-    max-width: 900px; // ?
   }
 }
 </style>

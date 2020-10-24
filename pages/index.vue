@@ -9,8 +9,8 @@
 <script>
 export default {
   mounted() {
-    this.$store.commit('SET_HEADER_TITLE', '')
-    this.$store.commit('SET_HEADER_SUBTITLE', '')
+    this.$store.commit('SET_PAGE_TITLE_TITLE', '')
+    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', '')
   },
   beforeCreate() {
     this.$store.commit('SET_THEME', 'light')

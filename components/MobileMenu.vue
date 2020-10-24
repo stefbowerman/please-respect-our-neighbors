@@ -39,12 +39,18 @@
       </div>
 
       <span class="close" @click="close">Close</span>
+      <Background />
     </div>
   </transition>
 </template>
 
 <script>
+import Background from '~/components/Background'
+
 export default {
+  components: {
+    Background
+  },
   props: {
     show: {
       type: Boolean,
@@ -71,16 +77,7 @@ export default {
 <style lang="scss" scoped>
 .mobile-menu {
   @include fill(fixed);
-  // position: fixed;
   z-index: $zindex-mobile-menu;
-  // top: 0;
-  // left: 0;
-  // width: 100%;
-  // height: 100%;
-  // height: var(--unit-100vh);
-
-  background-color: transparentize($white, 0.11);
-  background-image: linear-gradient(180deg, #ffffffc7, #afafafb0)
 }
 
 .dialog {

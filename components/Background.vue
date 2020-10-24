@@ -1,6 +1,5 @@
 <template>
   <div class="background">
-    <!-- @TODO - May need to turn the gradient into it's own component so we can re-use it on the mobile menu -->
     <div class="gradient" :style="gradientStyles" />
   </div>
 </template>

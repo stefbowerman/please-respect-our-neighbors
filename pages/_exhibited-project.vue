@@ -5,40 +5,16 @@
       ref="slices"
       :class="sliceClasses(slice)"
     >
-      <ExhibitedProjectSliceImageTextBox
-        v-if="slice.slice_type === 'image_text_box'"
+      <component
+        :is="getSliceComponentName(slice.slice_type)"
         :slice="slice"
-      />
-
-      <ExhibitedProjectSliceAccentImage
-        v-else-if="slice.slice_type === 'accent_image'"
-        :slice="slice"
-      />
-
-      <ExhibitedProjectSliceImageGallery
-        v-else-if="slice.slice_type === 'image_gallery'"
-        :slice="slice"
-      />
-      
-      <ExhibitedProjectSliceImagePair
-        v-else-if="slice.slice_type === 'image_pair'"
-        :slice="slice"
-      />
-
-      <ExhibitedProjectSliceZoomImage
-        v-else-if="slice.slice_type === 'zoom_image'"
-        :slice="slice"
-      />
-
-      <ExhibitedProjectSliceTextBox
-        v-else-if="slice.slice_type === 'text_box'"
-        :slice="slice"
-      />     
+        :current="currentSliceIndex === j"
+      />    
     </div>
       
     <div class="captions container">
       <div class="row">
-        <div class="primary-column">      
+        <div class="primary-column">  
           <div class="medium" v-if="captions.medium" v-text="captions.medium" />
           <div class="small"  v-if="captions.small"  v-text="captions.small" />
           <div class="large"  v-if="captions.large"  v-text="captions.large" />
@@ -54,6 +30,8 @@ import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
 import _kebabCase from 'lodash/kebabCase'
+import _camelCase from 'lodash/camelCase'
+import _capitalize from 'lodash/capitalize'
 import { stripTags } from '~/utils/tools'
 
 import ExhibitedProjectSliceZoomImage from '~/components/exhibitedProject/ExhibitedProjectSliceZoomImage'
@@ -85,7 +63,7 @@ export default {
     this.$store.commit('SET_THEME', 'light')
   },
   mounted() {
-    this.$store.commit('SET_HEADER_TITLE', this.title)
+    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)
     this.throttledOnResize = _throttle(this.onResize, 250)
@@ -103,6 +81,9 @@ export default {
         'exhibit-slice',
         _kebabCase(slice.slice_type)
       ]
+    },
+    getSliceComponentName(sliceType) {
+      return `ExhibitedProjectSlice${sliceType.split('_').map(t => _capitalize(t)).join('')}` // 'zoom_image' => 'ExhibitedProjectSliceZoomImage'
     },
     setCurrentSlice() {
       const winH = window.innerHeight
@@ -130,7 +111,7 @@ export default {
   },
   watch: {
     currentSliceIndex(newIndex, oldIndex) {
-      this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)
+      this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
     }
   },
   computed: {

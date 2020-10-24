@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 300px;">
+  <div class="projects-container">
     <project
       v-for="(project, i) in projects"
       :project="project"
@@ -32,8 +32,8 @@ export default {
     this.$store.commit('SET_THEME', 'dark')
   },  
   mounted() {
-    this.$store.commit('SET_HEADER_TITLE', 'Accumulated Projects')
-    this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)
+    this.$store.commit('SET_PAGE_TITLE_TITLE', 'Accumulated Projects')
+    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)
     this.throttledOnResize = _throttle(this.onResize, 250)
@@ -135,7 +135,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.project {
-  margin: 100px 0;
+.projects-container {
+  margin-top: 115px;
+
+  @include bp-up(lg) {
+    margin-top: 155px;    
+  }
+}
+
+.project + .project {
+  margin-top: 125px;
 }
 </style>

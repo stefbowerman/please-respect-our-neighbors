@@ -28,17 +28,16 @@ export default {
     return {
       title: '',
       subtitle: '',
-      partners: [],
-      activePartnerUID: null,
-      meta: {}
+      meta: {},
+      activePartnerUID: null
     }
   },
   beforeCreate() {
     this.$store.commit('SET_THEME', 'red')
   },
   mounted() {
-    this.$store.commit('SET_HEADER_TITLE', this.title)
-    this.$store.commit('SET_HEADER_SUBTITLE', this.subtitle)
+    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
+    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
   },
   methods: {
     onPartnerClick(partnerName) {
@@ -61,7 +60,7 @@ export default {
       title: $prismic.asText(_get(data, 'meta_title', [])),
       description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
       imageUrl: _get(data, 'meta_image.url')
-    }    
+    }
 
     return {
       title,
@@ -104,7 +103,7 @@ export default {
 
 <style lang="scss" scoped>
 .wall {
-  padding-top: 200px;
+  padding-top: 100px;
   padding-bottom: 100px;
 
   @include text-big;
@@ -117,7 +116,7 @@ export default {
   }
 
   @include bp-up(lg) {
-    padding-top: 300px;
+    padding-top: 240px;
     padding-bottom: 200px;    
     padding-left: 20px;
     padding-right: 20px;    

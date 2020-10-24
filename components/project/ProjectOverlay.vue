@@ -17,7 +17,7 @@
             :slice="slice"
             :visible="visible"
             :fully-visible="fullyVisible"
-            @progress="onSlideshowProgress"
+            @progress="t => progressText = t"
             ref="slideshow"
             class="viewer-content"
             :style="viewerContentStyle"
@@ -37,20 +37,15 @@
 
         <div
           :class="[
-            'caption',
-            { 'is-visible': fullyVisible }
+            'viewer-caption',
+            { 'is-visible' : fullyVisible }
           ]"
-          ref="caption"
+          v-if="progressText || captionHtml"
+          ref="viewerCaption"
         >
-          <div
-            class="caption-progress"
-            v-if="progressText"
-            v-text="progressText"
-          />
-          <div
-            class="container"
-            v-if="captionHtml"
-            v-html="captionHtml"
+          <Caption
+            :progress="progressText"
+            :captionHtml="captionHtml"
           />
         </div>
       </div>
@@ -65,12 +60,14 @@ import _throttle from 'lodash/throttle'
 import Overlay from '~/components/Overlay'
 import TextBox from '~/components/TextBox'
 import Slideshow from '~/components/Slideshow'
+import Caption from '~/components/Caption'
 
 export default {
   components: {
     Overlay,
     TextBox,
-    Slideshow
+    Slideshow,
+    Caption
   },
   props: {
     show: {
@@ -116,7 +113,7 @@ export default {
   },
   methods: {
     onResize() {
-      this.captionHeight = this.$refs.caption ? this.$refs.caption.clientHeight : 0
+      this.captionHeight = this.$refs.viewerCaption ? this.$refs.viewerCaption.clientHeight : 0
     },
     onEnter() {
       this.visible = true
@@ -130,9 +127,6 @@ export default {
       this.visible = false
       this.fullyVisible = false
       this.$refs.slideshow && this.$refs.slideshow.reset()
-    },
-    onSlideshowProgress(progressText) {
-      this.progressText = progressText
     },
     prev() {
       this.$refs.slideshow && this.$refs.slideshow.prev()
@@ -156,39 +150,22 @@ export default {
   padding-bottom: 35px;
 }
 
-.caption {
+.viewer-caption {
   position: absolute;
   z-index: 1;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 25px 0;
-  text-align: center;
-  font-weight: $font-weight-medium;
-
+  padding: 45px 0;  
   opacity: 0;
   transition: opacity 1s $easing-ease-out-quart;
 
+  @include bp-up(lg) {
+    padding: 25px 0;
+  }
+
   &.is-visible {
     opacity: 1;
-  }
-
-  .container {
-    max-width: 900px; // ?
-  }
-
-  /deep/ a {
-    border-bottom: 2px solid; // Duplicated across Project.vue
-  }
-}
-
-.caption-progress {
-  @include bp-up(md) {
-    display: none;
-  }
-
-  body.no-touch {
-    display: none;
   }
 }
 

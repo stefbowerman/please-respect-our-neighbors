@@ -28,6 +28,10 @@ export default {
       validator(s) {
         return s.slice_type === 'accent_image'
       }      
+    },
+    current: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

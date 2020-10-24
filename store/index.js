@@ -10,9 +10,10 @@ export const state = () => ({
     exhibitedProjectUID: ''
   },
   theme: '',
-  header: {
+  pageTitle: {
     title: '',
-    subtitle: ''
+    subtitle: '',
+    height: 0,
   },
   overlayOpen: false,
   mobileMenuOpen: false,
@@ -29,11 +30,14 @@ export const mutations = {
   SET_THEME(state, data) {
     state.theme = data
   },
-  SET_HEADER_TITLE(state, data) {
-    state.header.title = data
+  SET_PAGE_TITLE_TITLE(state, data) {
+    state.pageTitle.title = data
   },
-  SET_HEADER_SUBTITLE(state, data) {
-    state.header.subtitle = data
+  SET_PAGE_TITLE_SUBTITLE(state, data) {
+    state.pageTitle.subtitle = data
+  },
+  SET_PAGE_TITLE_HEIGHT(state, data) {
+    state.pageTitle.height = parseInt(data)
   },
   SET_OVERLAY_OPEN(state, data) {
     state.overlayOpen = data
@@ -49,7 +53,7 @@ export const mutations = {
   },
   SET_PROJECTS(state, data) {
     state.projects = data
-  },  
+  }
 }
 
 // Define actions
@@ -58,8 +62,7 @@ export const actions = {
     // Make all requests in parallel
     const data = await Promise.all([
       store.dispatch('QUERY_SETTINGS'),
-      store.dispatch('QUERY_PROJECTS'),
-      // store.dispatch('QUERY_PARTNERS')
+      store.dispatch('QUERY_PROJECTS')
     ])
   },
 

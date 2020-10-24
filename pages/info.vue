@@ -41,8 +41,8 @@ export default {
     this.$store.commit('SET_THEME', 'light')
   },  
   mounted() {
-    this.$store.commit('SET_HEADER_TITLE', this.title)
-    this.$store.commit('SET_HEADER_SUBTITLE', null)
+    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
+    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', null)
   },
   async asyncData({ $prismic }) {
     const response = await $prismic.api.getSingle('about_page')
