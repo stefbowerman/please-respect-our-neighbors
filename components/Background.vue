@@ -51,7 +51,7 @@ export default {
         animate({
           from: this.gradientTopColor,
           to: themeColors.top,
-          duration: 1300,
+          duration: 800,
           ease: easeInOut, // linear,
           onUpdate: (color) => {
             this.gradientTopColor = color
@@ -67,7 +67,7 @@ export default {
         animate({
           from: this.gradientBottomColor,
           to: themeColors.bottom,
-          duration: 1300,
+          duration: 800,
           ease: easeInOut, // linear,
           onUpdate: (color) => {
             this.gradientBottomColor = color
@@ -82,8 +82,8 @@ export default {
 <style lang="scss" scoped>
 .background {
   @include fill(fixed);
+  @include fs-height;
   z-index: $zindex-background;
-  height: var(--unit-100vh);
   background-color: var(--background-color);
   pointer-events: none;
 }

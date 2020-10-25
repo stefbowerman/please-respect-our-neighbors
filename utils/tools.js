@@ -16,14 +16,21 @@ export const stripTags = (str) => {
 }
 
 export const isTouch = () => {
-  if (typeof window === 'undefined')
-    return false
+  if (typeof window === 'undefined') {
+    return false 
+  }
 
-  if ('ontouchstart' in window)
-      return true;
+  if ('ontouchstart' in window) {
+    return true
+  }
 
-  if (window.DocumentTouch && document instanceof DocumentTouch)
-      return true;
+  if (window.DocumentTouch && document instanceof DocumentTouch) {
+    return true
+  }
+
+  if (window.navigator.userAgent.match(/iphone|ipad|android/i)) {
+    return true
+  }
 
   const prefixes = ["", "-webkit-", "-moz-", "-o-", "-ms-"];
   const queries = prefixes.map(prefix => `(${prefix}touch-enabled)`);

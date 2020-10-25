@@ -57,10 +57,10 @@ export default {
   },
   watch: {
     '$store.state.pageTitle.title'() {
-      this.commitHeight()
+      this.$nextTick(() => this.commitHeight())
     },
     '$store.state.pageTitle.subtitle'() {
-      this.commitHeight()
+      this.$nextTick(() => this.commitHeight())
     }
   }
 }

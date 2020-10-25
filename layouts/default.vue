@@ -29,6 +29,7 @@
 <script>
 import _kebabCase from 'lodash/kebabCase'
 import _throttle from 'lodash/throttle'
+import _get from 'lodash/get'
 import { decodeHtmlEntities, isTouch } from '~/utils/tools'
 
 import SiteHeader from '~/components/Header'
@@ -151,6 +152,34 @@ export default {
       bodyClasses.push('is-touch')  
     }
 
+    const link = []
+    const favicon = this.$store.state.siteSettings.faviconImage
+    const touchIcon = this.$store.state.siteSettings.touchIcon
+
+    if (favicon && favicon.url) {
+      link.push({
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: _get(favicon, '["32x32"].url', favicon.url)
+      })
+
+      link.push({
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        href: _get(favicon, '["16x16"].url', favicon.url)
+      })      
+    }
+
+    if (touchIcon.url || favicon.url) {
+      link.push({
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: (touchIcon.url || _get(favicon, '["180x180"].url', favicon.url))
+      }) 
+    }
+
     return {
       htmlAttrs: {
           lang: 'en',
@@ -169,7 +198,8 @@ export default {
 
         return output
       },
-      meta: meta
+      meta,
+      link
     }
   }
 }

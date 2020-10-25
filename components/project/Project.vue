@@ -1,5 +1,8 @@
 <template>
-  <div class="project">
+  <div
+    class="project"
+    @mouseleave="onProjectMouseleave"
+  >
     <div :style="{ position: 'relative', width: '100%'}">
       <div
         v-if="project.slices.length"
@@ -9,6 +12,11 @@
           v-for="(slice, i) in project.slices"
           :slice="slice"
           :key="`slice-${i}`"
+          :active="activeSliceIndex === i"
+          :class="[
+            {'active': activeSliceIndex === i },
+            {'inactive': activeSliceIndex > -1 && activeSliceIndex !== i }
+          ]"
           @click="projectPreviewClick(i)"
           @mouseenter="activeSliceIndex = i"
         />
@@ -133,6 +141,10 @@ export default {
     onResize() {
       const heights = this.$refs.captions.map(el => el.clientHeight)
       this.captionsHeight = Math.max(...heights);
+    },
+    onProjectMouseleave() {
+      // can't just do this since mouseleave gets triggered when we open the overlay
+      // this.activeSliceIndex = -1
     }
   }
 }
@@ -186,6 +198,25 @@ export default {
 
   .project-preview {
     flex: 1;
+    padding: 0 2.5vw;
+    transition: all 600ms cubic-bezier(0.26, 0.35, 0.12, 1.01);
+
+    &:first-child {
+      padding-left: 2.5vw !important;
+    }
+
+    &:last-child {
+      padding-right: 2.5vw !important;
+    }
+
+    &.active {
+      flex: 3.5;
+      padding: 0 5vw;
+    }
+
+    &.inactive {
+      padding: 0 1vw;
+    }
   }
 }
 

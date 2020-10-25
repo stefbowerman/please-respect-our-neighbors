@@ -1,10 +1,12 @@
 <template>
   <div class="container">
-    <div class="text-box-wrapper">
-      <text-box
-        :date="date"
-        :content="content"
-      />
+    <div class="sizer">
+      <div class="text-box-wrapper">
+        <text-box
+          :date="date"
+          :content="content"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -43,12 +45,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sizer {
+  @include bp-up(lg) {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    padding: 130px 0;  
+    padding-top: var(--page-title-height);
+  }
+}
+
 .text-box-wrapper {
   margin: 0 auto;
   height: 80vh;
+  width: 100%;
 
   @include bp-up(lg) {
     max-width: 80%;
+    padding: 60px 0;
   }
 }
 </style>

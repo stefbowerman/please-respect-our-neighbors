@@ -193,6 +193,12 @@ export default {
   flex-direction: column;
   justify-content: center;
   min-height: 100vh;
+
+  @include bp-up(lg) {
+    &.zoom-image {
+      margin-bottom: 100px;
+    }
+  }
 }
 
 .captions {

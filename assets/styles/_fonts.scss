@@ -3,7 +3,7 @@
   src: url('/fonts/Swiss721BT-Light.woff2') format('woff2'),
        url('/fonts/Swiss721BT-Light.woff') format('woff');
   font-style: normal;
-  font-weight: 100;
+  font-weight: $font-weight-light;
 }
 
 @font-face {
@@ -11,7 +11,15 @@
   src: url('/fonts/Swiss721BT-Roman.woff2') format('woff2'),
        url('/fonts/Swiss721BT-Roman.woff') format('woff');
   font-style: normal;
-  font-weight: 400;
+  font-weight: $font-weight-normal;
+}
+
+@font-face {
+  font-family: 'Swiss 721';
+  src: url('/fonts/Swiss721-Medium.woff2') format('woff2'),
+       url('/fonts/Swiss721-Medium.woff') format('woff');
+  font-style: normal;
+  font-weight: $font-weight-medium;
 }
 
 @font-face {
@@ -19,21 +27,5 @@
   src: url('/fonts/Swiss721BT-Bold.woff2') format('woff2'),
        url('/fonts/Swiss721BT-Bold.woff') format('woff');
   font-style: normal;
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: 'Swiss 721';
-  src: url('/fonts/Swiss721BT-Italic.woff2') format('woff2'),
-       url('/fonts/Swiss721BT-Italic.woff') format('woff');
-  font-style: italic;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Swiss 721';
-  src: url('/fonts/Swiss721BT-BoldItalic.woff2') format('woff2'),
-       url('/fonts/Swiss721BT-BoldItalic.woff') format('woff');
-  font-style: italic;
-  font-weight: 400;
+  font-weight: $font-weight-bold;
 }

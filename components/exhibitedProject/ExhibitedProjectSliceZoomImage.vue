@@ -1,12 +1,34 @@
 <template>
   <div class="container">
-    <div style="position: relative">
-      <div class="primary" v-if="primaryImage">
+    <div class="sizer">
+      <div
+        v-if="primaryImage"
+        class="primary"
+      >
         <img :src="primaryImage.url" :alt="primaryImage.alt" />
       </div>
-      <div class="detail" v-if="detailImage">
-        <div class="loupe">
-          <img :src="detailImage.url" :alt="detailImage.alt" />
+      <div
+        class="detail"
+        v-if="detailImage"
+        :style="loupeStyle"
+      >
+        <div
+          :class="[
+            'loupe',
+            { 'is-hovered': this.loupeHovered }
+          ]"
+          @mousemove="onLoupeMousemove"
+          ref="loupe"
+        >
+          <div
+            class="loupe-image"
+            :style="loupeImageStyle"
+          >
+            <img
+              :src="detailImage.url"
+              :alt="detailImage.alt"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -30,20 +52,97 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      detailImageTransX: 0,
+      detailImageTransY: 0,
+      loupeHovered: false,
+      loupeTransY: 0
+    }
+  },
+  // @TODO - Add intersection observer to only run on scroll when element is close to being in view?
+  mounted() {
+    window.addEventListener('scroll', this.onScroll)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onScroll)
+  },
   computed: {
     primaryImage() {
       return _get(this.slice, 'primary.main_image')
     },
     detailImage() {
       return _get(this.slice, 'primary.detail_image')
+    },
+    loupeImageStyle() {
+      return {
+        transform: `translate(${this.detailImageTransX}px, ${this.detailImageTransY}px)`
+      }
+    },
+    loupeStyle() {
+      return {
+        transform: `translateY(${this.loupeTransY}px)`
+      }
+    }
+  },
+  methods: {
+    onLoupeMousemove(e) {
+      const loupeRect = this.$refs.loupe.getBoundingClientRect()
+      const r = loupeRect.width/2
+      const distX = e.clientX - (loupeRect.x + r)
+      const distY = e.clientY - (loupeRect.y + r)
+
+      const isInside = (Math.pow(distX, 2) + Math.pow(distY, 2)) < Math.pow(r, 2)
+
+      if (isInside) {
+        this.detailImageTransX = parseInt(distX * 0.5)
+        this.detailImageTransY = parseInt(distY * 0.5)
+        this.loupeHovered = true
+      }
+      else {
+        this.loupeHovered = false
+      }
+    },
+    onScroll() {
+      const winH = window.innerHeight
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      const h = this.$el.offsetHeight
+      const top = this.$el.offsetTop
+      const bottom = h + top
+      const elMiddle = top + h/2
+
+      const shift = (scrollTop + winH/2) - elMiddle // this isn't exact but it's close enough...
+
+      this.loupeTransY = shift * -0.15
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.primary {
+.sizer {
+  position: relative;
 
+  @include bp-up(lg) {
+    height: 100vh;
+    padding: 130px 0;
+    margin-left: -24px;
+    margin-right: -24px;    
+    padding-top: var(--page-title-height);
+  }
+}
+
+.primary {
+  @include bp-up(lg) {
+    height: 100%;
+
+    img {
+      vertical-align: top;
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
 }
 
 .detail {
@@ -57,16 +156,40 @@ export default {
   overflow: hidden;
 
   @include bp-up(lg) {
-    top: 10%;
-    right: 10%;    
-    width: 600px;
-    height: 600px;
+    top: 36%;
+    right: 3%;    
+    width: 700px;
+    height: 700px;
+
+    height: 38vw;
+    width: 38vw;
   }
+
+  transition: transform 0.5s $easing-ease-out-quart;
+}
+
+.loupe {
+  height: 100%;
+  width: 100%;
+  
+  &.is-hovered {
+    // cursor: none;
+  }
+}
+
+.loupe-image {
+  position: relative;
+  height: 200%;
+  width: 200%;
+  top: -25%;
+  left: -25%;
+  transition: transform 0.025s ease-out;
+  will-change: transform;
 
   img {
     height: 100%;
     width: 100%;
     object-fit: cover;
-  }
+  }  
 }
 </style>

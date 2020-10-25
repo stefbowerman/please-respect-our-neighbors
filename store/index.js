@@ -7,7 +7,9 @@ export const state = () => ({
     description: '',
     imageUrl: '',
     footerText: '',
-    exhibitedProjectUID: ''
+    exhibitedProjectUID: '',
+    faviconImage: {},
+    touchIcon: {}
   },
   theme: '',
   pageTitle: {
@@ -76,7 +78,9 @@ export const actions = {
       description: this.$prismic.asText(data.description),
       imageUrl: _get(data, 'image.url', ''),
       footerText: this.$prismic.asText(data.footer_text),
-      exhibitedProjectUID: _get(data, 'exhibited_project.uid', '')
+      exhibitedProjectUID: _get(data, 'exhibited_project.uid', ''),
+      faviconImage: _get(data, 'favicon_image', {}),
+      touchIcon: _get(data, 'touch_icon', {})
     }
 
     commit('SET_SITE_SETTINGS', settings)

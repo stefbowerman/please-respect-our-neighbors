@@ -91,11 +91,8 @@ export default {
 
 <style lang="scss" scoped>
 .overlay {
-  position: fixed;
+  @include fill(fixed);
   z-index: $zindex-overlay;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
   // height: var(--unit-100vh);
 
