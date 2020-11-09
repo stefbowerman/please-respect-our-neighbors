@@ -7,6 +7,11 @@
   padding-right: 12px;
 
   @include bp-up(lg) {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  @include bp-up(xxl) {
     padding-left: 50px;
     padding-right: 50px;
   }
@@ -21,6 +26,11 @@
 
   @include bp-up(lg) {
     flex-direction: row;
+    margin-left: -14px;
+    margin-right: -14px;
+  }
+
+  @include bp-up(xxl) {
     margin-left: -25px;
     margin-right: -25px;
   }
@@ -34,6 +44,10 @@
   flex-grow: 1;
 
   @include bp-up(lg) {
+    padding: 0 14px;
+  }
+
+  @include bp-up(xxl) {
     padding: 0 25px;
   }
 
@@ -44,13 +58,27 @@
 
 @include bp-up(lg) {
   .primary-column {
+    flex: 0 0 53%;
+    max-width: 53%;
+    width: 53%;
+  }
+  .secondary-column {
+    flex: 0 0 47%;
+    max-width: 47%;
+    width: 47%;
+  }  
+}
+
+@include bp-up(xxxl) {
+  .primary-column {
     flex: 0 0 60%;
     max-width: 60%;
     width: 60%;
   }
+
   .secondary-column {
     flex: 0 0 40%;
     max-width: 40%;
     width: 40%;
-  }  
+  } 
 }

@@ -41,6 +41,7 @@ header {
   left: 0;
   right: 0;
   text-align: center;
+  pointer-events: none; // Since we only use the secondary column for content, make sure you can use the mouse *through* the rest of the header; apply pointer-events to the nav element
 
   @include theme-text;
 
@@ -52,6 +53,7 @@ header {
 nav {
   font-family: $font-family-secondary;
   font-weight: $font-weight-bold;
+  pointer-events: auto;
 
   display: none;
 

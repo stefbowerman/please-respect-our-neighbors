@@ -1,32 +1,56 @@
+// Text box date
 @mixin text-massive {
   font-size: 50px;
   line-height: (45px/50px);
 
-  @include bp-up(lg) {
+  @include bp-up(xxxl) {
     font-size: 100px;
     line-height: (90px/100px);
+  }
+
+  // Responsive type kicks in above md
+  @include bp-up(md) {
+    font-size: clamp(50px, calc(50px + 2.75vw), 100px)
   }
 }
 
 // Exhibited Project - Large Caption
 @mixin text-huge {
   font-size: 52px;
-  line-height: (33px/52px);
+  line-height: (33px/52px); // 0.64
 
   @include bp-up(lg) {
+    line-height: 0.76; // Somewhere in the middle
+  }    
+
+  @include bp-up(xxxl) {
     font-size: 80px;
-    line-height: (70px/80px);
+    line-height: (70px/80px); // 0.875
+  }
+
+  // Responsive type kicks in above md
+  @include bp-up(md) {
+    font-size: clamp(52px, calc(52px + 1.55vw), 80px);
   }
 }
 
-// Header Title
+// Header Title + text-box-content
 @mixin text-bigger {
   font-size: 27px;
   line-height: (23px/27px);
 
   @include bp-up(lg) {
+    line-height: 0.86; // Somewhere in the middle
+  }
+
+  @include bp-up(xxxl) {
     font-size: 74px;
     line-height: (65px/74px);
+  }
+
+  // Responsive type kicks in above md
+  @include bp-up(md) {
+    font-size: clamp(27px, calc(27px + 2.7vw), 74px);
   }
 }
 
@@ -36,8 +60,17 @@
   line-height: (23px/27px);
 
   @include bp-up(lg) {
+    line-height: 1.05; // Somewhere in the middle
+  }  
+
+  @include bp-up(xxxl) {
     font-size: 46px;
     line-height: (55px/46px);
+  }
+
+  // Responsive type kicks in above md
+  @include bp-up(md) {
+    font-size: clamp(27px, calc(27px + 1vw), 46px);
   }
 }
 
@@ -50,26 +83,35 @@
   @include text-bigger;
 
   // text-huge above lg
-  @include bp-up(lg) {
+  @include bp-up(xxxl) {
     font-size: 80px;
     line-height: (70px/80px);
+  }
+
+  // Responsive type kicks in above md
+  @include bp-up(md) {
+    font-size: clamp(27px, calc(27px + 2.8vw), 80px);
   }
 }
 
 @mixin text-subtitle {
   @include text-big;
 
-  // text-bigger above lg
+  // text-big above lg
   @include bp-down(md) {
     font-size: 15px;
     line-height: (18px/15px);
+  }
+
+    // Responsive type kicks in above md
+  @include bp-up(md) {
+    font-size: clamp(15px, calc(15px + 1.75vw), 46px);
   }
 }
 
 // Normal on most screens
 // Smaller on small screens
 @mixin text-shrink {
-
   @include bp-down(sm) {
     font-size: 12px;
     line-height: 14px;

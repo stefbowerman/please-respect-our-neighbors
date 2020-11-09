@@ -85,10 +85,29 @@ export default {
 <style lang="scss" scoped>
 .header-link {
   display: inline-block;
+  font-size: 16px;
+
+  @include bp-up(xxl) {
+    font-size: $font-size-base;
+  }
+
+  @include bp-up(md) {
+    font-size: clamp(16px, calc(16px + 0.23vw), $font-size-base);
+  }
 
   a {
     display: inline-block;
-    padding: 9px 16px;
+    padding: 9px 2px;
+
+    @include bp-up(xxl) {
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    @include bp-up(xxxl) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
   }
 }
 
@@ -105,7 +124,7 @@ export default {
 // Force the top and bottom to touch the text without messing with line height
 .placement {
   margin-bottom: -8px;
-  transform: translateY(-5px);
+  transform: translateY(-4px);
 }
 
 .text {

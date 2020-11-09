@@ -20,6 +20,9 @@ $red-gradient:   linear-gradient(0deg, $red, $red);
 $font-family-primary:   'Swiss 721', 'Helvetica', sans-serif;
 $font-family-secondary: 'Roboto', sans-serif;
 
+$font-size-base: 1.3125rem; // 21px @ 16px root
+$line-height-base: (25/21);
+
 // $font-size-huge:   80px;
 // $font-size-bigger: 74px;
 // $font-size-big:    46px;

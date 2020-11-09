@@ -46,8 +46,8 @@ body {
   color: $black;
   color: var(--text-color);
   font-family: $font-family-primary;
-  font-size: 1.3125rem; // 21px 
-  line-height: (25/21);
+  font-size: $font-size-base; 
+  line-height: $line-height-base;
   text-transform: uppercase;
 }
 
