@@ -85,11 +85,20 @@ export default {
   .route-info &,
   .route-partners & {
     position: relative;
+    top: auto;
+    margin-top: 72px;
+
+    @include bp-up(lg) {
+      margin-top: 50px;
+    }
   }
 }
 
 .title {
   @include text-title;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 20em;
 }
 
 .subtitle {

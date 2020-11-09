@@ -1,22 +1,22 @@
 <template>
-  <div style="padding-top: 100px; margin-bottom: 100px;">
+  <div class="page page-info">
     <div class="container">
       <div class="row">
         <div class="primary-column">
-          <div class="block">
-            <div
-              class="text-field text-big"
-              v-if="this.description.length"
-              v-html="this.description"
-            />
-          </div>
-
           <div
-            class="block"
+            v-if="description.length"
+            v-html="description"
+            class="block block--description"
+          />
+          <div
             v-for="(slice, i) in slices"
+            :class="[
+              'block',
+              `block--${getSliceType(slice.slice_type)}`
+            ]"
           >
-            <h3 v-text="$prismic.asText(slice.primary.block_title)" />
-            <div class="text-big" v-html="$prismic.asHtml(slice.primary.block_content)"></div>
+            <h3 class="block__title" v-text="$prismic.asText(slice.primary.block_title)" />
+            <div class="block__content" v-html="$prismic.asHtml(slice.primary.block_content)"></div>
           </div>
         </div>
       </div>   
@@ -26,6 +26,7 @@
 
 <script>
 import _get from 'lodash/get'
+import _kebabCase from 'lodash/kebabCase'
 import { stripTags } from '~/utils/tools'
 
 export default {
@@ -43,6 +44,11 @@ export default {
   mounted() {
     this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
     this.$store.commit('SET_PAGE_TITLE_SUBTITLE', null)
+  },
+  methods: {
+    getSliceType(sliceType) {
+      return _kebabCase(sliceType).replace('-block', '')
+    }
   },
   async asyncData({ $prismic }) {
     const response = await $prismic.api.getSingle('about_page')
@@ -97,41 +103,100 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-info {
+  padding-top: 32px;
+  margin-bottom: 100px;
+  align-items: flex-start;
+
+  @include bp-down(md) {
+    min-height: none; // ?
+  }
+
+  @include bp-up(lg) {
+    padding-top: 7.4vw;
+  }
+}
+
 .block {
+  font-weight: $font-weight-medium;
   text-align: center;
+  word-break: break-word;
 
   & + & {
-    margin-top: 171px;
+    margin-top: 61px;
+
+    @include bp-up(lg) {
+      margin-top: 11.8vw;
+      margin-top: clamp(61px, 11.8vw, 200px)
+    }
   }
 
-  p + p {
-    margin-top: 56px;
+  &--description,
+  &--text,
+  &--links {
+    @include text-big;
+
+    @include bp-down(md) {
+      font-size: 18px;
+      line-height: 22px;
+    }
+  }
+
+  &--contact {
+    // @TODO - Make this scale?
+    @include text-large;
+
+    @include bp-down(md) {
+      font-size: 13px;
+      line-height: 17px;
+    }
+
+    /deep/ p + p {
+      margin-top: 16px;
+
+      @include bp-up(lg) {
+        margin-top: 58px;
+        margin-top: 3vw;
+      }
+    }
+  }
+
+  &--text {
+    /deep/ p + p {
+      margin-top: 22px;
+
+      @include bp-up(lg) {
+        margin-top: 49px;
+        margin-top: 2.5vw;
+      }
+    }
+  }
+
+  &--links {
+    .block__title {
+      @include bp-up(lg) {
+        margin-bottom: 48px;
+        margin-bottom: 2.5vw;
+      }
+    }
+    
+    /deep/ a {
+      text-decoration: underline;
+    }  
   }
 }
 
-.text-field {
-  position: relative;
-  border: 1px solid black;
-  padding: 0 27px 25px 0;
-
-  &:before {
-    content: '';
-    background-color: white;
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 27px;
-    bottom: 25px;
-  }
-}
-
-h3 {
-  @include text-huge;
+.block__title {
   margin-bottom: 3px;
+  @include text-huge;
+
+  @include bp-down(md) {
+    font-size: 27px;
+    line-height: 25px;
+  }
 }
 
-.text-big {
-  font-weight: $font-weight-medium; // @TODO - Is this for all .text-big ?
+.block__content {
+
 }
 </style>

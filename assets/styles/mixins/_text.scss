@@ -8,8 +8,8 @@
     line-height: (90px/100px);
   }
 
-  // Responsive type kicks in above md
-  @include bp-up(md) {
+  // Responsive type kicks in above lg
+  @include bp-up(lg) {
     font-size: clamp(50px, calc(50px + 2.75vw), 100px)
   }
 }
@@ -28,8 +28,8 @@
     line-height: (70px/80px); // 0.875
   }
 
-  // Responsive type kicks in above md
-  @include bp-up(md) {
+  // Responsive type kicks in above lg
+  @include bp-up(lg) {
     font-size: clamp(52px, calc(52px + 1.55vw), 80px);
   }
 }
@@ -37,7 +37,7 @@
 // Header Title + text-box-content
 @mixin text-bigger {
   font-size: 27px;
-  line-height: (23px/27px);
+  line-height: (25px/27px);
 
   @include bp-up(lg) {
     line-height: 0.86; // Somewhere in the middle
@@ -48,8 +48,8 @@
     line-height: (65px/74px);
   }
 
-  // Responsive type kicks in above md
-  @include bp-up(md) {
+  // Responsive type kicks in above lg
+  @include bp-up(lg) {
     font-size: clamp(27px, calc(27px + 2.7vw), 74px);
   }
 }
@@ -68,8 +68,8 @@
     line-height: (55px/46px);
   }
 
-  // Responsive type kicks in above md
-  @include bp-up(md) {
+  // Responsive type kicks in above lg
+  @include bp-up(lg) {
     font-size: clamp(27px, calc(27px + 1vw), 46px);
   }
 }
@@ -88,8 +88,8 @@
     line-height: (70px/80px);
   }
 
-  // Responsive type kicks in above md
-  @include bp-up(md) {
+  // Responsive type kicks in above lg
+  @include bp-up(lg) {
     font-size: clamp(27px, calc(27px + 2.8vw), 80px);
   }
 }
@@ -103,8 +103,8 @@
     line-height: (18px/15px);
   }
 
-    // Responsive type kicks in above md
-  @include bp-up(md) {
+    // Responsive type kicks in above lg
+  @include bp-up(lg) {
     font-size: clamp(15px, calc(15px + 1.75vw), 46px);
   }
 }

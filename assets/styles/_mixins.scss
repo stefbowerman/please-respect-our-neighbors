@@ -18,5 +18,8 @@
 @mixin fs-height() {
   height: 100vh;
   height: var(--unit-100vh);
-  transition: height 0.4s ease-out;
+
+  @include bp-down(md) {
+    transition: height 0.4s ease-out;
+  }
 }
