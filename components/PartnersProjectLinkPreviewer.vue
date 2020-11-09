@@ -1,25 +1,31 @@
 <template>
-  <span class="link-previewer">
+  <span
+    :class="[
+      'link-previewer',
+      {'loaded': iframeLoaded }
+    ]"
+  >
     <span
       v-text="text"
-      @click="showPreview = !showPreview"
+      @click="onClick"
     />
 
     <span
       :class="[
         'preview-window',
-        { 'is-visible': showPreview }
+        { 'is-visible': showPreviewWindow }
       ]"
       :style="{}"
     >
       <iframe
-        v-if="showPreview"      
+        v-if="loadable"
         :src="url"
+        ref="iframe"
         :class="[
           { 'is-loaded': iframeLoaded }
         ]"
-        @load="iframeLoaded = true"
-        @onload="iframeLoaded = true"        
+        @load="onIframeLoad"
+        @onload="onIframeLoad"
       />
     </span>
   </span>
@@ -41,11 +47,20 @@ export default {
   },
   data() {
     return {
-      showPreview: false,
+      show: false,
+      loadable: false,
       iframeLoaded: false
     }
   },
+  mounted() {
+    // AJAX check if iframe has x-frame-options same origin
+    // https://stackoverflow.com/questions/15273042/catch-error-if-iframe-src-fails-to-load-error-refused-to-display-http-ww
+    // this.loadable = true / false
+  },
   computed: {
+    showPreviewWindow() {
+      return this.show && this.iframeLoaded
+    }
     // previewWindowStyle() {
     //   if (window ===) return
 
@@ -64,10 +79,12 @@ export default {
     // }
   },
   methods: {
-    // onClick() {
-    //   console.log(`trigger preview for ${this.url}`)
-    //   this.showPreview = !this.showPreview
-    // }
+    onClick() {
+      this.show = !this.show
+    },
+    onIframeLoad() {
+      this.iframeLoaded = true
+    }
   }
 }
 </script>
@@ -75,7 +92,10 @@ export default {
 <style lang="scss" scoped>
 .link-previewer {
   position: relative;
-  cursor: pointer;
+
+  &.loaded {
+    cursor: pointer;
+  }
 }
 
 .preview-window {
@@ -88,7 +108,7 @@ export default {
   transform: scale(0.3);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease-out;
+  transition: opacity 0.5s $easing-ease-out-quart;
   background-image: $light-gradient;
   border: 1px solid var(--text-color);
 

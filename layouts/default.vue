@@ -193,10 +193,10 @@ export default {
         let output      = siteTitle
 
         if (title && siteTitle != title) {
-          output = `${title} - ${siteTitle}`
+          output = `${title} . ${siteTitle}`
         }
 
-        return output
+        return output.toUpperCase()
       },
       meta,
       link

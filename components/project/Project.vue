@@ -115,19 +115,16 @@ export default {
         dates.push(`Completed ${this.formatDate(this.project.end_date)}`)
       }
 
-      // @TODO - make sure this is working for project without description, without partners, etc...
-      return `${title} ${desc && `— ${desc}`} <br /> ${dates.join(', ')} ${partners && `— ${partners}`}`
+      const topLine = `${title}${desc && ` — ${desc}`}`
+      const bottomLine = `${dates.join(', ')}${partners && ` — ${partners}`}`
+
+      return `${topLine}${bottomLine && `<br />${bottomLine}`}`
     },
     captionsStyle() {
       return { height: `${this.captionsHeight}px`}
     }
   },
   methods: {
-    // sliceComponentName(slice) {
-    //   const name = `project-slice-${_kebabCase(slice.slice_type)}`
-    //   console.log(name)
-    //   return name
-    // },
     formatDate(_d) {
       const d = new Date(_d)
       return `${months[d.getMonth()]} ${d.getFullYear()}`
