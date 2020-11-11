@@ -1,0 +1,78 @@
+// This is the core library from plyr (with a few things disabled)
+@import 'plyr/plyr';
+
+:root {
+  --plyr-range-thumb-height: 15px;
+  --plyr-control-spacing: 80px;
+}
+
+.plyr--video {
+  .plyr__controls {
+    padding: 10px 17px;
+    border: 1px solid var(--text-color);
+
+    @include bp-up(md) {
+      padding: 23px 30px 22px;
+    }
+  }
+
+  .plyr__control {
+    padding: 0;
+    color: var(--text-color); // so SVGs can pick up with currentColor
+
+    &.plyr__tab-focus,
+    &:hover,
+    &[aria-expanded='true'] {
+      background: none; // Hide the background that shows on the control icon when hovering
+      color: var(--text-color);
+    }
+  }  
+}
+
+.plyr__progress__buffer {
+  display: none;
+}
+
+
+// Hide the track
+// Need to check this on other browsers
+.plyr--full-ui.plyr--video input[type='range'] {
+
+  &::-webkit-slider-runnable-track {
+    background-color: transparent;
+    background-image: none;
+  }
+
+  &::-webkit-slider-thumb {
+    box-shadow: none;
+    background-color: var(--text-color);
+    cursor: grab;
+  }
+
+  &:active::-webkit-slider-thumb {
+    box-shadow: none;
+    cursor: grabbing;
+  }
+
+  // // Mozilla
+  // &::-moz-range-track {
+  //   display: none;
+  // }
+
+  // // Microsoft
+  // &::-ms-track {
+  //   display: none;
+  // }
+
+  // &::-ms-fill-upper {
+  //   display: none;
+  // }
+
+  // &::-ms-fill-lower {
+  //   display: none;
+  // }
+
+  // &::-ms-thumb {
+  //   display: none;
+  // }
+}

@@ -8,7 +8,10 @@
     @mousemove="onMousemove"
   >          
     <div class="swiper-container" ref="swiper">
-      <div class="swiper-wrapper">
+      <div :class="[
+        'swiper-wrapper',
+        { 'is-disabled': this.slideshowDisabled }
+      ]">
         <slideshow-slide
           v-for="(item, j) in slice.items"
           :key="`slide-${j}`"
@@ -47,6 +50,7 @@
 
 <script>
 import Swiper from 'swiper'
+import Plyr from 'plyr'
 import _padStart from 'lodash/padStart'
 import _round from 'lodash/round'
 import _throttle from 'lodash/throttle'
@@ -80,6 +84,7 @@ export default {
     return {
       progressText: '',
       slideContentHovered: false,
+      slideshowDisabled: false,
       floatingProgressTransX: 0,
       floatingProgressTransY: 0
     }
@@ -88,6 +93,8 @@ export default {
     const VimeoPlayer = require('@vimeo/player').default
 
     this.vimeoPlayers = []
+    this.plyrs = []
+
     this.swiper = new Swiper(this.$refs.swiper, {
       init: false,
       loop: true,
@@ -102,21 +109,56 @@ export default {
 
     this.swiper.init()
 
+    if (this.slice.items.length <= 1) {
+      this.slideshowDisabled = true
+    }
+
+
     // Add a mouseenter, leave and mouse listener to each slide's interactive area
     // Nuxt is mad if we don't assign to a var
     const evts = [...this.swiper.el.querySelectorAll('.slide-content-interactive-area')].map(el => {
       el.addEventListener('mouseenter', e => this.slideContentHovered = true)
       el.addEventListener('mouseleave', e => this.slideContentHovered = false)
-      el.addEventListener('click', this.onSlideContentInteractiveAreaClick)
+
+      const img = el.querySelector('img')
+
+      img && img.addEventListener('click', this.onSlideContentImageClick)
+
+      // el.addEventListener('click', this.onSlideContentInteractiveAreaClick)
+      // @TODO - only attach the click handler to the image inside of the area
+      // If we have a video, clicking on it should just pause and play
     })
 
     // Initialize all the iframes
-    this.vimeoPlayers = [...this.swiper.el.querySelectorAll('iframe')].map(iframe => {
-      if (String(iframe.src).includes('vimeo.com')) {
-        const player = new VimeoPlayer(iframe)
-        player.on('loaded', () => iframe.classList.add('is-loaded'))
-        return player
-      }
+    // this.vimeoPlayers = [...this.swiper.el.querySelectorAll('iframe')].map(iframe => {
+    //   if (String(iframe.src).includes('vimeo.com')) {
+    //     const player = new VimeoPlayer(iframe)
+    //     player.on('loaded', () => iframe.classList.add('is-loaded'))
+    //     return player
+    //   }
+    // })
+
+    // Initialize all the players
+    this.plyrs = [...this.swiper.el.querySelectorAll('.plyr')].map(el => {
+      const p = new Plyr(el, {
+        controls: ['play', 'progress'],
+        disableContextMenu: false,
+        fullscreen: {
+          enabled: false
+        },
+        tooltips: {
+          controls: false,
+          seek: false
+        }
+      })
+
+      p.on('ready', e => el.classList.add('is-loaded'))
+      p.on('ended', e => {
+        p.currentTime = 0
+        this.next()
+      })
+
+      return p
     })
 
     this.throttledResize = _throttle(this.onResize, 250)  
@@ -134,7 +176,8 @@ export default {
     },
     fullyVisible(newViz, oldViz) {
       if (newViz === false) {
-        this.pauseVimeoPlayers()
+        // this.pauseVimeoPlayers()
+        this.pausePlyrs()
       }
     }
   },
@@ -166,17 +209,18 @@ export default {
   },
   methods: {
     onSlideChangeTransitionStart() {
-      this.pauseVimeoPlayers();
+      // this.pauseVimeoPlayers();
+      this.pausePlyrs()
     },
     onSlideChangeTransitionEnd() {
       this.setProgress()
     },
-    onSlideContentInteractiveAreaClick(e) {
+    onSlideContentImageClick(e) {
       if (this.$store.state.isTouch) return
 
       // Since we're only showing one image at a time in the center of the screen
       // we can just check which half of the window they clicked on
-      e.screenX >= window.innerWidth/2 ? this.next() : this.prev()
+      e.clientX >= window.innerWidth/2 ? this.next() : this.prev()
     },
     onMousemove(e) {
       if (!this.$refs.floatingProgress || this.$store.state.isTouch) return
@@ -233,8 +277,11 @@ export default {
 
       this.$emit('progress', this.progressText)
     },
-    pauseVimeoPlayers() {
-      this.vimeoPlayers && this.vimeoPlayers.forEach(player => player.pause())
+    // pauseVimeoPlayers() {
+    //   this.vimeoPlayers && this.vimeoPlayers.forEach(player => player.pause())
+    // },
+    pausePlyrs() {
+      this.plyrs && this.plyrs.forEach(p => p.pause())
     }
   }
 }
@@ -295,6 +342,11 @@ $arrow-slot-width-xxxl: 450px;
   body:not(.is-touch) & {
     transition-timing-function: cubic-bezier(0.5, 0.1, 0, 0.99) !important;
   } 
+
+  // Prevent transform
+  &.is-disabled {
+    transform: translate3d(0, 0, 0) !important;
+  }
 }
 
 .arrow-slot {
@@ -373,14 +425,11 @@ $arrow-slot-width-xxxl: 450px;
     g {
       stroke: var(--text-color);
       stroke-width: 5px;
+      stroke-width: calc(12px - 1vw);
 
-      @include bp-up(md) {
-        stroke-width: 3px;
-      }
-
-      @include bp-up(xl) {
+      @include bp-up(lg) {
         stroke-width: 2px;
-      }      
+      }   
     }
   }
 }
