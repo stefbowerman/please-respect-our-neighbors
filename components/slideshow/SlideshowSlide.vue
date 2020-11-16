@@ -17,16 +17,7 @@
               <video class="plyr" playsinline controls>
                 <source :src="item.video_file_url.url" type="video/mp4" />
               </video>
-            </div>
-
-            <!--
-            <iframe
-              :src="iFrameSrc"
-              frameborder="0"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-            />
-             -->                   
+            </div>                  
           </template>
         </div>
       </div>
@@ -45,15 +36,6 @@ export default {
       type: Object,
       default: () => {}      
     }
-  },
-  computed: {
-    // iFrameSrc() {
-    //   if (this.type !== 'detail_videos' || !this.item.vimeo_url) return ''
-
-    //   const base = this.item.vimeo_url.url.replace('https://vimeo.com/', 'https://player.vimeo.com/video/')
-
-    //   return `${base}?byline=false&color=FD5858&fun=false&portrait=false&title=false`
-    // }
   }
 }
 </script>

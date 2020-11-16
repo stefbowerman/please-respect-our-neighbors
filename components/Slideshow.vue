@@ -90,9 +90,6 @@ export default {
     }
   },
   mounted() {
-    const VimeoPlayer = require('@vimeo/player').default
-
-    this.vimeoPlayers = []
     this.plyrs = []
 
     this.swiper = new Swiper(this.$refs.swiper, {
@@ -128,15 +125,6 @@ export default {
       // @TODO - only attach the click handler to the image inside of the area
       // If we have a video, clicking on it should just pause and play
     })
-
-    // Initialize all the iframes
-    // this.vimeoPlayers = [...this.swiper.el.querySelectorAll('iframe')].map(iframe => {
-    //   if (String(iframe.src).includes('vimeo.com')) {
-    //     const player = new VimeoPlayer(iframe)
-    //     player.on('loaded', () => iframe.classList.add('is-loaded'))
-    //     return player
-    //   }
-    // })
 
     // Initialize all the players
     this.plyrs = [...this.swiper.el.querySelectorAll('.plyr')].map(el => {
@@ -176,7 +164,6 @@ export default {
     },
     fullyVisible(newViz, oldViz) {
       if (newViz === false) {
-        // this.pauseVimeoPlayers()
         this.pausePlyrs()
       }
     }
@@ -209,7 +196,6 @@ export default {
   },
   methods: {
     onSlideChangeTransitionStart() {
-      // this.pauseVimeoPlayers();
       this.pausePlyrs()
     },
     onSlideChangeTransitionEnd() {
@@ -277,9 +263,6 @@ export default {
 
       this.$emit('progress', this.progressText)
     },
-    // pauseVimeoPlayers() {
-    //   this.vimeoPlayers && this.vimeoPlayers.forEach(player => player.pause())
-    // },
     pausePlyrs() {
       this.plyrs && this.plyrs.forEach(p => p.pause())
     }
