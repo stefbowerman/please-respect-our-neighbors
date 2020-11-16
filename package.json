@@ -17,6 +17,7 @@
     "intrinsic-scale": "^3.0.4",
     "lodash": "^4.17.20",
     "nuxt": "^2.0.0",
+    "plyr": "^3.6.2",
     "popmotion": "^9.0.0",
     "portal-vue": "^2.1.7",
     "prismic-javascript": "^3.0.2",

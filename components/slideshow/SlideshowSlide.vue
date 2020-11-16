@@ -12,13 +12,12 @@
               />
             </div>
           </template>
-          <template v-else-if="type === 'detail_videos' && item.vimeo_url.url">
-            <iframe
-              :src="iFrameSrc"
-              frameborder="0"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-            />                     
+          <template v-else-if="type === 'detail_videos' && item.video_file_url.url">
+            <div class="slide-content-interactive-area">
+              <video class="plyr" playsinline controls>
+                <source :src="item.video_file_url.url" type="video/mp4" />
+              </video>
+            </div>                  
           </template>
         </div>
       </div>
@@ -37,20 +36,11 @@ export default {
       type: Object,
       default: () => {}      
     }
-  },
-  computed: {
-    iFrameSrc() {
-      if (this.type !== 'detail_videos' || !this.item.vimeo_url) return ''
-
-      const base = this.item.vimeo_url.url.replace('https://vimeo.com/', 'https://player.vimeo.com/video/')
-
-      return `${base}?byline=false&color=FD5858&fun=false&portrait=false&title=false`
-    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .slide-inner {
   height: 100%;
   width: 100%;
@@ -64,12 +54,14 @@ export default {
   justify-content: center;
 
   img,
-  iframe {
+  iframe,
+  video {
     height: 100%;
     width: 100%;
   }
 
-  iframe {
+  iframe,
+  video {
     object-fit: contain;
     opacity: 0;
     transition: opacity 1s ease-out;
@@ -77,6 +69,26 @@ export default {
     &.is-loaded {
       opacity: 1;
     }
+  }
+
+  // .plyr,
+  // .plyr__video-wrapper {
+  //   height: 100%;
+  // }
+
+  .plyr,
+  .plyr--video,
+  .plyr__video-wrapper {
+    height: auto;
+    width: 100%;
+  }
+
+  .plyr__captions {
+    display: none;
+  }
+
+  .plyr.is-loaded video {
+    opacity: 1;
   }
 }  
 </style>
