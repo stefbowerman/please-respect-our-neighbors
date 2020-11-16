@@ -1,6 +1,9 @@
 <template>
   <div
-    class="project"
+    :class="[
+      'project',
+      { 'is-highlighted': isHighlighted }
+    ]"
     @mouseleave="onProjectMouseleave"
   >
     <div :style="{ position: 'relative', width: '100%'}">
@@ -13,6 +16,7 @@
           :slice="slice"
           :key="`slice-${i}`"
           :active="activeSliceIndex === i"
+          :highlighted="isHighlighted"
           :class="[
             {'active': activeSliceIndex === i },
             {'inactive': activeSliceIndex > -1 && activeSliceIndex !== i }
@@ -23,13 +27,31 @@
       </div>
 
       <!-- This goes behind the previewer -->
-      <div class="project-description">
+      <div class="project-preview__bottom-layer">
         <div
-          class="project-description__text"
-          v-html="fullDescription"
-        />
+          class="project-description"
+          @click="onProjectDescriptionBottomLayerClick"
+        >
+          <div
+            class="project-description__text"
+            v-html="fullDescription"
+          />
+        </div>
       </div>
-    </div>  
+
+      <!-- This goes on top of the previewer and only shows on highlight -->
+      <div class="project-preview__top-layer">
+        <div
+          class="project-description"
+          @click="onProjectDescriptionTopLayerClick"
+        >
+          <div
+            class="project-description__text"
+            v-html="fullDescription"
+          />
+        </div>
+      </div>      
+    </div>
 
     <div
       class="captions"
@@ -88,7 +110,8 @@ export default {
     return {
       activeSliceIndex: -1,
       selectedSliceIndex: -1,
-      captionsHeight: 0
+      captionsHeight: 0,
+      isHighlighted: false
     }
   },
   mounted() {
@@ -142,6 +165,13 @@ export default {
     onProjectMouseleave() {
       // can't just do this since mouseleave gets triggered when we open the overlay
       // this.activeSliceIndex = -1
+    },
+    onProjectDescriptionBottomLayerClick() {
+      this.isHighlighted = true
+      this.activeSliceIndex = -1
+    },
+    onProjectDescriptionTopLayerClick() {
+      this.isHighlighted = false
     }
   }
 }
@@ -164,27 +194,11 @@ export default {
   }
 }
 
-.project-description {
-  position: absolute;
-  z-index: -1;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  text-align: center;
-  pointer-events: none;
-  font-weight: $font-weight-medium;
-  @include text-shrink;
-
-  &__text {
-    // max-width: 800px;
-    // margin: 0 auto;
-    padding: 0 50px;
-  }
-}
-
 .project-previewer {
   display: flex;
+  position: relative;
+  z-index: 2;
+  pointer-events: none; // Apply them back at the 'frame' child level
   width: 100%;
   height: 800px;
   height: 75vh;
@@ -196,7 +210,7 @@ export default {
   .project-preview {
     flex: 1;
     padding: 0 2.5vw;
-    transition: all 600ms cubic-bezier(0.26, 0.35, 0.12, 1.01);
+    transition: all 800ms cubic-bezier(0.26, 0.35, 0.12, 1.01);
 
     &:first-child {
       padding-left: 2.5vw !important;
@@ -214,6 +228,54 @@ export default {
     &.inactive {
       padding: 0 1vw;
     }
+
+    .frame {
+      pointer-events: auto;
+    }
+  }
+}
+
+.project-preview__bottom-layer,
+.project-preview__top-layer {
+  @include fill;
+}
+
+.project-preview__bottom-layer {
+  z-index: 1; // Below project preview
+}
+
+.project-preview__top-layer {
+  z-index: 3; // Above project preview
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity $preview-highlight-transition-duration-out$preview-highlight-easing-out;
+
+  .is-highlighted & {
+    opacity: 1;
+    pointer-events: auto;
+    transition: {
+      timing-function: $preview-highlight-easing-in;
+      duration: $preview-highlight-transition-duration-in;
+    }
+  }
+}
+
+.project-description {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  text-align: center;
+  font-weight: $font-weight-medium;
+  @include text-shrink;
+  cursor: pointer;
+
+  &__text {
+    // max-width: 800px;
+    // margin: 0 auto;
+    padding: 0 50px;
   }
 }
 

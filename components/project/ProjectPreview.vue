@@ -1,5 +1,8 @@
 <template>
-  <div class="project-preview">
+  <div :class="[
+    'project-preview',
+    { 'is-highlighted': highlighted }
+  ]">
     <div
       class="frame"
       v-on:click="$emit('click')"
@@ -32,6 +35,8 @@
           />
         </div>
       </template>
+
+      <div class="frame__overlay" />
     </div>
   </div>
 </template>
@@ -42,6 +47,14 @@ export default {
     slice: {
       type: Object,
       required: true
+    },
+    active: {
+      type: Boolean,
+      default: false
+    },
+    highlighted: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -57,17 +70,35 @@ export default {
 
 <style lang="scss" scoped>
 .project-preview {
-  // cursor: pointer;
   padding: 0 50px;
   padding: 0 3vw;
 }
 
 .frame {
   cursor: pointer;
+  pointer-events: auto;
   height: 100%;
   width: 100%;
   border: 1px solid white;
   overflow: hidden;
+  position: relative;
+}
+
+.frame__overlay {
+  @include fill;
+  z-index: 1;
+  background-color: $black;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity $preview-highlight-transition-duration-out $preview-highlight-easing-out;
+
+  .is-highlighted & {
+    opacity: 0.8;
+    transition: {
+      timing-function: $preview-highlight-easing-in;
+      duration: $preview-highlight-transition-duration-in;
+    }
+  }
 }
 
 // slice.slice_type === 'detail_gallery'
@@ -75,6 +106,15 @@ export default {
 .detail-gallery {
   height: 100%;
   position: relative;
+  transition: filter $preview-highlight-transition-duration-out $preview-highlight-easing-out;
+
+  .is-highlighted & {
+    filter: grayscale(1);
+    transition: {
+      timing-function: $preview-highlight-easing-in;
+      duration: $preview-highlight-transition-duration-in;
+    }
+  }
 
   img {
     @include fill;

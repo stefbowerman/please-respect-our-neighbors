@@ -57,3 +57,9 @@ $container-max-width: 1920px;
 $easing-ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
 $easing-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 $easing-ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+$preview-highlight-transition-duration-in: 0.5s;
+$preview-highlight-transition-duration-out: 0.2s;
+$preview-highlight-easing-in: cubic-bezier(0.18, 0.51, 0.08, 0.9);
+$preview-highlight-easing-out: cubic-bezier(0.17, 0.36, 0.77, 0.56);
+

@@ -3,6 +3,9 @@ import linkResolver from './app/prismic/link-resolver'
 
 export default {
   target: 'static',
+  server: {
+    port: 8000, // default: 3000
+  },
   /*
   ** Headers of the page
   */
