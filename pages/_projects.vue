@@ -137,13 +137,14 @@ export default {
 <style lang="scss" scoped>
 .projects-container {
   margin-top: 115px;
+  margin-bottom: 60px;
 
   @include bp-up(lg) {
-    margin-top: 155px;    
+    margin-top: 65px;    
   }
 }
 
 .project + .project {
-  margin-top: 125px;
+  margin-top: 60px;
 }
 </style>

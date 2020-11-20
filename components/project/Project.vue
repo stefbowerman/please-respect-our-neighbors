@@ -6,7 +6,7 @@
     ]"
     @mouseleave="onProjectMouseleave"
   >
-    <div :style="{ position: 'relative', width: '100%'}">
+    <div class="project-preview-wrapper">
       <div
         v-if="project.slices.length"
         class="project-previewer"
@@ -21,17 +21,17 @@
             {'active': activeSliceIndex === i },
             {'inactive': activeSliceIndex > -1 && activeSliceIndex !== i }
           ]"
-          @click="projectPreviewClick(i)"
-          @mouseenter="activeSliceIndex = i"
+          @click="onProjectPreviewClick(i)"
+          @mouseenter="onProjectPreviewMouseenter(i)"
         />
       </div>
 
       <!-- This goes behind the previewer -->
-      <div class="project-preview__bottom-layer">
-        <div
-          class="project-description"
-          @click="onProjectDescriptionBottomLayerClick"
-        >
+      <div
+        class="project-preview__bottom-layer"
+        @click="onProjectPreviewBottomLayerClick"
+      >
+        <div class="project-description">
           <div
             class="project-description__text"
             v-html="fullDescription"
@@ -40,11 +40,11 @@
       </div>
 
       <!-- This goes on top of the previewer and only shows on highlight -->
-      <div class="project-preview__top-layer">
-        <div
-          class="project-description"
-          @click="onProjectDescriptionTopLayerClick"
-        >
+      <div
+        class="project-preview__top-layer"
+        @click="onProjectPreviewTopLayerClick"
+      >
+        <div class="project-description">
           <div
             class="project-description__text"
             v-html="fullDescription"
@@ -75,7 +75,7 @@
     <portal to="overlays">
       <project-overlay
         v-for="(slice, j) in project.slices"
-        @close="projectOverlayClose"
+        @close="onProjectOverlayClose"
         :key="`project-overlay-${project.uid}-${j}`"
         :show="j === selectedSliceIndex"
         :slice="slice"
@@ -152,26 +152,33 @@ export default {
       const d = new Date(_d)
       return `${months[d.getMonth()]} ${d.getFullYear()}`
     },
-    projectPreviewClick(i) {
-      this.selectedSliceIndex = i
-    },
-    projectOverlayClose() {
-      this.selectedSliceIndex = -1
-    },
     onResize() {
       const heights = this.$refs.captions.map(el => el.clientHeight)
       this.captionsHeight = Math.max(...heights);
     },
-    onProjectMouseleave() {
-      // can't just do this since mouseleave gets triggered when we open the overlay
-      // this.activeSliceIndex = -1
+    onProjectPreviewMouseenter(i) {
+      this.activeSliceIndex = i
     },
-    onProjectDescriptionBottomLayerClick() {
+     onProjectPreviewClick(i) {
+      this.selectedSliceIndex = i
+      this.activeSliceIndex = i // Make up for mouseleave happening on modal open
+    },
+    onProjectPreviewBottomLayerClick() {
       this.isHighlighted = true
       this.activeSliceIndex = -1
     },
-    onProjectDescriptionTopLayerClick() {
+    onProjectPreviewTopLayerClick() {
       this.isHighlighted = false
+    },
+    onProjectOverlayClose() {
+      this.selectedSliceIndex = -1
+    },
+    onProjectMouseleave() {
+      // Only set active slice to -1 if there's no selected slice
+      // Kind of an edge-case, mouseleave gets triggered when we open a modal but that happens when we select a slice
+      if (this.selectedSliceIndex === -1) {
+        this.activeSliceIndex = -1  
+      }
     }
   }
 }
@@ -179,19 +186,24 @@ export default {
 
 <style lang="scss" scoped>
 .project {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   z-index: 1;
+  height: calc(100vh - var(--page-title-height));
 
   @include bp-up(lg) {
-    min-height: none;
-    // height: 100vh;
-    // min-height: 500px;
-    // max-height: 1500px;    
+    height: calc(100vh - var(--page-title-height));
+    padding-top: 30px;
+    max-height: 900px; // For huge monitors
   }
+}
+
+.project-preview-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .project-previewer {
@@ -200,17 +212,12 @@ export default {
   z-index: 2;
   pointer-events: none; // Apply them back at the 'frame' child level
   width: 100%;
-  height: 800px;
-  height: 75vh;
-
-  @include bp-up(lg) {
-    // height: 100%;
-  }
+  height: 100%;
 
   .project-preview {
     flex: 1;
     padding: 0 2.5vw;
-    transition: all 800ms cubic-bezier(0.26, 0.35, 0.12, 1.01);
+    transition: all 0.6s cubic-bezier(0.26, 0.35, 0.12, 1.01);
 
     &:first-child {
       padding-left: 2.5vw !important;
@@ -221,8 +228,8 @@ export default {
     }
 
     &.active {
-      flex: 3.5;
-      padding: 0 5vw;
+      flex: 3.8;
+      padding: 0 6vw;
     }
 
     &.inactive {
@@ -238,6 +245,7 @@ export default {
 .project-preview__bottom-layer,
 .project-preview__top-layer {
   @include fill;
+  cursor: pointer;
 }
 
 .project-preview__bottom-layer {
@@ -270,7 +278,6 @@ export default {
   text-align: center;
   font-weight: $font-weight-medium;
   @include text-shrink;
-  cursor: pointer;
 
   &__text {
     // max-width: 800px;

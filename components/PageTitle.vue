@@ -51,7 +51,8 @@ export default {
   },
   methods: {
     commitHeight() {
-      const h = this.$el.clientHeight + this.$el.getBoundingClientRect().top
+      const rect = this.$el.getBoundingClientRect()
+      const h = rect.height + rect.top
       this.$store.commit('SET_PAGE_TITLE_HEIGHT', h)
     }
   },
