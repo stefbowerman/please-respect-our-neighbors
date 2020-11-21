@@ -40,17 +40,23 @@ export default {
     return {
       progressText: ''
     }
-  }
+  },
+  // mounted() {
+  //   this.$nextTick(() => {
+  //     console.log('updating size')
+  //     this.$refs.slideshow.updateSize()
+  //   })
+  // }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .ex-gallery {
-  height: 100vh;
+  height: 100%;
 
-  /deep/ .slideshow {
-    padding-top: 50px;
-    max-height: 90vh;
+  .arrow-slot {
+    padding-top: 30px;
+    padding-bottom: 30px;
   }
 }
 

@@ -3,9 +3,9 @@
     <exhibited-project-slice
       v-for="(slice, j) in slices"
       :key="j"
-      ref="slices"
       :slice="slice"
       :current="currentSliceIndex === j"
+      ref="slices"
     />
   </div>
 </template>
@@ -48,8 +48,7 @@ export default {
   },
   methods: {
     setCurrentSlice() {
-      const winH = window.innerHeight
-      const triggerPoint = (winH * 0.4) // Slice is ~40% on screen
+      const triggerPoint = (window.innerHeight * 0.4) // Slice is ~40% on screen
 
       // Find the slice which straddles the triggerPoint of the screen
       const i = this.$refs.slices.findIndex((slice, j) => {

@@ -1,34 +1,32 @@
 <template>
   <div class="container">
-    <div class="sizer">
+    <div
+      v-if="primaryImage"
+      class="primary"
+    >
+      <img :src="primaryImage.url" :alt="primaryImage.alt" />
+    </div>
+    <div
+      class="detail"
+      v-if="detailImage"
+      :style="loupeStyle"
+    >
       <div
-        v-if="primaryImage"
-        class="primary"
-      >
-        <img :src="primaryImage.url" :alt="primaryImage.alt" />
-      </div>
-      <div
-        class="detail"
-        v-if="detailImage"
-        :style="loupeStyle"
+        :class="[
+          'loupe',
+          { 'is-hovered': this.loupeHovered }
+        ]"
+        @mousemove="onLoupeMousemove"
+        ref="loupe"
       >
         <div
-          :class="[
-            'loupe',
-            { 'is-hovered': this.loupeHovered }
-          ]"
-          @mousemove="onLoupeMousemove"
-          ref="loupe"
+          class="loupe-image"
+          :style="loupeImageStyle"
         >
-          <div
-            class="loupe-image"
-            :style="loupeImageStyle"
-          >
-            <img
-              :src="detailImage.url"
-              :alt="detailImage.alt"
-            />
-          </div>
+          <img
+            :src="detailImage.url"
+            :alt="detailImage.alt"
+          />
         </div>
       </div>
     </div>
@@ -111,30 +109,26 @@ export default {
       const bottom = h + top
       const elMiddle = top + h/2
 
-      const shift = (scrollTop + winH/2) - elMiddle // this isn't exact but it's close enough...
+      const shift = (scrollTop + winH/2) - (elMiddle) // this isn't exact but it's close enough...
 
-      this.loupeTransY = shift * -0.15
+      this.loupeTransY = shift * -0.12
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.sizer {
-  position: relative;
-
-  @include bp-up(lg) {
-    height: 100vh;
-    padding: 130px 0;
-    margin-left: -24px;
-    margin-right: -24px;    
-    padding-top: var(--page-title-height);
-  }
+.container,
+.primary {
+  height: 100%;
 }
 
 .primary {
+  position: relative;
+
   @include bp-up(lg) {
-    height: 100%;
+    margin-left: -24px;
+    margin-right: -24px; 
 
     img {
       vertical-align: top;
