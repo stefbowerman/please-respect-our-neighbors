@@ -66,7 +66,8 @@ export default {
   },
   methods: {
     onResize() {
-      this.set100vh();
+      this.set100vh()
+      this.$store.commit('SET_WINDOW_WIDTH', window.innerWidth)
     },
     onScroll() {
       const s = window.pageYOffset || document.documentElement.scrollTop

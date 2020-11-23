@@ -11,6 +11,7 @@ export const state = () => ({
     faviconImage: {},
     touchIcon: {}
   },
+  windowWidth: 0,
   theme: '',
   pageTitle: {
     title: '',
@@ -28,6 +29,9 @@ export const state = () => ({
 export const mutations = {
   SET_SITE_SETTINGS(state, data) {
     state.siteSettings = data
+  },
+  SET_WINDOW_WIDTH(state, data) {
+      state.windowWidth = data
   },  
   SET_THEME(state, data) {
     state.theme = data

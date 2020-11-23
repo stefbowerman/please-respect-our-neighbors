@@ -8,22 +8,29 @@
   >
     <div class="project-preview-wrapper">
       <div
-        v-if="project.slices.length"
-        class="project-previewer"
+        class="project-preview-overflow"
+        @click="onProjectPreviewOverflowClick"
+        ref="preview-overflow"
       >
-        <project-preview
-          v-for="(slice, i) in project.slices"
-          :slice="slice"
-          :key="`slice-${i}`"
-          :active="activeSliceIndex === i"
-          :highlighted="isHighlighted"
-          :class="[
-            {'active': activeSliceIndex === i },
-            {'inactive': activeSliceIndex > -1 && activeSliceIndex !== i }
-          ]"
-          @click="onProjectPreviewClick(i)"
-          @mouseenter="onProjectPreviewMouseenter(i)"
-        />
+        <div
+          v-if="project.slices.length"
+          class="project-previewer"
+          :style="previewerStyle"
+        >
+          <project-preview
+            v-for="(slice, i) in project.slices"
+            :slice="slice"
+            :key="`slice-${i}`"
+            :active="activeSliceIndex === i"
+            :highlighted="isHighlighted"
+            :class="[
+              {'active': activeSliceIndex === i },
+              {'inactive': activeSliceIndex > -1 && activeSliceIndex !== i }
+            ]"
+            @click="onProjectPreviewClick(i)"
+            @mouseenter="onProjectPreviewMouseenter(i)"
+          />
+        </div>
       </div>
 
       <!-- This goes behind the previewer -->
@@ -111,17 +118,13 @@ export default {
       activeSliceIndex: -1,
       selectedSliceIndex: -1,
       captionsHeight: 0,
-      isHighlighted: false
+      previewerWidth: 0,
+      isHighlighted: false,
+      horizontalScrollSet: false
     }
   },
   mounted() {
-    console.log(this.project)
-    window.addEventListener('resize', this.onResize)
-
     this.onResize()
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize) 
   },
   computed: {
     fullDescription() {
@@ -143,8 +146,18 @@ export default {
 
       return `${topLine}${bottomLine && `<br />${bottomLine}`}`
     },
+    previewerStyle() {
+      return { width: `${this.previewerWidth}px`}
+    },
     captionsStyle() {
+      if (process.server) return {}
+
       return { height: `${this.captionsHeight}px`}
+    }
+  },
+  watch: {
+    '$store.state.windowWidth'() {
+      this.onResize()
     }
   },
   methods: {
@@ -152,9 +165,33 @@ export default {
       const d = new Date(_d)
       return `${months[d.getMonth()]} ${d.getFullYear()}`
     },
+    setPreviewerWidth() {
+      // Update the previewer width
+      this.previewerWidth = this.$store.state.windowWidth * this.project.slices.length / 2.5
+
+      if (this.previewerWidth === 0 || this.horizontalScrollSet) return
+
+      // scroll to the middle of the project slices
+      this.$nextTick(() => {
+        const previewOverflow = this.$refs['preview-overflow']
+        previewOverflow.scrollLeft = (previewOverflow.scrollWidth - previewOverflow.clientWidth) / 2
+        
+        this.horizontalScrollSet = true
+      })
+    },
+    setCaptionHeight() {
+      let h = 0
+
+      if (this.$refs.captions) {
+        const heights = this.$refs.captions.map(el => el.clientHeight)  
+        h = Math.max(...heights)
+      }
+      
+      this.captionsHeight = h
+    },
     onResize() {
-      const heights = this.$refs.captions.map(el => el.clientHeight)
-      this.captionsHeight = Math.max(...heights);
+      this.setCaptionHeight()
+      this.setPreviewerWidth()
     },
     onProjectPreviewMouseenter(i) {
       this.activeSliceIndex = i
@@ -169,6 +206,12 @@ export default {
     },
     onProjectPreviewTopLayerClick() {
       this.isHighlighted = false
+    },
+    onProjectPreviewOverflowClick(e) {
+      // console.log(e)
+      if (e && e.target === this.$refs['preview-overflow']) {
+        this.onProjectPreviewBottomLayerClick()
+      }
     },
     onProjectOverlayClose() {
       this.selectedSliceIndex = -1
@@ -201,40 +244,81 @@ export default {
 }
 
 .project-preview-wrapper {
-  position: relative;
+  position: relative; // For top and bottom layers to position themselves against
   height: 100%;
   width: 100%;
 }
 
+.project-preview-overflow {
+  position: relative;
+  z-index: 2; // To sandwich in the middle of the top and bottom layers
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include bp-up(md) {
+    pointer-events: none; // Above this screen size we don't do scrolling anymore so we don't need pointer events
+  }
+}
+
 .project-previewer {
   display: flex;
-  position: relative;
-  z-index: 2;
-  pointer-events: none; // Apply them back at the 'frame' child level
-  width: 100%;
   height: 100%;
+  pointer-events: none; // Apply them back at the 'frame' child level
+
+  @include bp-up(md) {
+    width: 100% !important;
+  }
 
   .project-preview {
     flex: 1;
-    padding: 0 2.5vw;
+    padding: 0 5.5vw;
+    // width: 200px;
+    // width: 35vw;
+    // min-width: 35vw;
     transition: all 0.6s cubic-bezier(0.26, 0.35, 0.12, 1.01);
 
+    // @include bp-up(lg) {
+    //   width: auto;
+    // }
+
     &:first-child {
-      padding-left: 2.5vw !important;
+      padding-left: 5.5vw !important;
     }
 
     &:last-child {
-      padding-right: 2.5vw !important;
+      padding-right: 5.5vw !important;
     }
 
     &.active {
       flex: 3.8;
-      padding: 0 6vw;
+      padding: 0 8vw;
     }
 
     &.inactive {
-      padding: 0 1vw;
+      padding: 0 2.5vw;
     }
+
+    @include bp-up(md) {
+      padding: 0 2.5vw;
+
+      &:first-child {
+        padding-left: 2.5vw !important;
+      }
+
+      &:last-child {
+        padding-right: 2.5vw !important;
+      }
+
+      &.active {
+        padding: 0 5vw;
+      }      
+    }    
 
     .frame {
       pointer-events: auto;
