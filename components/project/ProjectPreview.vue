@@ -125,10 +125,12 @@ export default {
 // slice.slice_type === 'detail_text'
 
 .detail-text {
+  @include fill;
   border: 1px solid white;
   color: white;
-  background: #2B2B2B;
+  background: $darker-grey;
   white-space: nowrap;
+
 }
 
 .text {

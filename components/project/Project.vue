@@ -2,7 +2,8 @@
   <div
     :class="[
       'project',
-      { 'is-highlighted': isHighlighted }
+      { 'is-highlighted': isHighlighted },
+      { 'is-ready': ready }
     ]"
     @mouseleave="onProjectMouseleave"
   >
@@ -115,6 +116,7 @@ export default {
   },
   data() {
     return {
+      ready: false,
       activeSliceIndex: -1,
       selectedSliceIndex: -1,
       captionsHeight: 0,
@@ -158,6 +160,11 @@ export default {
   watch: {
     '$store.state.windowWidth'() {
       this.onResize()
+    },
+    previewerWidth(newVal, oldVal) {
+      if (newVal > 0 && this.ready === false) {
+        this.ready = true
+      }
     }
   },
   methods: {
@@ -197,8 +204,12 @@ export default {
       this.activeSliceIndex = i
     },
      onProjectPreviewClick(i) {
-      this.selectedSliceIndex = i
-      this.activeSliceIndex = i // Make up for mouseleave happening on modal open
+      if (!this.$store.state.isTouch) {
+        // don't activate on touch screens
+        this.activeSliceIndex = i // Make up for mouseleave happening on modal open
+      }
+
+      this.selectedSliceIndex = i // This triggers the modal opening
     },
     onProjectPreviewBottomLayerClick() {
       this.isHighlighted = true
@@ -235,11 +246,19 @@ export default {
   position: relative;
   z-index: 1;
   height: calc(100vh - var(--page-title-height));
+  max-height: 500px;
 
   @include bp-up(lg) {
     height: calc(100vh - var(--page-title-height));
     padding-top: 30px;
     max-height: 900px; // For huge monitors
+  }
+
+  opacity: 0;
+  transition: opacity 500ms ease-out;
+
+  &.is-ready {
+    opacity: 1
   }
 }
 
@@ -376,6 +395,12 @@ export default {
   margin-top: 10px;
   width: 100%;
   position: relative;
+
+  display: none;
+
+  @include bp-up(md) {
+    display: block;
+  }
 }
 
 .caption-holder {

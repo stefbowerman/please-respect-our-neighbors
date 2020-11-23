@@ -53,7 +53,7 @@ export default {
           top: this.$refs.projects[projectIndex].$el.getBoundingClientRect().top,
           behavior: 'smooth'
         });
-      }, 1000)
+      }, 2000)
     }  
   },
   beforeDestroy() {
