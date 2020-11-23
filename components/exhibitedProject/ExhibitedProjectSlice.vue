@@ -127,8 +127,11 @@ export default {
 
 .exhibited-project-slice__contain {
   height: 100vh;
-  padding-top: calc(var(--page-title-height) + 15px);
   position: relative; // For accent BG
-  padding-bottom: 40px; // Random number...something reasonable in case there's no caption
+  
+  @include bp-up(lg) {
+    padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
+    padding-top: calc(var(--page-title-height) + 15px);
+  }
 }
 </style>

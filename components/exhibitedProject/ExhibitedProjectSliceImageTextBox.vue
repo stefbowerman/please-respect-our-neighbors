@@ -47,6 +47,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container,
+.row,
+.primary-column,
+.secondary-column,
+.image {
+  height: 100%;
+}
+
 .image,
 .text-box-wrapper {
   @include bp-down(lg) {
@@ -65,6 +73,11 @@ export default {
     margin: 0 auto;
     display: block;
     border: 1px solid $black;
+    height: 100%;
+    max-height: 450px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 }
 

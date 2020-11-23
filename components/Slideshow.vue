@@ -250,9 +250,6 @@ export default {
       this.swiper.slideTo(1, 0)
       this.setProgress()
     },
-    updateSize() {
-      this.swiper.updateSize()
-    },
     destroySwiper() {
       this.swiper && this.swiper.destroy()
       delete this.swiper

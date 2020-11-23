@@ -51,10 +51,17 @@ export default {
 .text-box-wrapper {
   margin: 0 auto;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @include bp-up(lg) {
     max-width: 80%;
     padding: 60px 0;
+
+    .text-box {
+      max-height: 600px;
+    }    
   }
 }
 </style>

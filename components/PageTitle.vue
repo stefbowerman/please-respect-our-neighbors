@@ -93,6 +93,10 @@ export default {
       margin-top: 50px;
     }
   }
+
+  .route-exhibited-project & {
+    position: fixed;
+  }
 }
 
 .title {

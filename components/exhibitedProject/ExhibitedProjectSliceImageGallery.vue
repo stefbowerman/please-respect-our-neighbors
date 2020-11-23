@@ -41,12 +41,14 @@ export default {
       progressText: ''
     }
   },
-  // mounted() {
-  //   this.$nextTick(() => {
-  //     console.log('updating size')
-  //     this.$refs.slideshow.updateSize()
-  //   })
-  // }
+  mounted() {
+    // @TODO - Wait for everything to load before triggering this
+    setTimeout(() => {
+      console.log('updating size')
+      this.$refs.slideshow.update()
+    }, 1000)
+
+  }
 }
 </script>
 

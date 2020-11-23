@@ -27,7 +27,7 @@ export default {
       title: '',
       slices: [],
       meta: {},
-      currentSliceIndex: 0
+      currentSliceIndex: -1
     }
   },
   beforeCreate() {
@@ -35,6 +35,8 @@ export default {
   },
   mounted() {
     this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
+
+    this.setCurrentSlice()
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)
     this.throttledOnResize = _throttle(this.onResize, 250)
