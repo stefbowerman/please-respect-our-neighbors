@@ -143,7 +143,7 @@ export default {
         dates.push(`Completed ${this.formatDate(this.project.end_date)}`)
       }
 
-      const topLine = `${title}${desc && ` — ${desc}`}`
+      const topLine    = `${title}${desc && ` — ${desc}`}`
       const bottomLine = `${dates.join(', ')}${partners && ` — ${partners}`}`
 
       return `${topLine}${bottomLine && `<br />${bottomLine}`}`
@@ -250,7 +250,7 @@ export default {
 
   @include bp-up(lg) {
     height: calc(100vh - var(--page-title-height));
-    padding-top: 30px;
+    padding-top: 60px;
     max-height: 900px; // For huge monitors
   }
 
@@ -300,7 +300,7 @@ export default {
     // width: 200px;
     // width: 35vw;
     // min-width: 35vw;
-    transition: all 0.6s cubic-bezier(0.26, 0.35, 0.12, 1.01);
+    transition: all 0.7s cubic-bezier(0.26, 0.35, 0.12, 1.01);
 
     // @include bp-up(lg) {
     //   width: auto;
@@ -312,6 +312,11 @@ export default {
 
     &:last-child {
       padding-right: 5.5vw !important;
+    }
+
+    &.active,
+    &.inactive {
+      transition-duration: 0.6s;
     }
 
     &.active {

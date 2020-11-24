@@ -52,12 +52,12 @@ export default {
 }
 
 .caption-progress {
-  @include bp-up(md) {
-    display: none;
-  }
+  // @include bp-up(md) {
+  //   display: none;
+  // }
 
-  body.no-touch {
-    display: none;
-  }
+  // body.no-touch {
+  //   display: none;
+  // }
 }
 </style>

@@ -145,6 +145,6 @@ export default {
 }
 
 .project + .project {
-  margin-top: 60px;
+  margin-top: 100px;
 }
 </style>
