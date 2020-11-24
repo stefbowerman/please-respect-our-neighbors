@@ -142,6 +142,9 @@ export default {
       if (this.project.end_date) {
         dates.push(`Completed ${this.formatDate(this.project.end_date)}`)
       }
+      else {
+        dates.push(`Ongoing ∞`)
+      }
 
       const topLine    = `${title}${desc && ` — ${desc}`}`
       const bottomLine = `${dates.join(', ')}${partners && ` — ${partners}`}`

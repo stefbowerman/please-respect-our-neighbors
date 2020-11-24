@@ -62,7 +62,7 @@ export default {
 }
 
 .index-image {
-  height: 90%;
+  height: 50%;
   width: 100%;
   max-height: 800px;
 

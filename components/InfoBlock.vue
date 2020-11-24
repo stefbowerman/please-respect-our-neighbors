@@ -1,9 +1,21 @@
 <template>
   <div :class="classes">
-    <h3 class="block__title" v-text="title" />
-    <div class="block__content" v-html="content"></div>
+    <div
+      class="block__interaction"
+      ref="block"
+      @mouseenter="onMouseenter"
+      @mouseleave="onMouseleave"
+      @mousemove="onMousemove"      
+    >
+      <h3 class="block__title" v-text="title" />
+      <div class="block__content" v-html="content"></div>
 
-    <div class="block__box" />
+      <div
+        class="block__box"
+        :style="boxStyle"
+        v-show="hovered"
+      />      
+    </div>
   </div>
 </template>
 
@@ -23,6 +35,26 @@ export default {
       stype: String
     }
   },
+  data() {
+    return {
+      hovered: false,
+      hoveredEl: null,
+
+      boxTop: 0,
+      boxLeft: 0,
+      boxWidth: 0
+    }
+  },
+  watch: {
+    hoveredEl(newEl, oldEl) {
+      if (newEl && newEl !== this.$refs.block) {
+        this.boxTop = newEl.offsetTop
+        this.boxLeft = newEl.offsetLeft
+        this.boxWidth = newEl.offsetWidth
+        this.boxHeight = newEl.offsetHeight
+      }
+    }
+  },
   computed: {
     classes() {
       const t = _kebabCase(this.type).replace('-block', '')
@@ -31,6 +63,27 @@ export default {
         'block',
         ( t && `block--${t}` )
       ]
+    },
+    boxStyle() {
+      return {
+        top: `${this.boxTop}px`,
+        left: `${this.boxLeft}px`,
+        width: `${this.boxWidth}px`,
+        height: `${this.boxHeight}px`
+      }
+    }
+  },
+  methods: {
+    onMouseenter(e) {
+      this.hovered = true
+      this.hoveredEl = e.target
+    },
+    onMouseleave(e) {
+      this.hovered = false
+      this.hoveredEl = null
+    },
+    onMousemove(e) {
+      this.hoveredEl = e.target
     }
   }
 }
@@ -38,7 +91,6 @@ export default {
 
 <style lang="scss" scoped>
 .block {
-  position: relative;
   font-weight: $font-weight-medium;
   text-align: center;
   word-break: break-word;
@@ -98,10 +150,9 @@ export default {
   }
 }
 
-.block__title,
-.block__content {
+.block__interaction {
   position: relative;
-  z-index: 1; // Push above the box
+  z-index: 1;
 }
 
 .block__title {
@@ -122,17 +173,14 @@ export default {
 // Need to finalize the styling
 .block__box {
   position: absolute;
-  top: -13px;
+  z-index: -1;
+  top: 0;
   left: 0;
-  right: 0;
-  border: 1px solid transparent;
+  width: 100%;
   height: 0;
-  transition: all 0.4s cubic-bezier(0.43, 0.27, 0.14, 0.82);
-
-  .block:hover & {
-    height: 105%;
-    border-color: $black;
-    background-color: $white;
-  }
+  border: 1px solid black;
+  background-color: white;
+  transition: all 0.2s cubic-bezier(0.43, 0.27, 0.14, 0.82);
+  pointer-events: none;
 }
 </style>

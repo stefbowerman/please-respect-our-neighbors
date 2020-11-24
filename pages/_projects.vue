@@ -24,6 +24,9 @@ export default {
   },
   data() {
     return {
+      title: '',
+      subtitle: '',
+      meta: {},
       projects: [],
       selectedProject: null
     }
@@ -32,7 +35,7 @@ export default {
     this.$store.commit('SET_THEME', 'dark')
   },  
   mounted() {
-    this.$store.commit('SET_PAGE_TITLE_TITLE', 'Accumulated Projects')
+    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
     this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)
@@ -40,8 +43,8 @@ export default {
 
     // If selected project, wait until after scroll is complete to attach the scroll handler ?
     // or just add a flag to ignore scroll ?
-    window.addEventListener('scroll', this.throttledOnScroll)
-    window.addEventListener('resize', this.throttledOnResize)    
+    // window.addEventListener('scroll', this.throttledOnScroll)
+    // window.addEventListener('resize', this.throttledOnResize)    
 
     // @TODO - Testing to see if this works...
     if (this.selectedProject) {
@@ -57,15 +60,15 @@ export default {
     }  
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.throttledOnScroll)
-    window.removeEventListener('resize', this.throttledOnResize)
+    // window.removeEventListener('scroll', this.throttledOnScroll)
+    // window.removeEventListener('resize', this.throttledOnResize)
   },
   methods: {
     onScroll() {
-      this.checkVisibleProject()
+      // this.checkVisibleProject()
     },
     onResize() {
-      this.checkVisibleProject()
+      // this.checkVisibleProject()
     },
     checkVisibleProject() {
       // @TODO - this.$refs.project-* should maybe just be this.$refs.projects and pull based on index?
@@ -90,41 +93,62 @@ export default {
       // console.log(this.currentSliceIndex) 
     }
   },
-  computed: {
-    subtitle() {
-      // const dates = this.firstYearActive === this.lastYearActive ? '' : [this.firstYearActive, this.lastYearActive].join('—')
-      const dates = [2018, 2020].join('—') // @TODO - Finish computing this from array of 'start' and 'end' dates... or just let them set the page subtitle?
-
-      return `Collected Works ${dates}`
-    }
-  },
   async asyncData({ $prismic, store, route }) {
-    const projects = store.state.projects
+    const response = await $prismic.api.getSingle('projects_page')
+    const data = response.data
+
+    const projectUIDs = data.projects.map(({ project }) => project.uid) // i.e. ["sergio-tacchini", "undefeated", "what-a-romantic", "at-large-magazine"]
+
+    const title = $prismic.asText(_get(data, 'title', []))
+    const subtitle = $prismic.asText(_get(data, 'subtitle', []))
+    const meta = {
+      title: $prismic.asText(_get(data, 'meta_title', [])),
+      description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
+      imageUrl: _get(data, 'meta_image.url')
+    }
+
+
+    // Only show the projects as specified in the projects_page settings
+    const projects = projectUIDs.map(uid => {
+      return store.state.projects.find(p => p.uid === uid)
+    })
+
     const selectedProject = Boolean(route.params.uid) ? route.params.uid : null
 
     // @TODO - If route.params.uid and no project exists with that UID, redirect to /projects?
     // Don't want bad SEO
 
     return {
+      title,
+      subtitle,
+      meta,
       projects,
       selectedProject
     }
   },  
   head() {
-    const title = 'Accumulated Projects'.toUpperCase()
+    const title = this.meta.title || this.title
     const meta = [
       {
         hid: 'title',
         property: 'og:title',
         content: title
-      },
+      },    
       {
         hid: 'description',
         name: 'description',
         property: 'og:description',
-        content: 'All our work in one place'
+        content: stripTags(this.meta.description || this.description)
       }
     ]
+
+    if (this.meta.imageUrl) {
+      meta.push({
+        hid: 'og:image',
+        property: 'og:image',
+        content: this.meta.imageUrl
+      })
+    }
 
     return {
       title,

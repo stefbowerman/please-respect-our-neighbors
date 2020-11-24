@@ -119,14 +119,6 @@ export const actions = {
         slices: _get(project, 'data.body', []),
         partners: projectPartners // Add project property with linked partners
       }
-    })
-
-    // Sort oldest -> newest based on project end_date (or start date if end isn't supplied)
-    projects.sort((a, b) => {
-      const aDate = new Date(a.end_date || a.start_date)
-      const bDate = new Date(a.end_date || a.start_date)
-
-      return aDate >= bDate ? -1 : 1
     })    
 
     commit('SET_PROJECTS', projects)
