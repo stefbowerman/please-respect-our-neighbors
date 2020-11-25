@@ -57,7 +57,7 @@ import _throttle from 'lodash/throttle'
 
 import Overlay from '~/components/Overlay'
 import TextBox from '~/components/TextBox'
-import Slideshow from '~/components/Slideshow/Slideshow'
+import Slideshow from '~/components/slideshow/Slideshow'
 import Caption from '~/components/Caption'
 
 export default {
