@@ -139,6 +139,8 @@ export default {
         const player = e.detail.plyr;
         const controls = player.elements.controls
 
+        player.pip = false // Turn off
+
         if (controls) {
           controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)
           controls.addEventListener('mouseleave', e => this.videoControlsHovered = false)

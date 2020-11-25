@@ -164,7 +164,8 @@ export default {
   margin-bottom: 60px;
 
   @include bp-up(lg) {
-    margin-top: 65px;    
+    margin-top: 65px;
+    margin-bottom: 150px;   
   }
 }
 

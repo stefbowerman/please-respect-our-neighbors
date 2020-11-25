@@ -55,9 +55,22 @@
   }
 
   // // Mozilla
-  // &::-moz-range-track {
-  //   display: none;
-  // }
+  &::-moz-range-track,
+  &::-moz-range-progress {
+    background-color: transparent;
+    background-image: none;
+  }
+
+  &::-moz-range-thumb {
+    box-shadow: none;
+    background-color: var(--text-color);
+    cursor: grab;
+  }
+
+  &:active::-moz-range-thumb {
+    box-shadow: none;
+    cursor: grabbing;
+  }  
 
   // // Microsoft
   // &::-ms-track {
