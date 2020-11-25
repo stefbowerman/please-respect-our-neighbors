@@ -12,8 +12,8 @@
       <template v-if="slice.slice_type === 'detail_gallery'">
         <div class="detail-gallery">
           <prismic-image
-            v-if="slice.items.length"
-            :field="slice.items[0].image"
+            v-if="slice.primary.detail_featured_image.url"
+            :field="slice.primary.detail_featured_image"
           />
         </div>
       </template>
@@ -23,15 +23,6 @@
           <div
             class="text"
             v-html="$prismic.asHtml(slice.primary.detail_rich_text)"
-          />
-        </div>
-      </template>
-
-      <template v-else-if="slice.slice_type === 'detail_videos'">
-        <div class="detail-gallery">
-          <prismic-image
-            v-if="slice.primary.detail_featured_image.url"
-            :field="slice.primary.detail_featured_image"
           />
         </div>
       </template>
@@ -55,14 +46,6 @@ export default {
     highlighted: {
       type: Boolean,
       default: false
-    }
-  },
-  mounted() {
-    // console.log(this.slice)
-  },
-  methods: {
-    click() {
-      this.$emit('click')
     }
   }
 }
@@ -139,8 +122,4 @@ export default {
   width: 500px;
   padding: 65px 13px; 
 }
-
-// slice.slice_type === 'detail_videos'
-
-.detail-videos {}
 </style>

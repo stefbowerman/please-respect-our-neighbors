@@ -10,9 +10,7 @@
   >
     <template slot="body">
       <div class="viewer">
-        <template
-          v-if="slice.slice_type === 'detail_gallery' || slice.slice_type === 'detail_videos'"
-        >
+        <template v-if="slice.slice_type === 'detail_gallery'">
           <Slideshow
             :slice="slice"
             :visible="visible"
@@ -59,7 +57,7 @@ import _throttle from 'lodash/throttle'
 
 import Overlay from '~/components/Overlay'
 import TextBox from '~/components/TextBox'
-import Slideshow from '~/components/Slideshow'
+import Slideshow from '~/components/Slideshow/Slideshow'
 import Caption from '~/components/Caption'
 
 export default {

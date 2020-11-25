@@ -15,7 +15,6 @@
         <slideshow-slide
           v-for="(item, j) in slice.items"
           :key="`slide-${j}`"
-          :type="slice.slice_type"
           :item="item"
           ref="slides"
         />
@@ -84,6 +83,7 @@ export default {
     return {
       progressText: '',
       slideContentHovered: false,
+      videoControlsHovered: false,
       slideshowDisabled: false,
       floatingProgressTransX: 0,
       floatingProgressTransY: 0
@@ -110,7 +110,6 @@ export default {
       this.slideshowDisabled = true
     }
 
-
     // Add a mouseenter, leave and mouse listener to each slide's interactive area
     // Nuxt is mad if we don't assign to a var
     const evts = [...this.swiper.el.querySelectorAll('.slide-content-interactive-area')].map(el => {
@@ -120,10 +119,6 @@ export default {
       const img = el.querySelector('img')
 
       img && img.addEventListener('click', this.onSlideContentImageClick)
-
-      // el.addEventListener('click', this.onSlideContentInteractiveAreaClick)
-      // @TODO - only attach the click handler to the image inside of the area
-      // If we have a video, clicking on it should just pause and play
     })
 
     // Initialize all the players
@@ -140,7 +135,18 @@ export default {
         }
       })
 
-      p.on('ready', e => el.classList.add('is-loaded'))
+      p.on('ready', e => {
+        const player = e.detail.plyr;
+        const controls = player.elements.controls
+
+        if (controls) {
+          controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)
+          controls.addEventListener('mouseleave', e => this.videoControlsHovered = false)
+        }
+
+        el.classList.add('is-loaded')
+      })
+
       p.on('ended', e => {
         p.currentTime = 0
         this.next()
@@ -183,7 +189,7 @@ export default {
       return this.fullyVisible
     },
     showFloatingProgress() {
-      return this.fullyVisible && this.slideContentHovered && this.hasArrows
+      return this.fullyVisible && this.slideContentHovered && this.hasArrows && !this.videoControlsHovered
     },
     floatingProgressTransform() {
       if (this.floatingProgressTransX === 0 && this.floatingProgressTransY === 0) {

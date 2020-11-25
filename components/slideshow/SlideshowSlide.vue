@@ -2,22 +2,19 @@
   <div class="swiper-slide">
     <div class="slide-inner">
       <div class="slide-content-frame">
-          <template v-if="type === 'detail_gallery' || type === 'image_gallery'">
-            <div class="slide-content-interactive-area">
-              <prismic-image
-                :field="item.image"
-                class="slide-image"
-                :data-height="item.image.dimensions.height"
-                :data-width="item.image.dimensions.width"
-              />
-            </div>
-          </template>
-          <template v-else-if="type === 'detail_videos' && item.video_file_url.url">
-            <div class="slide-content-interactive-area">
-              <video class="plyr" playsinline controls>
-                <source :src="item.video_file_url.url" type="video/mp4" />
-              </video>
-            </div>                  
+        <div class="slide-content-interactive-area">
+          <template v-if="type === 'video'">
+            <video class="plyr" playsinline controls>
+              <source :src="item.video_file_url.url" type="video/mp4" />
+            </video>
+          </template>          
+          <template v-else-if="type === 'image'">
+            <prismic-image
+              :field="item.image"
+              class="slide-image"
+              :data-height="item.image.dimensions.height"
+              :data-width="item.image.dimensions.width"
+            />
           </template>
         </div>
       </div>
@@ -26,15 +23,28 @@
 </template>
 
 <script>
+import _get from 'lodash/get'
+
 export default {
   props: {
-    type: {
-      type: String,
-      default: ''
-    },
     item: {
       type: Object,
       default: () => {}      
+    }
+  },
+  computed: {
+    type() {
+      let t
+
+      // Prioritize videos in case they pass in both
+      if (_get(this.item, 'video_file_url.url', null) != null) {
+        t = 'video'
+      }
+      else if (_get(this.item, 'image.url', null) != null) {
+        t = 'image'
+      }
+
+      return t
     }
   }
 }
@@ -70,11 +80,6 @@ export default {
       opacity: 1;
     }
   }
-
-  // .plyr,
-  // .plyr__video-wrapper {
-  //   height: 100%;
-  // }
 
   .plyr,
   .plyr--video,
