@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Slideshow from '~/components/Slideshow/Slideshow'
+import Slideshow from '~/components/slideshow/Slideshow'
 import Caption from '~/components/Caption'
 
 export default {
