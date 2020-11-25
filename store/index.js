@@ -21,6 +21,7 @@ export const state = () => ({
   overlayOpen: false,
   mobileMenuOpen: false,
   isTouch: false,
+  isDragging: false,
   indexViewed: false,
   projects: []
 })
@@ -54,6 +55,9 @@ export const mutations = {
   SET_IS_TOUCH(state, data) {
     state.isTouch = !!data
   },
+  SET_IS_DRAGGING(state, data) {
+    state.isDragging = data
+  },  
   SET_INDEX_VIEWED(state, data) {
     state.indexViewed = data
   },

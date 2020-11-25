@@ -22,7 +22,8 @@
     "prismic-javascript": "^3.0.2",
     "simplebar": "^5.3.0",
     "simplebar-vue": "^1.6.0",
-    "swiper": "^6.3.2"
+    "swiper": "^6.3.2",
+    "v-dragged": "0.0.5"
   },
   "devDependencies": {
     "@aceforth/nuxt-netlify": "^1.1.0",

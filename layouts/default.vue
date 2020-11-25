@@ -153,6 +153,10 @@ export default {
       bodyClasses.push('is-touch')  
     }
 
+    if (this.$store.state.isDragging) {
+      bodyClasses.push('is-dragging')
+    }     
+
     const link = []
     const favicon = this.$store.state.siteSettings.faviconImage
     const touchIcon = this.$store.state.siteSettings.touchIcon

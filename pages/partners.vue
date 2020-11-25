@@ -1,14 +1,16 @@
 <template>
-  <div class="container">
-    <div class="wall">
-      <partners-project
-        v-for="(project, i) in projects"
-        :key="`project-${i}`"
-        :project="project"
-        :activePartnerUID="activePartnerUID"
-        @partner-mouseenter="onPartnerMouseenter"
-        @partner-mouseleave="onPartnerMouseleave"
-      />
+  <div style="overflow: hidden">
+    <div class="container">
+      <div class="wall">
+        <partners-project
+          v-for="(project, i) in projects"
+          :key="`project-${i}`"
+          :project="project"
+          :activePartnerUID="activePartnerUID"
+          @partner-mouseenter="onPartnerMouseenter"
+          @partner-mouseleave="onPartnerMouseleave"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -116,6 +118,11 @@ export default {
     padding-bottom: 200px;    
     padding-left: 20px;
     padding-right: 20px;    
+  }
+
+  .is-dragging & {
+    user-select: none;
+    pointer-events: none;
   }
 }
 </style>
