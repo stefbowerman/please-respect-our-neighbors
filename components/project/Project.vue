@@ -23,11 +23,9 @@
             :slice="slice"
             :key="`slice-${i}`"
             :active="activeSliceIndex === i"
+            :inactive="activeSliceIndex > -1 && activeSliceIndex !== i"
             :highlighted="isHighlighted"
-            :class="[
-              {'active': activeSliceIndex === i },
-              {'inactive': activeSliceIndex > -1 && activeSliceIndex !== i }
-            ]"
+            :random-style="true"
             @click="onProjectPreviewClick(i)"
             @mouseenter="onProjectPreviewMouseenter(i)"
           />
@@ -284,6 +282,7 @@ export default {
   }
 
   @include bp-up(md) {
+    overflow: visible;
     pointer-events: none; // Above this screen size we don't do scrolling anymore so we don't need pointer events
   }
 }
@@ -300,14 +299,7 @@ export default {
   .project-preview {
     flex: 1;
     padding: 0 5.5vw;
-    // width: 200px;
-    // width: 35vw;
-    // min-width: 35vw;
     transition: all 0.7s cubic-bezier(0.26, 0.35, 0.12, 1.01);
-
-    // @include bp-up(lg) {
-    //   width: auto;
-    // }
 
     &:first-child {
       padding-left: 5.5vw !important;
@@ -317,34 +309,29 @@ export default {
       padding-right: 5.5vw !important;
     }
 
-    &.active,
-    &.inactive {
+    &.is-active,
+    &.is-inactive {
       transition-duration: 0.6s;
     }
 
-    &.active {
-      flex: 3.8;
-      padding: 0 8vw;
+    &.is-active {
+      flex: 4.5;
+      padding: 0 8vw !important;
     }
 
-    &.inactive {
-      padding: 0 2.5vw;
+    &.is-inactive {
+      padding: 0 2.5vw !important;
+      flex: 1 !important; 
     }
 
     @include bp-up(md) {
-      padding: 0 2.5vw;
-
       &:first-child {
         padding-left: 2.5vw !important;
       }
 
       &:last-child {
         padding-right: 2.5vw !important;
-      }
-
-      &.active {
-        padding: 0 5vw;
-      }      
+      }    
     }    
 
     .frame {

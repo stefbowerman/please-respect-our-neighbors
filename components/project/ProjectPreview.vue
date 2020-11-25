@@ -1,8 +1,13 @@
 <template>
-  <div :class="[
-    'project-preview',
-    { 'is-highlighted': highlighted }
-  ]">
+  <div
+    :class="[
+      'project-preview',
+      { 'is-highlighted': highlighted },
+      { 'is-active': active },
+      { 'is-inactive': inactive }
+    ]"
+    :style="style"
+  >
     <div
       class="frame"
       v-on:click="$emit('click')"
@@ -33,6 +38,8 @@
 </template>
 
 <script>
+import _random from 'lodash/random'
+
 export default {
   props: {
     slice: {
@@ -43,9 +50,34 @@ export default {
       type: Boolean,
       default: false
     },
+    inactive: {
+      type: Boolean,
+      default: false
+    },    
     highlighted: {
       type: Boolean,
       default: false
+    },
+    randomStyle: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      style: {}
+    }
+  },
+  mounted() {
+    if (this.randomStyle) {
+      // Make sure flex stays below 3.8
+      // and padding stays below 8vw since those are the largest values that get applie on
+      // active / inactive states
+      this.style = {
+        'flex': _random(0.99, 2.11),
+        'padding-left': `${_random(0.5, 7.0)}vw`,
+        'padding-right': `${_random(0.5, 7.0)}vw`
+      }
     }
   }
 }
@@ -62,9 +94,18 @@ export default {
   pointer-events: auto;
   height: 100%;
   width: 100%;
-  border: 1px solid white;
+  border: 1px solid $white;
   overflow: hidden;
   position: relative;
+  transition: border-color $preview-highlight-transition-duration-out $preview-highlight-easing-out;
+
+  .is-highlighted & {
+    border-color: $dark-grey;
+    transition: {
+      timing-function: $preview-highlight-easing-in;
+      duration: $preview-highlight-transition-duration-in;
+    }
+  }  
 }
 
 .frame__overlay {
