@@ -19,15 +19,11 @@
       <template
         v-for="(partner, j) in project.partners"
       >
-        <span
-          v-html="`${$prismic.asText(partner.name)}`"
-          :class="[
-            'partner-name',
-            { 'active': activePartnerUID === partner.uid }
-          ]"
-          @click="$emit('partner-click', $prismic.asText(partner.name))"
-          @mouseenter="$emit('partner-mouseenter', partner.uid)"
-          @mouseleave="$emit('partner-mouseleave')"
+        <PartnersProjectPartnerName
+          :partner="partner"
+          :active="activePartnerUID === partner.uid"
+          @mouseenter.native="$emit('partner-mouseenter', partner.uid)"
+          @mouseleave.native="$emit('partner-mouseleave')"
         /><span
           v-if="j === project.partners.length - 1"
           v-html="`.&nbsp;`"
@@ -50,10 +46,12 @@
 <script>
 import _get from 'lodash/get'
 
-import PartnersProjectLinkPreviewer from '~/components/PartnersProjectLinkPreviewer'
+import PartnersProjectPartnerName from '~/components/partners/PartnersProjectPartnerName'
+import PartnersProjectLinkPreviewer from '~/components/partners/PartnersProjectLinkPreviewer'
 
 export default {
   components: {
+    PartnersProjectPartnerName,
     PartnersProjectLinkPreviewer
   },
   props: {
@@ -84,13 +82,6 @@ export default {
         return this.$prismic.asText(_get(detail, 'primary.detail_title', []))
       })
     }
-  },
-  methods: {
-    onProjectTitleMouseenter() {
-      if (this.project.website_url && this.project.website_url.link_type === 'Web') {
-        console.log(`trigger preview for ${this.project.website_url.url}`)
-      }
-    }
   }
 }
 </script>
@@ -102,13 +93,5 @@ export default {
 
 .sub {
 
-}
-
-.partner-name {
-  cursor: pointer;
-  
-  &.active {
-    color: $white;
-  }
 }
 </style>

@@ -101,6 +101,10 @@ export default {
   &.loaded {
     cursor: pointer;
   }
+
+  &:hover {
+    color: $white;
+  }
 }
 
 .preview-window {

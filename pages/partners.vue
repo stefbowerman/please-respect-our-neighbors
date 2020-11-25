@@ -6,7 +6,6 @@
         :key="`project-${i}`"
         :project="project"
         :activePartnerUID="activePartnerUID"
-        @partner-click="onPartnerClick"
         @partner-mouseenter="onPartnerMouseenter"
         @partner-mouseleave="onPartnerMouseleave"
       />
@@ -18,7 +17,7 @@
 import _get from 'lodash/get'
 import { stripTags } from '~/utils/tools'
 
-import PartnersProject from '~/components/PartnersProject'
+import PartnersProject from '~/components/partners/PartnersProject'
 
 export default {
   components: {
@@ -40,9 +39,6 @@ export default {
     this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
   },
   methods: {
-    onPartnerClick(partnerName) {
-      console.log(`Clicked ${partnerName}`)
-    },
     onPartnerMouseenter(partnerUID) {
       this.activePartnerUID = partnerUID
     },
