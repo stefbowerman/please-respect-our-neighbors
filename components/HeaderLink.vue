@@ -75,8 +75,8 @@ export default {
       const x = e.clientX - left - width/2
       const y = e.clientY - top - height/2
 
-      this.transX = _round(x, 2)
-      this.transY = _round(y, 2)
+      this.transX = _round(x, 2) * 0.25 // Reduce motion
+      this.transY = _round(y, 2) * 0.15 // Reduce motion
     }
   }
 }

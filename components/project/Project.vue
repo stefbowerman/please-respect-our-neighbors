@@ -231,9 +231,9 @@ export default {
     onProjectMouseleave() {
       // Only set active slice to -1 if there's no selected slice
       // Kind of an edge-case, mouseleave gets triggered when we open a modal but that happens when we select a slice
-      if (this.selectedSliceIndex === -1) {
-        this.activeSliceIndex = -1  
-      }
+      // if (this.selectedSliceIndex === -1) {
+      //   this.activeSliceIndex = -1  
+      // }
     }
   }
 }
@@ -300,6 +300,10 @@ export default {
     flex: 1;
     padding: 0 5.5vw;
     transition: all 0.7s cubic-bezier(0.26, 0.35, 0.12, 1.01);
+
+    &:only-child {
+      flex: 1 !important;
+    }
 
     &:first-child {
       padding-left: 5.5vw !important;

@@ -1,28 +1,27 @@
 <template>
   <div class="page-title">
-    <span
-      v-if="false"
-      style="position: fixed; top: 100px; left: 50px;"
-      v-text="$store.state.pageTitle.height"
-    />
     <div class="container">
       <div class="row">
         <div class="primary-column">
-          <div v-show="show">
-            <h1
-              class="title"
-              v-text="title"
-              v-if="title && title.length"
-              :key="title"
-            />
+          <element-highlighter
+            :disabled="highlighterDisabled"
+          >
+            <div v-show="show">
+              <h1
+                class="title"
+                v-text="title"
+                v-if="title && title.length"
+                :key="title"
+              />
 
-            <h3
-              class="subtitle"
-              v-text="subtitle"
-              v-if="subtitle && subtitle.length"
-              :key="subtitle"
-            />
-          </div>
+              <h3
+                class="subtitle"
+                v-text="subtitle"
+                v-if="subtitle && subtitle.length"
+                :key="subtitle"
+              />
+            </div>
+          </element-highlighter>
         </div>
       </div>
     </div>
@@ -30,7 +29,12 @@
 </template>
 
 <script>
+import ElementHighlighter from '~/components/ElementHighlighter'
+
 export default {
+  components: {
+    ElementHighlighter
+  },
   mounted() {
     this.commitHeight()
     window.addEventListener('resize', this.commitHeight)
@@ -38,9 +42,12 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.commitHeight)
   },
-  computed: {
+  computed: {   
     show() {
       return this.title || this.subtitle
+    },
+    highlighterDisabled() {
+      return this.$route.name !== 'info' // Only show on the info route
     },
     title() {
       return this.$store.state.pageTitle.title
@@ -52,7 +59,7 @@ export default {
   methods: {
     commitHeight() {
       const rect = this.$el.getBoundingClientRect()
-      const h = rect.height + rect.top
+      const h = rect.height + (rect.top > 0 ? rect.top : 0) // Need this incase the page title is relative and scrolls with the page...
       this.$store.commit('SET_PAGE_TITLE_HEIGHT', h)
     }
   },
@@ -84,8 +91,10 @@ export default {
   }
 
   .route-info &,
-  .route-partners & {
+  .route-partners &,
+  .route-projects & {
     position: relative;
+    z-index: 1;
     top: auto;
     margin-top: 72px;
 

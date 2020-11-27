@@ -71,12 +71,12 @@ export default {
   mounted() {
     if (this.randomStyle) {
       // Make sure flex stays below 3.8
-      // and padding stays below 8vw since those are the largest values that get applie on
+      // and padding stays below 8vw since those are the largest values that get applied on
       // active / inactive states
       this.style = {
-        'flex': _random(0.99, 2.11),
-        'padding-left': `${_random(0.5, 7.0)}vw`,
-        'padding-right': `${_random(0.5, 7.0)}vw`
+        'flex': _random(0.25, 3),
+        'padding-left': `${_random(0.25, 7.0)}vw`,
+        'padding-right': `${_random(0.25, 7.0)}vw`
       }
     }
   }
