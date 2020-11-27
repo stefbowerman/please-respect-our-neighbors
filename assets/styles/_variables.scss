@@ -34,14 +34,15 @@ $font-weight-normal: 400;
 $font-weight-medium: 500;
 $font-weight-bold:   700;
 
-$zindex-background:  -100;
-$zindex-accent-bg:   -99;
-$zindex-page-title:  -1;
-$zindex-main:        auto; // 1;
-$zindex-footer:      10;
-$zindex-header:      10;
-$zindex-mobile-menu: 50;
-$zindex-overlay:     100;
+$zindex-background:   -100;
+$zindex-accent-bg:    -99;
+$zindex-page-title:   -1;
+$zindex-main:         auto; // 1;
+$zindex-footer:       10;
+$zindex-header:       10;
+$zindex-link-preview: 20;
+$zindex-mobile-menu:  50;
+$zindex-overlay:      100;
 
 $breakpoints: (
   xs: 0,

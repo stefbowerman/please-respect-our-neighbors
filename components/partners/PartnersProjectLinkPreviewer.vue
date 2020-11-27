@@ -11,43 +11,61 @@
       @click="onClick"
     />
 
-    <div
-      :class="[
-        'preview-window',
-        { 'is-visible': showPreviewWindow }
-      ]"
-      :style="previewWindowStyle"
+    <transition
+      name="preview-window"
+      v-on:after-leave="onPreviewWindowAfterLeave"
     >
       <div
-        class="preview-frame"
-        :style="previewFrameStyle"
+        ref="preview"
+        :class="[
+          'preview-window',
+          { 'is-visible': showPreviewWindow }
+        ]"
+        :style="previewWindowStyle"
+        v-show="showPreviewWindow"
       >
-        <iframe
-          v-if="loadable"
-          :src="url"
-          ref="iframe"
-          :class="[
-            { 'is-loaded': iframeLoaded }
-          ]"
-          @load="onIframeLoad"
-          @onload="onIframeLoad"
-        />
-       <div class="iframe-mask" />
+        <div
+          class="preview-frame"
+          :style="previewFrameStyle"
+        >
+          <iframe
+            v-if="loadable"
+            :src="url"
+            ref="iframe"
+            :class="[
+              { 'is-loaded': iframeLoaded }
+            ]"
+            @load="onIframeLoad"
+            @onload="onIframeLoad"
+          />
+          <div class="iframe-mask" />
+
+          <div
+            class="preview-frame__scale-control"
+            v-dragged="onScaleControlDrag"
+          >
+            <svg-dragger />
+          </div>       
+        </div>
       </div>
-      <div
-        class="preview-window__scale-control"
-        v-dragged="onScaleControlDrag"
-      >
-        Drag Me
-      </div>
-    </div>
+    </transition>
   </span>
     
   </span>
 </template>
 
 <script>
+import SvgDragger from '~/assets/svg/dragger.svg'
+
+const PREVIEW_PADDING = 100 // How much space between the preview and the edge of the screen
+const PREVIEW_INITIAL_HEIGHT = 200
+const PREVIEW_INITIAL_WIDTH = 300
+const PREVIEW_FRAME_HEIGHT = 800
+
 export default {
+  components: {
+    SvgDragger
+  },
   props: {
     text: {
       type: String,
@@ -63,13 +81,9 @@ export default {
       show: false,
       loadable: false,
       iframeLoaded: false,
-      previewHeight: 200,
-      previewWidth: 300,
-      aspectRatio: (2/3),
-
-      // These values don't change
-      previewFrameHeight: 800,
-      previewFrameWidth: 1200
+      previewHeight: PREVIEW_INITIAL_HEIGHT,
+      previewWidth: PREVIEW_INITIAL_WIDTH,
+      aspectRatio: (2/3)
     }
   },
   mounted() {
@@ -91,11 +105,15 @@ export default {
     },
     previewFrameStyle() {
       return {
-        transform: `scale(${this.previewHeight / this.previewFrameHeight})`
+        transform: `scale(${this.previewHeight / PREVIEW_FRAME_HEIGHT})`
       }
     }
   },
   methods: {
+    onPreviewWindowAfterLeave() {
+      this.previewHeight = PREVIEW_INITIAL_HEIGHT
+      this.previewWidth  = PREVIEW_INITIAL_WIDTH
+    },
     onClick() {
       this.show = !this.show
     },
@@ -108,6 +126,14 @@ export default {
       }
       else if (last) {
         this.$store.commit('SET_IS_DRAGGING', false)
+      }
+
+      const previewRect = this.$refs.preview.getBoundingClientRect()
+      const isMin = this.previewWidth < PREVIEW_INITIAL_WIDTH
+      const isMax = (previewRect.x + previewRect.width + PREVIEW_PADDING) > window.innerWidth
+
+      if ((isMin && deltaX < 0) || (isMax && deltaX > 0)) {
+        return
       }
 
       // Maintain window aspect ratio
@@ -143,19 +169,14 @@ export default {
 
 .preview-window {
   position: absolute;
-  z-index: 1;
+  z-index: $zindex-link-preview;
   top: 50%;
   left: 50%;
   height: 200px;
   width: 300px;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s $easing-ease-out-quart;
-  background-image: $light-gradient;
-  border: 1px solid var(--text-color);
 
   &.is-visible {
-    opacity: 1;
     pointer-events: auto;
   }
 }
@@ -196,18 +217,29 @@ export default {
               inset 0px 0px 175px 100px $red;
 }
 
-.preview-window__scale-control {
+.preview-frame__scale-control {
   position: absolute;
-  top: 100%;
-  left: 100%;
-  background-color: white;
-  color: black;
-  font-size: 10px;
+  z-index: 1;
+  bottom: 15px;
+  right: 15px;
+  height: 30px;
+  width: 30px;
   cursor: nwse-resize;
-  text-transform: uppercase;
-  transform: translate(5px, 5px);
-  width: 66px;
-  text-align: center;
-  padding: 6px 0 4px;
+
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+// Transition
+.preview-window-enter,
+.preview-window-leave-to {
+  opacity: 0;
+}
+
+.preview-window-enter-active,
+.preview-window-leave-active {
+  transition: opacity 0.5s $easing-ease-out-quart;
 }
 </style>
