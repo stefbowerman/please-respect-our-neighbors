@@ -44,8 +44,11 @@ export default {
 
 <style lang="scss">
 .partner-name {  
+  transition: color 250ms ease-out;
+  
   &.active {
     color: $white;
+    transition: color 150ms ease-out;
   }
 }
 </style>

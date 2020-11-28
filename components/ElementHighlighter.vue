@@ -86,7 +86,7 @@ export default {
   height: 0;
   border: 1px solid $black;
   background-color: $white;
-  transition: all 0.2s cubic-bezier(0.43, 0.27, 0.14, 0.82);
+  transition: all 0.14s cubic-bezier(0.32, 0.46, 0.19, 0.9);
   pointer-events: none;
 }
 </style>

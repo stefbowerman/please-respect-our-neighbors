@@ -1,7 +1,10 @@
 <template>
   <div :class="classes">
     <element-highlighter>
-      <h3 class="block__title" v-text="title" />
+      <h3 class="block__title">
+        <!--  Add extra span for highlight effect-->
+        <span v-text="title" />
+      </h3>
       <div class="block__content" v-html="content"></div> 
     </element-highlighter>
   </div>

@@ -2,6 +2,7 @@
   <span
     :class="[
       'link-previewer',
+      {'is-active': show },
       {'loaded': iframeLoaded }
     ]"
   >
@@ -158,12 +159,16 @@ export default {
 }
 
 .text {
+  transition: color 250ms ease-out;
+
   .loaded & {
     cursor: pointer;
   }
 
-  .link-previewer:hover & {
+  .link-previewer:hover &,
+  .link-previewer.is-active & {
     color: $white;
+    transition: color 150ms ease-out;
   }
 }
 

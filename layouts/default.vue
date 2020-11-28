@@ -3,11 +3,16 @@
     <site-mobile-menu
       :show="showMenu"
       @close="closeMenu"
-      @link-click="linkClick"
+      @link-click="onLinkClick"
     />
 
     <div class="logo">
-      <span @click="toggleMenu">Please Respect Our Neighbors INC.</span>
+      <span
+        @click="toggleMenu"
+        class="logo__text"
+      >
+        Please Respect Our Neighbors INC.
+      </span>
     </div>
 
     <site-header />
@@ -65,17 +70,6 @@ export default {
     this.onScroll()
   },
   methods: {
-    onResize() {
-      this.set100vh()
-      this.$store.commit('SET_WINDOW_WIDTH', window.innerWidth)
-    },
-    onScroll() {
-      const s = window.pageYOffset || document.documentElement.scrollTop
-
-      this.scrollDirection = s > this.scrollTop ? 'down' : 'up'
-      this.scrollTop = s
-      this.set100vh();
-    },
     set100vh() {
       const v = window.innerWidth <= 1024 ? `${window.innerHeight}px` : ''
       document.documentElement.style.setProperty('--unit-100vh', v)
@@ -86,14 +80,24 @@ export default {
     closeMenu() {
       this.showMenu = false
     },
-    linkClick(uri) {
-      this.showMenu = false
-      this.$router.push(uri)
+    onLinkClick() {
+      this.closeMenu()
+    },
+    onResize() {
+      this.set100vh()
+      this.$store.commit('SET_WINDOW_WIDTH', window.innerWidth)
+    },
+    onScroll() {
+      const s = window.pageYOffset || document.documentElement.scrollTop
+
+      this.scrollDirection = s > this.scrollTop ? 'down' : 'up'
+      this.scrollTop = s
+      this.set100vh();
     }
   },
   watch: {
-    '$route'(to, from) {
-        this.showMenu = false              
+    '$route.fullPath'(to, from) {
+      this.closeMenu()
     },
     '$store.state.pageTitle.height'(height) {
       document.documentElement.style.setProperty('--page-title-height', `${height}px`)
@@ -214,12 +218,14 @@ export default {
 .logo {
   position: fixed;
   z-index: $zindex-mobile-menu + 1;
-  top: 15px;
+  top: 0;
   left: 0;
   right: 0;
   text-align: center;
 
-  span {
+  .logo__text {
+    display: inline-block;
+    padding: 15px 0;
     font-size: 18px;
     font-family: $font-family-secondary;
     font-weight: $font-weight-bold;
@@ -231,9 +237,22 @@ export default {
     display: none;
   }
 
-  transition: transform 0.6s cubic-bezier(0.4, 0.13, 0.25, 0.99);
+  &, .logo__text {
+    transition: transform 0.55s cubic-bezier(0.69, 0.11, 0.42, 0.94); // cubic-bezier(0.69, 0.11, 0.66, 0.97);  
+  }
+
   body.mobile-menu-open & {
-    transform: translateY(90vh);
+    &, .logo__text {
+      // transition: transform 0.8s cubic-bezier(0.62, 0.62, 0.39, 0.99);
+      // transition-delay: 0.1s;
+      transition: transform 0.65s cubic-bezier(0.62, 0.62, 0.39, 0.99) 0.15s;
+    }
+
+    transform: translateY(100vh);
+
+    .logo__text {
+      transform: translateY(-100%);
+    }
   }
 }
 </style>
