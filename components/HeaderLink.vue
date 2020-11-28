@@ -123,8 +123,8 @@ export default {
 
 // Force the top and bottom to touch the text without messing with line height
 .placement {
-  margin-bottom: -8px;
-  transform: translateY(-4px);
+  margin-bottom: -7px;
+  transform: translateY(-3px);
 }
 
 .text {

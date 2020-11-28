@@ -100,6 +100,10 @@ export default {
   height: 100%;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }  
 }
 
 .body {
@@ -160,7 +164,7 @@ nav {
     transition: opacity 0.5s ease-in;
   }
   .dialog {
-    transition: transform 0.65s cubic-bezier(0.62, 0.62, 0.39, 0.99) 0.15s;
+    transition: transform 0.8s cubic-bezier(0.62, 0.62, 0.39, 0.99);
   }
   .close {
     transition: opacity 0.5s $easing-ease-out-cubic 0.5s;

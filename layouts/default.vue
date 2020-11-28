@@ -237,20 +237,20 @@ export default {
     display: none;
   }
 
-  &, .logo__text {
-    transition: transform 0.55s cubic-bezier(0.69, 0.11, 0.42, 0.94); // cubic-bezier(0.69, 0.11, 0.66, 0.97);  
+  transition: transform 0.55s cubic-bezier(0.69, 0.11, 0.42, 0.94); // cubic-bezier(0.69, 0.11, 0.66, 0.97);  
+
+  .logo__text {
+    transition: transform 0.55s linear;
   }
 
   body.mobile-menu-open & {
-    &, .logo__text {
-      // transition: transform 0.8s cubic-bezier(0.62, 0.62, 0.39, 0.99);
-      // transition-delay: 0.1s;
-      transition: transform 0.65s cubic-bezier(0.62, 0.62, 0.39, 0.99) 0.15s;
-    }
+    transition: transform 0.8s cubic-bezier(0.62, 0.62, 0.39, 0.99);
 
     transform: translateY(100vh);
+    transform: translateY(var(--unit-100vh));
 
     .logo__text {
+      transition: transform 0.8s linear;
       transform: translateY(-100%);
     }
   }
