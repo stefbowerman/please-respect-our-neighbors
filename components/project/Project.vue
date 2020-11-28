@@ -319,13 +319,12 @@ export default {
     }
 
     &.is-active {
-      flex: 4.5;
+      flex: 3.8 !important;
       padding: 0 8vw !important;
     }
 
     &.is-inactive {
-      padding: 0 2.5vw !important;
-      flex: 1 !important; 
+      flex: 0.8 !important; 
     }
 
     @include bp-up(md) {
