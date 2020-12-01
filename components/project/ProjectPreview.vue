@@ -2,6 +2,7 @@
   <div
     :class="[
       'project-preview',
+      { 'is-ready': ready },
       { 'is-highlighted': highlighted },
       { 'is-active': active },
       { 'is-inactive': inactive }
@@ -61,10 +62,18 @@ export default {
     randomStyle: {
       type: Boolean,
       default: false
+    },
+    maxPaddingPercentage: {
+      type: Number,
+      default: 7,
+      validator: function(value) {
+        return value >= 0
+      }
     }
   },
   data() {
     return {
+      ready: false, // Need this flag so we can turn on transitions *after* the component is "ready" (has inline styles applied)
       style: {}
     }
   },
@@ -75,10 +84,14 @@ export default {
       // active / inactive states
       this.style = {
         'flex': _random(0.25, 3),
-        'padding-left': `${_random(0.25, 7.0)}vw`,
-        'padding-right': `${_random(0.25, 7.0)}vw`
+        'padding-left': `${_random(0.25, this.maxPaddingPercentage)}%`,
+        'padding-right': `${_random(0.25, this.maxPaddingPercentage)}%`
       }
     }
+
+    this.$nextTick(() => {
+      this.ready = true
+    })
   }
 }
 </script>

@@ -26,6 +26,7 @@
             :inactive="activeSliceIndex > -1 && activeSliceIndex !== i"
             :highlighted="isHighlighted"
             :random-style="true"
+            :max-padding-percentage="maxPaddingPercentage"
             @click="onProjectPreviewClick(i)"
             @mouseenter="onProjectPreviewMouseenter(i)"
           />
@@ -92,6 +93,7 @@
 
 <script>
 import _kebabCase from 'lodash/kebabCase'
+import _clamp from 'lodash/clamp'
 
 import ProjectPreview from '~/components/project/ProjectPreview'
 import ProjectOverlay from '~/components/project/ProjectOverlay'
@@ -127,6 +129,10 @@ export default {
     this.onResize()
   },
   computed: {
+    maxPaddingPercentage() {
+      // As we have *more* slices, we need to reduce the max padding percentage
+      return _clamp(2, 12 - this.project.slices.length, 8)
+    },
     fullDescription() {
       const title = this.$prismic.asText(this.project.title)
       const desc = this.$prismic.asText(this.project.description)
@@ -299,7 +305,10 @@ export default {
   .project-preview {
     flex: 1;
     padding: 0 5.5vw;
-    transition: all 0.7s cubic-bezier(0.26, 0.35, 0.12, 1.01);
+
+    &.is-ready {
+      transition: all 0.7s cubic-bezier(0.26, 0.35, 0.12, 1.01);
+    }
 
     &:only-child {
       flex: 1 !important;

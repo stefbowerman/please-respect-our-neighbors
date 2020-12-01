@@ -65,5 +65,9 @@ export default {
 .ex-gallery-caption {
   padding-top: 30px;
   color: $red;
+
+  @include bp-up(lg) {
+    display: none;
+  }
 }
 </style>
