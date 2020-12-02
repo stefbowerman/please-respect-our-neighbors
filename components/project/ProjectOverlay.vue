@@ -9,7 +9,7 @@
     :show="show"
   >
     <template slot="body">
-      <div class="viewer">
+      <div class="viewer" :style="{ '--caption-height': `${this.captionHeight}px` }">
         <template v-if="slice.slice_type === 'detail_gallery'">
           <Slideshow
             :slice="slice"
@@ -18,15 +18,11 @@
             @progress="t => progressText = t"
             ref="slideshow"
             class="viewer-content"
-            :style="viewerContentStyle"
           />
         </template>
 
         <template v-else-if="slice.slice_type === 'detail_text'">
-          <div
-            class="viewer-content project-overlay-text-box"
-            :style="viewerContentStyle"
-          >
+          <div class="viewer-content project-overlay-text-box">
             <TextBox
               :content="$prismic.asHtml(slice.primary.detail_rich_text)"
             />
@@ -99,14 +95,6 @@ export default {
   computed: {
     captionHtml() {
       return this.$prismic.asHtml(_get(this.slice, 'primary.detail_title', []))
-    },
-    viewerContentStyle() {
-      if (this.captionHeight == 0) return {}
-
-      return {
-        paddingTop: `${this.captionHeight}px`,
-        paddingBottom: `${this.captionHeight}px`
-      }
     }
   },
   methods: {
@@ -146,6 +134,15 @@ export default {
 .viewer-content {
   padding-top: 35px;
   padding-bottom: 35px;
+  padding-top: unquote('max(35px, var(--caption-height))');
+  padding-bottom: unquote('max(35px, var(--caption-height))');  
+
+  @include bp-up(md) {
+    padding-top: 165px;
+    padding-bottom: 165px;
+    padding-top: unquote('max(165px, var(--caption-height))');
+    padding-bottom: unquote('max(165px, var(--caption-height))');
+  }
 }
 
 .viewer-caption {
@@ -171,7 +168,8 @@ export default {
   height: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding: 90px 50px;
+  padding-left: 50px;
+  padding-right: 50px;
   max-width: 1200px;
   color: $white;
 
