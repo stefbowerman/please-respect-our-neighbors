@@ -33,9 +33,10 @@ export default {
   beforeCreate() {
     this.$store.commit('SET_THEME', 'light')
   },
-  mounted() {
+  created() {
     this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
-
+  },
+  mounted() {
     this.setCurrentSlice()
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)

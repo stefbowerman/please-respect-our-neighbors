@@ -103,7 +103,7 @@
     line-height: (18px/15px);
   }
 
-    // Responsive type kicks in above lg
+  // Responsive type kicks in above lg
   @include bp-up(lg) {
     font-size: clamp(15px, calc(15px + 1.75vw), 46px);
   }

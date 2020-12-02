@@ -120,6 +120,10 @@ export default {
     padding-right: 20px;    
   }
 
+  @include bp-up(xxl) {
+    padding-top: 190px;
+  }
+
   .is-dragging & {
     user-select: none;
     pointer-events: none;
