@@ -283,7 +283,8 @@ export default {
   z-index: 2; // To sandwich in the middle of the top and bottom layers
   height: 100%;
   width: 100%;
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
