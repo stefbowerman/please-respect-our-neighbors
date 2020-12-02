@@ -2,10 +2,14 @@
   <div
     :class="[
       'project',
+      { 'is-introduced': isIntroduced },
       { 'is-highlighted': isHighlighted },
-      { 'is-ready': ready }
+      { 'is-ready': isReady }
     ]"
-    @mouseleave="onProjectMouseleave"
+    v-intersection-observer="{
+      threshold: 0.2
+    }"
+    @has-intersected="onHasIntersected"
   >
     <div class="project-preview-wrapper">
       <div
@@ -25,6 +29,7 @@
             :active="activeSliceIndex === i"
             :inactive="activeSliceIndex > -1 && activeSliceIndex !== i"
             :highlighted="isHighlighted"
+            :introduced="isIntroduced"
             :random-style="true"
             :max-padding-percentage="maxPaddingPercentage"
             @click="onProjectPreviewClick(i)"
@@ -116,11 +121,12 @@ export default {
   },
   data() {
     return {
-      ready: false,
+      isReady: false,
       activeSliceIndex: -1,
       selectedSliceIndex: -1,
       captionsHeight: 0,
       previewerWidth: 0,
+      isIntroduced: false,
       isHighlighted: false,
       horizontalScrollSet: false
     }
@@ -169,8 +175,8 @@ export default {
       this.onResize()
     },
     previewerWidth(newVal, oldVal) {
-      if (newVal > 0 && this.ready === false) {
-        this.ready = true
+      if (newVal > 0 && this.isReady === false) {
+        this.isReady = true
       }
     }
   },
@@ -226,7 +232,6 @@ export default {
       this.isHighlighted = false
     },
     onProjectPreviewOverflowClick(e) {
-      // console.log(e)
       if (e && e.target === this.$refs['preview-overflow']) {
         this.onProjectPreviewBottomLayerClick()
       }
@@ -234,12 +239,10 @@ export default {
     onProjectOverlayClose() {
       this.selectedSliceIndex = -1
     },
-    onProjectMouseleave() {
-      // Only set active slice to -1 if there's no selected slice
-      // Kind of an edge-case, mouseleave gets triggered when we open a modal but that happens when we select a slice
-      // if (this.selectedSliceIndex === -1) {
-      //   this.activeSliceIndex = -1  
-      // }
+    onHasIntersected({ detail }) {
+      if (detail.isIntersecting) {
+        this.isIntroduced = true
+      }
     }
   }
 }
@@ -360,13 +363,19 @@ export default {
 
 .project-preview__bottom-layer {
   z-index: 1; // Below project preview
+  transition: opacity 500ms ease-out;
+  opacity: 0;
+
+  .is-introduced & {
+    opacity: 1;
+  }
 }
 
 .project-preview__top-layer {
   z-index: 3; // Above project preview
   pointer-events: none;
   opacity: 0;
-  transition: opacity $preview-highlight-transition-duration-out$preview-highlight-easing-out;
+  transition: opacity $preview-highlight-transition-duration-out $preview-highlight-easing-out;
 
   .is-highlighted & {
     opacity: 1;

@@ -2,6 +2,8 @@
   <div
     :class="[
       'project-preview',
+      { 'is-introd': introd },
+      { 'is-visible': visible },
       { 'is-ready': ready },
       { 'is-highlighted': highlighted },
       { 'is-active': active },
@@ -9,31 +11,33 @@
     ]"
     :style="style"
   >
-    <div
-      class="frame"
-      v-on:click="$emit('click')"
-      v-on:mouseenter="$emit('mouseenter')"
-      v-on:mouseleave="$emit('mouseleave')"
-    >
-      <template v-if="slice.slice_type === 'detail_gallery'">
-        <div class="detail-gallery">
-          <prismic-image
-            v-if="slice.primary.detail_featured_image.url"
-            :field="slice.primary.detail_featured_image"
-          />
-        </div>
-      </template>
+    <div class="frame-wrapper">
+      <div
+        class="frame"
+        v-on:click="$emit('click')"
+        v-on:mouseenter="$emit('mouseenter')"
+        v-on:mouseleave="$emit('mouseleave')"
+      >
+        <template v-if="slice.slice_type === 'detail_gallery'">
+          <div class="detail-gallery">
+            <prismic-image
+              v-if="slice.primary.detail_featured_image.url"
+              :field="slice.primary.detail_featured_image"
+            />
+          </div>
+        </template>
 
-      <template v-else-if="slice.slice_type === 'detail_text'">
-        <div class="detail-text">
-          <div
-            class="text"
-            v-html="$prismic.asHtml(slice.primary.detail_rich_text)"
-          />
-        </div>
-      </template>
+        <template v-else-if="slice.slice_type === 'detail_text'">
+          <div class="detail-text">
+            <div
+              class="text"
+              v-html="$prismic.asHtml(slice.primary.detail_rich_text)"
+            />
+          </div>
+        </template>
 
-      <div class="frame__overlay" />
+        <div class="frame__overlay" />
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +63,10 @@ export default {
       type: Boolean,
       default: false
     },
+    introduced: {
+      type: Boolean,
+      default: false
+    },
     randomStyle: {
       type: Boolean,
       default: false
@@ -74,6 +82,8 @@ export default {
   data() {
     return {
       ready: false, // Need this flag so we can turn on transitions *after* the component is "ready" (has inline styles applied)
+      introd: false, // Need this flag to stagger the intro
+      visible: false,
       style: {}
     }
   },
@@ -92,6 +102,19 @@ export default {
     this.$nextTick(() => {
       this.ready = true
     })
+  },
+  watch: {
+    introduced(newVal, oldVal) {
+      if (newVal) {
+        setTimeout(() => {
+          this.introd = true
+
+          setTimeout(() => {
+            this.visible = true
+          }, _random(0, 250))          
+        }, _random(0, 1000))       
+      }
+    }
   }
 }
 </script>
@@ -100,6 +123,22 @@ export default {
 .project-preview {
   padding: 0 50px;
   padding: 0 3vw;
+}
+
+.frame-wrapper {
+  height: 100%;
+  opacity: 0;
+  transform: translateY(150px);
+
+  .is-introd & {
+    transform: translateY(0px);
+    transition: transform 350ms cubic-bezier(0.84, 0.31, 0.78, 0.86);
+    // transform 600ms cubic-bezier(0.32, 0.62, 0.19, 0.96);
+  }
+
+  .is-visible & {
+    opacity: 1;
+  }
 }
 
 .frame {
