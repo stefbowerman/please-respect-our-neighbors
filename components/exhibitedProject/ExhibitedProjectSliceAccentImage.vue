@@ -67,5 +67,6 @@ export default {
   @include fill;
   background-color: $red;
   z-index: $zindex-accent-bg;
+  transform: translate3d(0, 0, 0); // Fix a chrome bug where it was disappearing randomly?
 }
 </style>
