@@ -108,6 +108,11 @@ export default {
   }
 }
 
+.title,
+.subtitle {
+  transition: font-size 250ms cubic-bezier(0.54, 0.17, 0.43, 0.95);
+}
+
 .title {
   @include text-title;
   margin-left: auto;
@@ -115,7 +120,8 @@ export default {
   max-width: 20em;
 
   @include bp-up(lg) {
-    .route-projects & {
+    .route-projects &,
+    .route-exhibited-project & {
       font-size: clamp(27px, calc(4px + 3.3vw), 70px);
     }
     .route-partners & {
@@ -130,7 +136,8 @@ export default {
   margin: 2px 0 0;
 
   @include bp-up(lg) {
-    .route-projects & {
+    .route-projects &,
+    .route-exhibited-project & {
       // Same as text-subtitle but just make sure the lower value is smaller on this route to match the title
       font-size: clamp(15px, calc(5px + 2.25vw), 46px);
     }
