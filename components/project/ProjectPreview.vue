@@ -88,6 +88,8 @@ export default {
     }
   },
   mounted() {
+    this.timeouts = [];
+
     if (this.randomStyle) {
       // Make sure flex stays below 3.8
       // and padding stays below 8vw since those are the largest values that get applied on
@@ -103,16 +105,27 @@ export default {
       this.ready = true
     })
   },
+  beforeDestroy() {
+    this.timeouts.forEach(tO => clearTimeout(tO))
+  },
   watch: {
     introduced(newVal, oldVal) {
       if (newVal) {
-        setTimeout(() => {
-          this.introd = true
-
+        this.timeouts.push(
           setTimeout(() => {
-            this.visible = true
-          }, _random(0, 250))          
-        }, _random(0, 1000))       
+            this.introd = true
+
+            this.timeouts.push(
+              setTimeout(() => {
+                this.visible = true
+              }, _random(0, 250)) 
+            )
+
+            this.timeouts.push(
+              setTimeout(() => this.$emit('intro-complete'), 350)
+            )
+          }, _random(0, 1000))
+        )  
       }
     }
   }

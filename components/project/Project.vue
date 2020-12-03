@@ -3,6 +3,7 @@
     :class="[
       'project',
       { 'is-introduced': isIntroduced },
+      { 'is-introduction-complete': isIntroductionComplete },
       { 'is-highlighted': isHighlighted },
       { 'is-ready': isReady }
     ]"
@@ -34,6 +35,7 @@
             :max-padding-percentage="maxPaddingPercentage"
             @click="onProjectPreviewClick(i)"
             @mouseenter="onProjectPreviewMouseenter(i)"
+            @intro-complete="onProjectPreviewIntroComplete"
           />
         </div>
       </div>
@@ -127,8 +129,10 @@ export default {
       captionsHeight: 0,
       previewerWidth: 0,
       isIntroduced: false,
+      isIntroductionComplete: false,
       isHighlighted: false,
-      horizontalScrollSet: false
+      horizontalScrollSet: false,
+      slicesIntroducedCount: 0
     }
   },
   mounted() {
@@ -240,8 +244,15 @@ export default {
       this.selectedSliceIndex = -1
     },
     onHasIntersected({ detail }) {
-      if (detail.isIntersecting) {
+      if (detail.isIntersecting && this.isIntroduced === false) {
         this.isIntroduced = true
+      }
+    },
+    onProjectPreviewIntroComplete() {
+      this.slicesIntroducedCount++
+
+      if (this.slicesIntroducedCount === this.project.slices.length) {
+        this.isIntroductionComplete = true
       }
     }
   }
@@ -283,12 +294,17 @@ export default {
   z-index: 2; // To sandwich in the middle of the top and bottom layers
   height: 100%;
   width: 100%;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  // Because the slices transform up
+  // We can't hide vertical overflow until after they're done animating in
+  .is-introduction-complete & {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;    
   }
 
   @include bp-up(md) {
