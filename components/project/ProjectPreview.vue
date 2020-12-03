@@ -215,11 +215,9 @@ export default {
 
 .detail-text {
   @include fill;
-  border: 1px solid white;
   color: white;
   background: $darker-grey;
   white-space: nowrap;
-
 }
 
 .text {

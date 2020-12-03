@@ -92,7 +92,8 @@ export default {
 
   .route-info &,
   .route-partners &,
-  .route-projects & {
+  .route-projects &,
+  .route-projects-uid & {
     position: relative;
     z-index: 1;
     top: auto;
@@ -121,6 +122,7 @@ export default {
 
   @include bp-up(lg) {
     .route-projects &,
+    .route-projects-uid &,
     .route-exhibited-project & {
       font-size: clamp(27px, calc(4px + 3.3vw), 70px);
     }
@@ -137,6 +139,7 @@ export default {
 
   @include bp-up(lg) {
     .route-projects &,
+    .route-projects-uid &,
     .route-exhibited-project & {
       // Same as text-subtitle but just make sure the lower value is smaller on this route to match the title
       font-size: clamp(15px, calc(5px + 2.25vw), 46px);

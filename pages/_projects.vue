@@ -46,14 +46,16 @@ export default {
     // window.addEventListener('scroll', this.throttledOnScroll)
     // window.addEventListener('resize', this.throttledOnResize)    
 
-    // @TODO - Testing to see if this works...
     if (this.selectedProject) {
       const projectIndex = this.projects.findIndex(project => project.uid === this.selectedProject)
 
+      // need to scroll the *bottom* of the selected project into view...
+      const rect = this.$refs.projects[projectIndex].$el.getBoundingClientRect()
+      const scrollTo = rect.top - (window.innerHeight - rect.height)
+
       setTimeout(() => {
         window.scrollTo({
-          // top: this.$refs.projects[projectIndex].$el.offsetTop,
-          top: this.$refs.projects[projectIndex].$el.getBoundingClientRect().top,
+          top: scrollTo,
           behavior: 'smooth'
         });
       }, 2000)
@@ -106,7 +108,6 @@ export default {
       description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
       imageUrl: _get(data, 'meta_image.url')
     }
-
 
     // Only show the projects as specified in the projects_page settings
     const projects = projectUIDs.map(uid => {
