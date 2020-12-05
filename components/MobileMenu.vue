@@ -22,6 +22,10 @@
             />
           </nav>
         </div>
+
+        <site-logo
+          @click="close"
+        />
       </div>
 
       <span
@@ -29,18 +33,16 @@
         @click="close"
         v-text="'Close'"
       />
-
-      <background />
     </div>
   </transition>
 </template>
 
 <script>
-import Background from '~/components/Background'
+import SiteLogo from '~/components/Logo'
 
 export default {
   components: {
-    Background
+    SiteLogo
   },
   data() {
     return {
@@ -90,9 +92,12 @@ export default {
 .mobile-menu {
   @include fill(fixed);
   z-index: $zindex-mobile-menu;
+  background-color: $white;
 
-  .background {
-    opacity: 0.95;
+  a,
+  .close,
+  .logo {
+    color: $black;
   }
 }
 
@@ -123,8 +128,14 @@ export default {
   right: 27px;
   font-size: 15px; // @TODO - Var this
   font-weight: $font-weight-light;
-  @include theme-text;
   cursor: pointer;
+}
+
+.site-logo {
+  position: fixed;
+  bottom: 15px;
+  left: 0;
+  right: 0;
 }
 
 nav {
@@ -140,6 +151,7 @@ nav {
 
     & + a {
       margin-top: 45px;
+      margin-top: clamp(10px, calc(10vh - 27px), 45px);
     }
   }
 }
@@ -147,41 +159,11 @@ nav {
 // Transition
 .mobile-menu-enter,
 .mobile-menu-leave-to {
-  .background,
-  .close {
-    opacity: 0;
-  }
-
-  .dialog {
-    transform: translateY(-100%);
-  }
+  transform: translateY(-100%);
 }
 
-.mobile-menu-enter-active {
-  transition-duration: 1s;
-
-  .background {
-    transition: opacity 0.5s ease-in;
-  }
-  .dialog {
-    transition: transform 0.8s cubic-bezier(0.62, 0.62, 0.39, 0.99);
-  }
-  .close {
-    transition: opacity 0.5s $easing-ease-out-cubic 0.5s;
-  }
-}
-
+.mobile-menu-enter-active,
 .mobile-menu-leave-active {
-  transition-duration: 0.75s;
-
-  .background {
-    transition: opacity 0.5s ease-out 0.25s;
-  }
-  .dialog {
-    transition: transform 0.55s cubic-bezier(0.69, 0.11, 0.66, 0.97);
-  }
-  .close {
-    transition: opacity 0.4s ease-out 0.1s;
-  }
+  transition: transform 850ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 </style>

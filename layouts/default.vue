@@ -6,15 +6,9 @@
       @link-click="onLinkClick"
     />
 
-    <div class="logo">
-      <span
-        @click="toggleMenu"
-        class="logo__text"
-      >
-        Please Respect Our Neighbors INC.
-      </span>
-    </div>
-
+    <site-logo
+      @click="toggleMenu"
+    />
     <site-header />
     <site-page-title />
 
@@ -38,6 +32,7 @@ import _get from 'lodash/get'
 import { decodeHtmlEntities, isTouch } from '~/utils/tools'
 
 import SiteHeader from '~/components/Header'
+import SiteLogo from '~/components/Logo'
 import SitePageTitle from '~/components/PageTitle'
 import SiteFooter from '~/components/Footer'
 import SiteMobileMenu from '~/components/MobileMenu'
@@ -46,6 +41,7 @@ import SiteBackground from '~/components/Background'
 export default {
   components: {
     SiteHeader,
+    SiteLogo,
     SitePageTitle,
     SiteFooter,
     SiteMobileMenu,
@@ -214,45 +210,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .logo {
   position: fixed;
-  z-index: $zindex-mobile-menu + 1;
-  top: 0;
+  z-index: $zindex-mobile-menu - 1;
+  top: 15px;
   left: 0;
   right: 0;
-  text-align: center;
-
-  .logo__text {
-    display: inline-block;
-    padding: 15px 0;
-    font-size: 18px;
-    font-family: $font-family-secondary;
-    font-weight: $font-weight-bold;
-    @include theme-text;
-    cursor: pointer;    
-  }
 
   @include bp-up(lg) {
     display: none;
   }
 
-  transition: transform 0.55s cubic-bezier(0.69, 0.11, 0.42, 0.94); // cubic-bezier(0.69, 0.11, 0.66, 0.97);  
-
-  .logo__text {
-    transition: transform 0.55s linear;
-  }
-
-  body.mobile-menu-open & {
-    transition: transform 0.8s cubic-bezier(0.62, 0.62, 0.39, 0.99);
-
-    transform: translateY(100vh);
-    transform: translateY(var(--unit-100vh));
-
-    .logo__text {
-      transition: transform 0.8s linear;
-      transform: translateY(-100%);
-    }
-  }
+  /deep/ .logo__text {
+    @include theme-text;
+  }  
 }
 </style>
