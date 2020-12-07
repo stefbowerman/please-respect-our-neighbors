@@ -1,23 +1,30 @@
 <template>
-  <div class="page page-info">
-    <div class="container">
-      <div class="row">
-        <div class="primary-column">
-          <info-block
-            v-if="description.length"
-            :content="description"
-            type="description"
-          />
+  <div class="page page--info">
+    <div class="page-inner">
+      <page-title
+        :title="title"
+        :highlighter-enabled="true"
+      />
 
-          <info-block
-            v-for="(slice, i) in slices"
-            :key="i"
-            :type="slice.slice_type"
-            :title="$prismic.asText(slice.primary.block_title)"
-            :content="$prismic.asHtml(slice.primary.block_content)"
-          />
-        </div>
-      </div>   
+      <div class="container">
+        <div class="row">
+          <div class="primary-column">
+            <info-block
+              v-if="description.length"
+              :content="description"
+              type="description"
+            />
+
+            <info-block
+              v-for="(slice, i) in slices"
+              :key="i"
+              :type="slice.slice_type"
+              :title="$prismic.asText(slice.primary.block_title)"
+              :content="$prismic.asHtml(slice.primary.block_content)"
+            />
+          </div>
+        </div>   
+      </div>
     </div>
   </div>
 </template>
@@ -26,10 +33,14 @@
 import _get from 'lodash/get'
 import _kebabCase from 'lodash/kebabCase'
 import { stripTags } from '~/utils/tools'
+import getTheme from '~/utils/getTheme'
+
+import PageTitle from '~/components/PageTitle'
 import InfoBlock from '~/components/InfoBlock'
 
 export default {
   components: {
+    PageTitle,
     InfoBlock
   },
   data() {
@@ -40,12 +51,8 @@ export default {
       slices: []
     }
   },
-  beforeCreate() {
-    this.$store.commit('SET_THEME', 'light')
-  },  
   mounted() {
-    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
-    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', null)
+    this.$store.commit('SET_THEME', getTheme(this.$route))
   },
   async asyncData({ $prismic }) {
     const response = await $prismic.api.getSingle('about_page')
@@ -100,28 +107,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-info {
-  padding-top: 32px;
-  margin-bottom: 100px;
-  align-items: flex-start;
-
-  @include bp-down(md) {
-    min-height: none; // ?
-  }
-
-  @include bp-up(lg) {
-    padding-top: 7.4vw;
-  }
+.page-title {
+  z-index: 1; // So the highlighter functionality works
 }
 
 .block {
-  & + & {
-    margin-top: 61px;
+  margin-top: 61px;
 
-    @include bp-up(lg) {
-      margin-top: 11.8vw;
-      margin-top: clamp(61px, 11.8vw, 200px)
-    }
+  @include bp-up(lg) {
+    margin-top: 11.8vw;
+    margin-top: clamp(61px, 11.8vw, 200px)
   }
 }
 </style>

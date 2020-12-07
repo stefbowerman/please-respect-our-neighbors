@@ -23,6 +23,13 @@ export default {
       }
     ]
   },
+  pageTransition: {
+    name: 'page',
+    mode: '',
+    afterEnter(el) {
+      window.scrollTo(0, 0)
+    }
+  },   
   /*
   ** Customize the progress-bar color
   */

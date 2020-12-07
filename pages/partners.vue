@@ -1,15 +1,24 @@
 <template>
-  <div style="overflow: hidden">
-    <div class="container">
-      <div class="wall">
-        <partners-project
-          v-for="(project, i) in projects"
-          :key="`project-${i}`"
-          :project="project"
-          :activePartnerUID="activePartnerUID"
-          @partner-mouseenter="onPartnerMouseenter"
-          @partner-mouseleave="onPartnerMouseleave"
-        />
+  <div class="page page--red">
+    <div class="page-inner">
+      <page-title
+        :title="title"
+        :subtitle="subtitle"
+      />
+
+      <div style="overflow: hidden;">
+        <div class="container">
+          <div class="wall">
+            <partners-project
+              v-for="(project, i) in projects"
+              :key="`project-${i}`"
+              :project="project"
+              :activePartnerUID="activePartnerUID"
+              @partner-mouseenter="onPartnerMouseenter"
+              @partner-mouseleave="onPartnerMouseleave"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -18,11 +27,14 @@
 <script>
 import _get from 'lodash/get'
 import { stripTags } from '~/utils/tools'
+import getTheme from '~/utils/getTheme'
 
+import PageTitle from '~/components/PageTitle'
 import PartnersProject from '~/components/partners/PartnersProject'
 
 export default {
   components: {
+    PageTitle,
     PartnersProject
   },
   data() {
@@ -33,12 +45,8 @@ export default {
       activePartnerUID: null
     }
   },
-  beforeCreate() {
-    this.$store.commit('SET_THEME', 'red')
-  },
   mounted() {
-    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
-    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
+    this.$store.commit('SET_THEME', getTheme(this.$route))
   },
   methods: {
     onPartnerMouseenter(partnerUID) {

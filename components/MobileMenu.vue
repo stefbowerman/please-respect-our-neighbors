@@ -131,7 +131,7 @@ export default {
   cursor: pointer;
 }
 
-.site-logo {
+.logo {
   position: fixed;
   bottom: 15px;
   left: 0;

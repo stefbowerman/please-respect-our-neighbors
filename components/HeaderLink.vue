@@ -131,5 +131,6 @@ export default {
 
 .text {
   display: inline-block;
+  @include theme-text;
 }
 </style>

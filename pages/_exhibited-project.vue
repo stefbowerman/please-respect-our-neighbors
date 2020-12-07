@@ -1,12 +1,23 @@
 <template>
-  <div>
-    <exhibited-project-slice
-      v-for="(slice, j) in slices"
-      :key="j"
-      :slice="slice"
-      :current="currentSliceIndex === j"
-      ref="slices"
-    />
+  <div
+    class="page page--light"
+    :style="{ '--page-title-height': `${this.pageTitleHeight}px` }"
+  >
+    <div class="page-inner">
+      <page-title
+        :title="title"
+        :subtitle="subtitle"
+        @height-change="h => pageTitleHeight = h"
+      />
+
+      <exhibited-project-slice
+        v-for="(slice, j) in slices"
+        :key="j"
+        :slice="slice"
+        :current="currentSliceIndex === j"
+        ref="slices"
+      />
+    </div>
   </div>
 </template>
 
@@ -15,11 +26,14 @@ import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
 import { stripTags } from '~/utils/tools'
+import getTheme from '~/utils/getTheme'
 
+import PageTitle from '~/components/PageTitle'    
 import ExhibitedProjectSlice from '~/components/exhibitedProject/ExhibitedProjectSlice'
 
 export default {
   components: {
+    PageTitle,
     ExhibitedProjectSlice
   },
   data() {
@@ -27,16 +41,13 @@ export default {
       title: '',
       slices: [],
       meta: {},
-      currentSliceIndex: -1
+      currentSliceIndex: -1,
+      pageTitleHeight: 0
     }
   },
-  beforeCreate() {
-    this.$store.commit('SET_THEME', 'light')
-  },
-  created() {
-    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
-  },
   mounted() {
+    this.$store.commit('SET_THEME', getTheme(this.$route))
+
     this.setCurrentSlice()
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)
@@ -70,11 +81,6 @@ export default {
     },
     onScroll() {
       this.setCurrentSlice()
-    }
-  },
-  watch: {
-    currentSliceIndex(newIndex, oldIndex) {
-      this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
     }
   },
   computed: {
@@ -142,3 +148,11 @@ export default {
   }
 }  
 </script>
+
+<style lang="scss" scoped>
+.page-title {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+</style>

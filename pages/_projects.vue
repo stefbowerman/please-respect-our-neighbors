@@ -1,11 +1,24 @@
 <template>
-  <div class="projects-container">
-    <project
-      v-for="(project, i) in projects"
-      :project="project"
-      :key="`project-${i}`"
-      ref="projects"
-    />
+  <div
+    class="page page--dark"
+    :style="{ '--page-title-height': `${this.pageTitleHeight}px` }"
+  >
+    <div class="page-inner">
+      <page-title
+        :title="title"
+        :subtitle="subtitle"
+        @height-change="h => pageTitleHeight = h"
+      />
+
+      <div class="projects-container">
+        <project
+          v-for="(project, i) in projects"
+          :project="project"
+          :key="`project-${i}`"
+          ref="projects"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,12 +28,15 @@ import _uniq from 'lodash/uniq'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
 import { stripTags } from '~/utils/tools'
+import getTheme from '~/utils/getTheme'
 
-import project from '~/components/project/Project'
+import PageTitle from '~/components/PageTitle'   
+import Project from '~/components/project/Project'
 
 export default {
   components: {
-    project
+    PageTitle,
+    Project
   },
   data() {
     return {
@@ -28,15 +44,12 @@ export default {
       subtitle: '',
       meta: {},
       projects: [],
-      selectedProject: null
+      selectedProject: null,
+      pageTitleHeight: 0
     }
-  },
-  beforeCreate() {
-    this.$store.commit('SET_THEME', 'dark')
   },  
   mounted() {
-    this.$store.commit('SET_PAGE_TITLE_TITLE', this.title)
-    this.$store.commit('SET_PAGE_TITLE_SUBTITLE', this.subtitle)
+    this.$store.commit('SET_THEME', getTheme(this.$route))
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)
     this.throttledOnResize = _throttle(this.onResize, 250)

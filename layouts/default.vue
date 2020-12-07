@@ -10,7 +10,6 @@
       @click="toggleMenu"
     />
     <site-header />
-    <site-page-title />
 
     <main>
       <nuxt />
@@ -19,8 +18,7 @@
     <site-footer
       :text="$store.state.siteSettings.footerText"
     />
-    <site-background />
-    
+
     <portal-target name="overlays" multiple />
   </div>
 </template>
@@ -33,19 +31,15 @@ import { decodeHtmlEntities, isTouch } from '~/utils/tools'
 
 import SiteHeader from '~/components/Header'
 import SiteLogo from '~/components/Logo'
-import SitePageTitle from '~/components/PageTitle'
 import SiteFooter from '~/components/Footer'
 import SiteMobileMenu from '~/components/MobileMenu'
-import SiteBackground from '~/components/Background'
 
 export default {
   components: {
     SiteHeader,
     SiteLogo,
-    SitePageTitle,
     SiteFooter,
-    SiteMobileMenu,
-    SiteBackground
+    SiteMobileMenu
   },
   data() {
     return {
@@ -94,9 +88,6 @@ export default {
   watch: {
     '$route.fullPath'(to, from) {
       this.closeMenu()
-    },
-    '$store.state.pageTitle.height'(height) {
-      document.documentElement.style.setProperty('--page-title-height', `${height}px`)
     }
   },  
   head() {

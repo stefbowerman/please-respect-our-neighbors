@@ -1,4 +1,5 @@
 import _get from 'lodash/get'
+import getTheme from '~/utils/getTheme'
 
 // Define State defaults
 export const state = () => ({
@@ -14,11 +15,6 @@ export const state = () => ({
   },
   windowWidth: 0,
   theme: '',
-  pageTitle: {
-    title: '',
-    subtitle: '',
-    height: 0,
-  },
   overlayOpen: false,
   mobileMenuOpen: false,
   isTouch: false,
@@ -37,15 +33,6 @@ export const mutations = {
   },  
   SET_THEME(state, data) {
     state.theme = data
-  },
-  SET_PAGE_TITLE_TITLE(state, data) {
-    state.pageTitle.title = data
-  },
-  SET_PAGE_TITLE_SUBTITLE(state, data) {
-    state.pageTitle.subtitle = data
-  },
-  SET_PAGE_TITLE_HEIGHT(state, data) {
-    state.pageTitle.height = parseInt(data)
   },
   SET_OVERLAY_OPEN(state, data) {
     state.overlayOpen = data
@@ -69,11 +56,13 @@ export const mutations = {
 
 // Define actions
 export const actions = {
-  async nuxtServerInit(store) {
+  async nuxtServerInit({ dispatch, commit }, { route }) {
+    commit('SET_THEME', getTheme(route))
+
     // Make all requests in parallel
     const data = await Promise.all([
-      store.dispatch('QUERY_SETTINGS'),
-      store.dispatch('QUERY_PROJECTS')
+      dispatch('QUERY_SETTINGS'),
+      dispatch('QUERY_PROJECTS')
     ])
   },
 

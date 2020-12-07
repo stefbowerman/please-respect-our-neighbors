@@ -4,7 +4,7 @@
 // For any text that needs to respond to changes in site theme
 @mixin theme-text {
   color: var(--text-color);
-  // transition: color 1.3s ease-in-out;
+  transition: color 0.05s ease-out 0.35s; // Delay is set to work with the page transition so the nav text changes color at the same time the incoming page slides up to meet it
 }
 
 @mixin fill($position: absolute) {

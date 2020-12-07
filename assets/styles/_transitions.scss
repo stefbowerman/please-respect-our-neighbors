@@ -1,11 +1,37 @@
 // Page
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.4s $easing-ease-in-out-quart;
+.page-enter {
+  transform: translate3d(0, 100vh, 0);
 }
-.page-enter,
+.page-enter-to {
+  transform: translateY(0);
+}
+
+.page-enter-active {
+  position: fixed !important;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;  
+  backface-visibility: hidden;
+  transition: transform 600ms cubic-bezier(0.77, 0, 0.175, 1) 0s;
+}
+
+.page-leave-to {
+  transform: translate3d(0, -20vh, 0);
+
+  .page-inner {
+    opacity: 0.8;
+  }
+}
+
 .page-leave-active {
-  opacity: 0;
+  position: relative;
+  z-index: 0;
+  transition: transform 600ms cubic-bezier(0.77, 0, 0.175, 1);
+
+  .page-inner {
+    transition: opacity 600ms ease;
+  }
 }
 
 // Fade
