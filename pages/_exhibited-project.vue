@@ -15,6 +15,7 @@
         :key="j"
         :slice="slice"
         :current="currentSliceIndex === j"
+        :page-title-height="pageTitleHeight"
         ref="slices"
       />
     </div>

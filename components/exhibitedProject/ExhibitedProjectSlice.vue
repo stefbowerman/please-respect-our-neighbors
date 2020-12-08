@@ -8,6 +8,7 @@
         :is="sliceComponentName"
         :slice="slice"
         :current="current"
+        ref="slice"
       />
     </div>
 
@@ -52,6 +53,10 @@ export default {
     current: {
       type: Boolean,
       default: false
+    },
+    pageTitleHeight: {
+      type: Number,
+      required: false
     }
   },
   data() {
@@ -67,6 +72,11 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.throttledOnResize)
+  },
+  watch: {
+    pageTitleHeight() {
+      this.$refs.slice.onResize && this.$refs.slice.onResize()
+    }
   },
   methods: {
     onResize() {

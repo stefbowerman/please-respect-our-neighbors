@@ -41,13 +41,11 @@ export default {
       progressText: ''
     }
   },
-  mounted() {
-    // @TODO - Wait for everything to load before triggering this
-    setTimeout(() => {
-      console.log('updating size')
-      this.$refs.slideshow.update()
-    }, 1000)
-
+  methods: {
+    // Triggered by parent component
+    onResize() {
+      this.$refs.slideshow.onResize()
+    }
   }
 }
 </script>
