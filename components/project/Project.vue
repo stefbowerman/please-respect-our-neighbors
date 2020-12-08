@@ -294,22 +294,18 @@ export default {
   z-index: 2; // To sandwich in the middle of the top and bottom layers
   height: 100%;
   width: 100%;
-
+  overflow-y: hidden;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;    
+  
   &::-webkit-scrollbar {
     display: none;
-  }
+  }  
 
-  // Because the slices transform up
-  // We can't hide vertical overflow until after they're done animating in
-  .is-introduction-complete & {
-    overflow-y: hidden;
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;    
-  }
-
+  // Above this screen size we don't do horizontal scrolling anymore so we don't need pointer events
   @include bp-up(md) {
     overflow: visible;
-    pointer-events: none; // Above this screen size we don't do scrolling anymore so we don't need pointer events
+    pointer-events: none;
   }
 }
 

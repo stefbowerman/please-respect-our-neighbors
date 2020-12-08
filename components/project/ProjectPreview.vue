@@ -141,16 +141,27 @@ export default {
 .frame-wrapper {
   height: 100%;
   opacity: 0;
-  transform: translateY(150px);
 
-  .is-introd & {
-    transform: translateY(0px);
-    transition: transform 350ms cubic-bezier(0.84, 0.31, 0.78, 0.86);
-    // transform 600ms cubic-bezier(0.32, 0.62, 0.19, 0.96);
+  // Only do the translation stuff on larger screens where there's no overflow
+  @include bp-up(md) {
+    transform: translateY(150px);
+
+    .is-introd & {
+      transform: translateY(0px);
+      transition: transform 350ms cubic-bezier(0.84, 0.31, 0.78, 0.86);
+    }
+
+    .is-visible & {
+      opacity: 1;
+    }    
   }
 
-  .is-visible & {
-    opacity: 1;
+  // On smaller screens just fade in
+  @include bp-down(sm) {
+    .is-introd & {
+      opacity: 1;
+      transition: opacity 350ms cubic-bezier(0.84, 0.31, 0.78, 0.86);
+    }
   }
 }
 
