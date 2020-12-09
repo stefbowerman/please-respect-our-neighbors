@@ -272,7 +272,7 @@ export default {
   @include bp-up(lg) {
     height: calc(100vh - var(--page-title-height));
     padding-top: 60px;
-    max-height: 900px; // For huge monitors
+    max-height: 700px; // For huge monitors
   }
 
   opacity: 0;

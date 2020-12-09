@@ -120,9 +120,6 @@ export default {
 .captions {
   font-family: $font-family-secondary;
   text-align: center;
-  margin-top: 25px;
-  margin-bottom: 50px;
-
   display: none;
 
   @include bp-up(lg) {
