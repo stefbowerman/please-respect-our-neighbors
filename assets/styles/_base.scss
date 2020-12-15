@@ -1,5 +1,6 @@
 :root {
   --background-color: #{$white};
+  --background-color-top: #{$white};
   --text-color: #{$black};
   --link-color: #{$black};
   --unit-100vh: 100vh;
@@ -12,6 +13,7 @@ body.scrolling-down {
 
 body.theme-dark {
   --background-color: #{$dark-gradient-top};
+  --background-color-top: #{$dark-gradient-top};
   --text-color: #{$red};
   --link-color: #{$red};
 
@@ -22,6 +24,7 @@ body.theme-dark {
 
 body.theme-red {
   --background-color: #{$red};
+  --background-color-top: #{$red};
 }
 
 html {

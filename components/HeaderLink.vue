@@ -61,19 +61,20 @@ export default {
   watch: {
     // Reset on url change, otherwise we'll get a weird background color change from switching routes
     '$route.fullPath'(to, from) {
-      this.hovered = false
-      this.transX = 0
-      this.transY = 0
+      this.reset()
     }
   },  
   methods: {
+    reset() {
+      this.hovered = false
+      this.transX = 0
+      this.transY = 0
+    },
     onMouseenter() {
       this.hovered = true
     },
     onMouseleave() {
-      this.transX = 0
-      this.transY = 0
-      this.hovered = false
+      this.reset()
     },
     onMousemove(e) {
       if (this.$store.state.isTouch || this.hovered === false) return
@@ -126,7 +127,7 @@ export default {
 
   .is-active & {
     border-color: var(--text-color);
-    background-color: var(--background-color);
+    background-color: var(--background-color-top);
   }
 }
 
