@@ -4,8 +4,6 @@
       :show="showMenu"
       @close="closeMenu"
       @link-click="onLinkClick"
-      @leave="onMobileMenuLeave"
-      @after-leave="onMobileMenuAfterLeave"
     />
 
     <site-logo

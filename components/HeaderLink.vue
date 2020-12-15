@@ -58,6 +58,14 @@ export default {
       }
     }
   },
+  watch: {
+    // Reset on url change, otherwise we'll get a weird background color change from switching routes
+    '$route.fullPath'(to, from) {
+      this.hovered = false
+      this.transX = 0
+      this.transY = 0
+    }
+  },  
   methods: {
     onMouseenter() {
       this.hovered = true
@@ -68,7 +76,7 @@ export default {
       this.hovered = false
     },
     onMousemove(e) {
-      if (this.$store.state.isTouch) return
+      if (this.$store.state.isTouch || this.hovered === false) return
 
       const { left, top, height, width } = this.$refs.bounds.getBoundingClientRect()
 
@@ -119,7 +127,6 @@ export default {
   .is-active & {
     border-color: var(--text-color);
     background-color: var(--background-color);
-    transition: background-color 500ms ease; // --background-color changes as you scroll
   }
 }
 
