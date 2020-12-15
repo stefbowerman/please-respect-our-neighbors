@@ -4,6 +4,8 @@
       :show="showMenu"
       @close="closeMenu"
       @link-click="onLinkClick"
+      @leave="onMobileMenuLeave"
+      @after-leave="onMobileMenuAfterLeave"
     />
 
     <site-logo
@@ -70,8 +72,14 @@ export default {
     closeMenu() {
       this.showMenu = false
     },
-    onLinkClick() {
+    onLinkClick(url) {   
       this.closeMenu()
+
+      // The menu leave animation takes 750ms - waiting 450ms puts us 60% into the animation
+      // which is enough time for the screen to mostly clear without the user feeling like they're waiting too long
+      setTimeout(() => {
+        this.$router.push(url)
+      }, 450)      
     },
     onResize() {
       this.set100vh()

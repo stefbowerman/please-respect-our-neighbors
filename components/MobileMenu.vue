@@ -17,7 +17,8 @@
               v-for="(link, i) in links"
               :key="`link-${i}`"
               :to="link.url"
-              @click.native="$emit('link-click')"
+              :event="''"
+              @click.native="onLinkClick(link)"
               v-text="link.title"
             />
           </nav>
@@ -80,6 +81,9 @@ export default {
   methods: {
     close() {
       this.$emit('close')
+    },
+    onLinkClick(link) {
+      this.$emit('link-click', link.url)
     },
     onEnter() {
       this.$refs.dialog.scrollTop = 0
@@ -165,5 +169,9 @@ nav {
 .mobile-menu-enter-active,
 .mobile-menu-leave-active {
   transition: transform 850ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.mobile-menu-leave-active {
+  transition-duration: 750ms;
 }
 </style>
