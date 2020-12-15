@@ -41,7 +41,7 @@
 .page--index {
   height: 100vh;
   height: var(--unit-100vh);
-  
+
   .page-inner {
     height: 100%;
     display: flex;
@@ -52,17 +52,12 @@
 }
 
 .page--info {
-  // padding-top: 32px;
-  margin-bottom: 100px;
+  padding-bottom: 100px;
   align-items: flex-start;
 
   @include bp-down(md) {
     min-height: none; // ?
   }
-
-  // @include bp-up(lg) {
-  //   padding-top: 7.4vw;
-  // }
 }
 
 // Need this element so we can fade out page contents without affecting the opacity of the page background
