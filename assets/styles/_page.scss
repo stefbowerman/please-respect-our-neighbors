@@ -41,10 +41,14 @@
 .page--index {
   height: 100vh;
   height: var(--unit-100vh);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  
+  .page-inner {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;    
+  }
 }
 
 .page--info {

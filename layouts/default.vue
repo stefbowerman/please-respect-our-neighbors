@@ -85,10 +85,19 @@ export default {
     },
     onScroll() {
       const s = window.pageYOffset || document.documentElement.scrollTop
+      let dir = s > this.scrollTop ? 'down' : 'up'
 
-      this.scrollDirection = s > this.scrollTop ? 'down' : 'up'
+      // handle momentum scrolling past the page bounds
+      if (s <= 0) {
+        dir = 'up'
+      }
+      else if (s > window.innerHeight) {
+        dir = 'down'
+      }
+      
+      this.scrollDirection = dir
       this.scrollTop = s
-      this.set100vh();
+      this.set100vh()
     }
   },
   watch: {

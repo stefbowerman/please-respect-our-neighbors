@@ -267,12 +267,10 @@ export default {
   position: relative;
   z-index: 1;
   height: calc(100vh - var(--page-title-height));
-  max-height: 500px;
+  max-height: 350px;
 
   @include bp-up(lg) {
-    height: calc(100vh - var(--page-title-height));
-    padding-top: 60px;
-    max-height: 700px; // For huge monitors
+    max-height: 500px;
   }
 
   opacity: 0;

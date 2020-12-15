@@ -174,16 +174,18 @@ export default {
 
 <style lang="scss" scoped>
 .projects-container {
-  margin-top: 115px;
-  margin-bottom: 60px;
+  padding: 115px 0 60px;
 
   @include bp-up(lg) {
-    margin-top: 65px;
-    margin-bottom: 150px;   
+    padding: 65px 0 150px;
   }
 }
 
 .project + .project {
-  margin-top: 100px;
+  margin-top: 80px;
+
+  @include bp-up(md) {
+    margin-top: 160px;
+  }
 }
 </style>

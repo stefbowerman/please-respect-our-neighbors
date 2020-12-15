@@ -42,7 +42,7 @@ export default {
       title: '',
       slices: [],
       meta: {},
-      currentSliceIndex: -1,
+      currentSliceIndex: 0,
       pageTitleHeight: 0
     }
   },
