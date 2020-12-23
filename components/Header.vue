@@ -43,8 +43,6 @@ header {
   text-align: center;
   pointer-events: none; // Since we only use the secondary column for content, make sure you can use the mouse *through* the rest of the header; apply pointer-events to the nav element
 
-  @include theme-text;
-
   @include bp-up(lg) {
     top: 40px;
   }

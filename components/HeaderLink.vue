@@ -140,5 +140,6 @@ export default {
 .text {
   display: inline-block;
   @include theme-text;
+  transition-delay: 0.35s;
 }
 </style>

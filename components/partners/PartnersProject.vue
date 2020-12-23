@@ -35,10 +35,8 @@
     </span>
     <span
       v-if="codedDetails"
-      class="sub"
-    >
-      <span v-html="codedDetails" />
-    </span>
+      v-html="codedDetails"
+    />
   </span>
 </template>
 
@@ -81,7 +79,7 @@ export default {
         const t = this.$prismic.asText(_get(detail, 'primary.detail_title', []))
         let truncated = t.split(' ').splice(0, 9).join(' ') // Grab the first couple words 
 
-        if (truncated.charAt(truncated.length-1) != '.') {
+        if (truncated.charAt(truncated.length - 1) != '.') {
           truncated += '.'
         }
 
@@ -97,9 +95,5 @@ export default {
 <style lang="scss" scoped>
 .main {
   font-weight: $font-weight-medium;
-}
-
-.sub {
-
 }
 </style>

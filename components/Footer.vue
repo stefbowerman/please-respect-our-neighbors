@@ -22,10 +22,11 @@ footer {
   z-index: $zindex-footer;
   bottom: 30px;
   right: 30px;
+  font-weight: $font-weight-bold;
+  font-family: $font-family-secondary;
 
   @include theme-text;
-  font-weight: $font-weight-medium;
-  font-family: $font-family-secondary;
+  transition-delay: 0.1s;
 
   @include bp-down(md) {
     display: none;
