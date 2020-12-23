@@ -8,9 +8,8 @@
   >
     <div class="row">
       <div class="primary-column">  
-        <div class="medium" v-if="captions.medium" v-text="captions.medium" />
-        <div class="small"  v-if="captions.small"  v-text="captions.small" />
-        <div class="large"  v-if="captions.large"  v-text="captions.large" />
+        <div class="small" v-if="captions.small" v-html="captions.small" />
+        <div class="large" v-if="captions.large" v-html="captions.large" />
       </div>
     </div>
   </div>
@@ -32,10 +31,15 @@ export default {
   },
   computed: {
     captions() {
+      const smallCap = _get(this.slice, 'primary.small_caption', [])
+      const largeCap = _get(this.slice, 'primary.large_caption', [])
+
+      const small = this.$prismic.asText(smallCap).length ? this.$prismic.asHtml(smallCap) : null
+      const large = this.$prismic.asText(largeCap).length ? this.$prismic.asHtml(largeCap) : null
+
       return {
-        small: this.$prismic.asText(_get(this.slice, 'primary.small_caption', [])) || '',
-        medium: this.$prismic.asText(_get(this.slice, 'primary.medium_caption', [])) || '',
-        large: this.$prismic.asText(_get(this.slice, 'primary.large_caption', [])) || '',
+        small,
+        large
       }
     }
   }
@@ -63,7 +67,8 @@ export default {
   }
 
   .small {
-    line-height: 1; // Do we need?
+    line-height: 1.1;
+    font-size: 19px;
     max-width: 31em;
     margin-left: auto;
     margin-right: auto;
@@ -71,19 +76,15 @@ export default {
     @include bp-down(md) {
       font-size: 13px;
     }
-  }
 
-  .medium {
-    @include text-big;
+    /deep/ p + p {
+      margin-top: 20px;
+    }
   }
 
   .large {
     @include text-huge;
     margin-bottom: -7px;
-  }
-
-  .medium + .small {
-    margin-top: 3px;
   }
 
   .small + .large {

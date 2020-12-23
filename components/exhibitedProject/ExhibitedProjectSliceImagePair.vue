@@ -19,25 +19,6 @@
         </div>   
       </div>
     </div>
-
-    <div class="caption-placement" v-show="current">
-      <div class="container">
-        <div class="row">
-          <div class="primary-column">
-            <div class="captions">
-              <div class="caption" v-if="firstCaption">
-                <div>Left:</div>
-                <div v-text="firstCaption" />
-              </div>
-              <div class="caption" v-if="secondImage">
-                <div>Right:</div>
-                <div v-text="secondCaption" />
-              </div>
-            </div>              
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -64,12 +45,6 @@ export default {
     },
     secondImage() {
       return _get(this.slice, 'primary.second_image')
-    },
-    firstCaption() {
-      return this.firstImage && this.$prismic.asText(_get(this.slice, 'primary.first_image_caption', []))
-    },
-    secondCaption() {
-      return this.secondImage && this.$prismic.asText(_get(this.slice, 'primary.second_image_caption', []))
     }
   }
 }
@@ -104,34 +79,6 @@ export default {
   @include bp-up(lg) {
     max-width: 571px;
     margin-top: 0;
-  }
-}
-
-// I'm just copying the style of .captions in _exhibited-project.vue :-/
-.caption-placement {
-  position: fixed;
-  z-index: -1;
-  bottom: 21px;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-}
-
-.captions {
-  font-family: $font-family-secondary;
-  text-align: center;
-  display: none;
-
-  @include bp-up(lg) {
-    display: block;
-  }
-}
-
-.caption {
-  line-height: 1.523; // @TODO - Can this be a variable?
-
-  & + & {
-    margin-top: 1em * 1.523;
   }
 }
 </style>
