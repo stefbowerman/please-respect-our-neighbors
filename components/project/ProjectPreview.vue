@@ -30,7 +30,7 @@
         <template v-else-if="slice.slice_type === 'detail_text'">
           <div class="detail-text">
             <div
-              class="text"
+              class="text-box-content"
               v-html="$prismic.asHtml(slice.primary.detail_rich_text)"
             />
           </div>
@@ -231,10 +231,7 @@ export default {
   white-space: nowrap;
 }
 
-.text {
-  font-size: 50px;
-  line-height: 53px;
-  width: 500px;
+.text-box-content {
   padding: 65px 13px; 
 }
 </style>
