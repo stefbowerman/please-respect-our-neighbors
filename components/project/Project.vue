@@ -264,13 +264,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 1;
-  height: calc(100vh - var(--page-title-height));
-  max-height: 350px;
+  height: 420px;
+  max-height: 850px;
 
-  @include bp-up(lg) {
-    max-height: 500px;
+  @include bp-up(md) {
+    height: calc(100vh - var(--page-title-height));    
   }
 
   opacity: 0;
@@ -285,6 +286,7 @@ export default {
   position: relative; // For top and bottom layers to position themselves against
   height: 100%;
   width: 100%;
+  max-height: 350px;
 }
 
 .project-preview-overflow {
@@ -410,8 +412,6 @@ export default {
   @include text-shrink;
 
   &__text {
-    // max-width: 800px;
-    // margin: 0 auto;
     padding: 0 50px;
   }
 }
@@ -419,7 +419,8 @@ export default {
 // This is all trash, get using it to get the idea
 .captions {
   flex: none; // Might not need this when we re-do how the container
-  margin-top: 10px;
+  margin-top: 150px;
+  margin-top: 17vh;
   width: 100%;
   position: relative;
 

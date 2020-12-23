@@ -174,10 +174,10 @@ export default {
 
 <style lang="scss" scoped>
 .projects-container {
-  padding: 115px 0 60px;
+  padding: 50px 0 60px;
 
   @include bp-up(lg) {
-    padding: 65px 0 150px;
+    padding-top: 65px;
   }
 }
 
@@ -185,7 +185,11 @@ export default {
   margin-top: 80px;
 
   @include bp-up(md) {
-    margin-top: 160px;
+    margin-top: 40px;
+  }
+
+  @media (min-height: 1000px) {
+    margin-top: 0;
   }
 }
 </style>
