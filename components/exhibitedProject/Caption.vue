@@ -59,7 +59,7 @@ export default {
   }
 
   @include bp-up(md) {
-    bottom: 14px;
+    bottom: 34px;
   }
 
   .small {
@@ -79,6 +79,7 @@ export default {
 
   .large {
     @include text-huge;
+    margin-bottom: -7px;
   }
 
   .medium + .small {

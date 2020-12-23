@@ -11,7 +11,6 @@
         </div>
       </div>
     </div>
-    <div class="bg" />
   </div>
 </template>
 
@@ -61,12 +60,5 @@ export default {
     width: 100%;
     object-fit: contain;
   }
-}
-
-.bg {
-  @include fill;
-  background-color: $red;
-  z-index: $zindex-accent-bg;
-  transform: translate3d(0, 0, 0); // Fix a chrome bug where it was disappearing randomly?
 }
 </style>
