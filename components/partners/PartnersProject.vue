@@ -33,12 +33,11 @@
         />        
       </template>
     </span>
-    <span class="sub">
-      <span
-        v-if="detailTitles.length"
-        v-for="title in detailTitles"
-        v-html="`${title}&nbsp;`"
-      />
+    <span
+      v-if="codedDetails"
+      class="sub"
+    >
+      <span v-html="codedDetails" />
     </span>
   </span>
 </template>
@@ -75,12 +74,21 @@ export default {
     projectPreviewUrl() {
       return this.project.website_url && this.project.website_url.link_type === 'Web' ? this.project.website_url.url : null
     },
-    detailTitles() {
-      if (!this.project.body) return []
+    codedDetails() {
+      if (!this.project.body) return null
 
-      return this.project.body.map(detail => {
-        return this.$prismic.asText(_get(detail, 'primary.detail_title', []))
+      const titles = this.project.body.map(detail => {
+        const t = this.$prismic.asText(_get(detail, 'primary.detail_title', []))
+        let truncated = t.split(' ').splice(0, 9).join(' ') // Grab the first couple words 
+
+        if (truncated.charAt(truncated.length-1) != '.') {
+          truncated += '.'
+        }
+
+        return truncated
       })
+
+      return titles.join('&nbsp;')
     }
   }
 }
