@@ -147,7 +147,7 @@ nav {
   font-size: 42px; // 47px; - had to make this a little smaller to fit the text without breaking the container
   line-height: 1;
   text-align: center;
-  font-weight: $font-weight-bold;
+  font-weight: $font-weight-medium;
   font-family: $font-family-secondary;
 
   a {
