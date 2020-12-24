@@ -33,10 +33,6 @@ export default {
       validator(s) {
         return s.slice_type === 'image_pair'
       } 
-    },
-    current: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {

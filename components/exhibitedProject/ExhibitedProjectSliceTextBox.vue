@@ -25,10 +25,6 @@ export default {
       validator(s) {
         return s.slice_type === 'text_box'
       } 
-    },
-    current: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {

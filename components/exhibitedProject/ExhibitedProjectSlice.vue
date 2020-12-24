@@ -7,7 +7,6 @@
       <component
         :is="sliceComponentName"
         :slice="slice"
-        :current="current"
         ref="slice"
       />
     </div>
@@ -35,6 +34,7 @@ import ExhibitedProjectSliceAccentImage from '~/components/exhibitedProject/Exhi
 import ExhibitedProjectSliceImageGallery from '~/components/exhibitedProject/ExhibitedProjectSliceImageGallery'
 import ExhibitedProjectSliceImageTextBox from '~/components/exhibitedProject/ExhibitedProjectSliceImageTextBox'
 import ExhibitedProjectSliceTextBox from '~/components/exhibitedProject/ExhibitedProjectSliceTextBox'
+import ExhibitedProjectSliceVideo from '~/components/exhibitedProject/ExhibitedProjectSliceVideo'
 
 export default {
   components: {
@@ -44,7 +44,8 @@ export default {
     ExhibitedProjectSliceAccentImage,
     ExhibitedProjectSliceImageGallery,
     ExhibitedProjectSliceImageTextBox,
-    ExhibitedProjectSliceTextBox
+    ExhibitedProjectSliceTextBox,
+    ExhibitedProjectSliceVideo
   },
   props: {
     slice: {
@@ -126,7 +127,7 @@ export default {
 
 <style lang="scss">
 .exhibited-project-slice {
-  position: relative;
+  position: relative; // For accent BG
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -144,7 +145,6 @@ export default {
 
 .exhibited-project-slice__contain {
   height: 100vh;
-  position: relative; // For accent BG
   
   @include bp-up(lg) {
     padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
