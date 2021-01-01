@@ -49,21 +49,26 @@ export default {
 <style lang="scss" scoped>
 .captions {
   position: fixed;
-  z-index: -1;
+  z-index: 0;
   bottom: 21px;
   left: 0;
   right: 0;
-  pointer-events: none;
   text-align: center;
   font-weight: $font-weight-medium;
   opacity: 0;
-
-  &.is-visible {
-    opacity: 1;
-  }
+  pointer-events: none;
 
   @include bp-up(md) {
     bottom: 34px;
+  }  
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /deep/ a {
+    text-decoration: underline;
   }
 
   .small {

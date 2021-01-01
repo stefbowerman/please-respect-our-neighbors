@@ -3,18 +3,45 @@
     <div class="container">
       <div class="row">
         <div class="primary-column">
-          <div class="first-image" v-if="firstImage">
-            <img
-              :src="firstImage.url"
-              :alt="firstImage.alt"
-            />
+          <div
+            v-if="firstImage"
+            class="first-image"
+          >
+            <a
+              v-if="firstImageLink.url"
+              :href="firstImageLink.url"
+              :target="firstImageLink.target"
+            >
+              <prismic-image
+                :field="firstImage"
+              />
+            </a>
+
+            <prismic-image
+              v-else
+              :field="firstImage"
+            />            
           </div>
         </div>
         <div class="secondary-column">
-          <div class="second-image" v-if="secondImage">
+          <div
+            v-if="secondImage"
+            class="second-image"
+          >
+            <a
+              v-if="secondImageLink.url"
+              :href="secondImageLink.url"
+              :target="secondImageLink.target"
+            >
+              <prismic-image
+                :field="secondImage"
+              />
+            </a>
+
             <prismic-image
+              v-else
               :field="secondImage"
-            />
+            />            
           </div>
         </div>   
       </div>
@@ -39,8 +66,14 @@ export default {
     firstImage() {
       return _get(this.slice, 'primary.first_image')
     },
+    firstImageLink() {
+      return _get(this.slice, 'primary.first_image_link')
+    },
     secondImage() {
       return _get(this.slice, 'primary.second_image')
+    },
+    secondImageLink() {
+      return _get(this.slice, 'primary.second_image_link')
     }
   }
 }

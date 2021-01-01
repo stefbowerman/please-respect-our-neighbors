@@ -228,6 +228,7 @@ export default {
 }
 
 .text-box-content {
-  padding: 65px 13px; 
+  padding: 65px 13px;
+  pointer-events: none; // In case the text has links in it..you shouldn't be able to click at this point
 }
 </style>

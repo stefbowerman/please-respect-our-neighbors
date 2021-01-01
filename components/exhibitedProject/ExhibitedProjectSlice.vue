@@ -4,14 +4,16 @@
       class="exhibited-project-slice__contain"
       :style="containStyle"
     >
-      <component
-        :is="sliceComponentName"
-        :slice="slice"
-        ref="slice"
-      />
+      <div class="exhibited-project-slice__component">
+        <component
+          :is="sliceComponentName"
+          :slice="slice"
+          ref="slice"
+        />
+      </div>
     </div>
 
-    <project-caption
+    <exhibited-project-caption
       :slice="slice"
       :visible="current"
       ref="caption"
@@ -27,7 +29,7 @@ import _capitalize from 'lodash/capitalize'
 import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 
-import ProjectCaption from '~/components/exhibitedProject/Caption'
+import ExhibitedProjectCaption from '~/components/exhibitedProject/Caption'
 import ExhibitedProjectSliceZoomImage from '~/components/exhibitedProject/ExhibitedProjectSliceZoomImage'
 import ExhibitedProjectSliceImagePair from '~/components/exhibitedProject/ExhibitedProjectSliceImagePair'
 import ExhibitedProjectSliceAccentImage from '~/components/exhibitedProject/ExhibitedProjectSliceAccentImage'
@@ -38,7 +40,7 @@ import ExhibitedProjectSliceVideo from '~/components/exhibitedProject/ExhibitedP
 
 export default {
   components: {
-    ProjectCaption,
+    ExhibitedProjectCaption,
     ExhibitedProjectSliceZoomImage,
     ExhibitedProjectSliceImagePair,
     ExhibitedProjectSliceAccentImage,
@@ -128,6 +130,7 @@ export default {
 <style lang="scss">
 .exhibited-project-slice {
   position: relative; // For accent BG
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -144,6 +147,8 @@ export default {
 }
 
 .exhibited-project-slice__contain {
+  position: relative;
+  z-index: 1;
   padding-top: calc(var(--page-title-height) + 15px);
 
   // These don't have much content so make them go 100vh on small screens
@@ -157,6 +162,11 @@ export default {
     padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
     // padding-top: calc(var(--page-title-height) + 15px);
   }
+}
+
+.exhibited-project-slice__component {
+  height: 100%;
+  pointer-events: auto;
 }
 
 .exhibited-project-slice__accent-bg {

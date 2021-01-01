@@ -3,9 +3,19 @@
     <div class="row">
       <div class="primary-column">
         <div class="image">
-          <img
-            :src="slice.primary.image.url"
-            :alt="slice.primary.image.alt"
+          <a
+            v-if="slice.primary.image_link.url"
+            :href="slice.primary.image_link.url"
+            :target="slice.primary.image_link.target"
+          >
+            <prismic-image
+              :field="slice.primary.image"
+            />
+          </a>
+
+          <prismic-image
+            v-else
+            :field="slice.primary.image"
           />
         </div>
       </div>
@@ -73,6 +83,11 @@ export default {
     width: auto;
     max-width: 100%;
     object-fit: contain;
+    border: 1px solid transparent;
+  }
+
+  a:hover img {
+    border-color: var(--link-color);
   }
 }
 
