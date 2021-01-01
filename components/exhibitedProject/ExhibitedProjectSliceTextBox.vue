@@ -4,6 +4,7 @@
       <text-box
         :date="date"
         :content="content"
+        :text-size="size"
       />
     </div>
   </div>
@@ -33,6 +34,9 @@ export default {
     },
     content() {
       return this.$prismic.asHtml(_get(this.slice, 'primary.content', []))
+    },
+    size() {
+      return _get(this.slice, 'primary.text_size', null)
     }
   }
 }

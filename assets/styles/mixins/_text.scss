@@ -34,7 +34,7 @@
   }
 }
 
-// Header Title + text-box-content
+// Header Title + .text-box-content
 @mixin text-bigger {
   font-size: 27px;
   line-height: (25px/27px);
@@ -77,6 +77,16 @@
 @mixin text-large {
   font-size: 42px;
   line-height: (50px/42px);
+}
+
+// Medium sized text for "small" text box
+@mixin text-med-screen {
+  font-size: 27px;
+  line-height: 1.14;
+
+  @include bp-up(lg) {
+    font-size: 35px;
+  }
 }
 
 @mixin text-title {

@@ -52,16 +52,16 @@ export default {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  border: 1px solid $black;
 
   img {
     display: inline-block;
     vertical-align: top;
+    border: 1px solid $black; // ?
   }
 }
 
 .first-image {
-  max-width: 79%;
+  // max-width: 79%;
 
   @include bp-up(lg) {
     max-width: 750px;
@@ -69,11 +69,11 @@ export default {
 }
 
 .second-image {
-  max-width: 55%;
+  // max-width: 55%;
   margin-top: 10px;
 
   @include bp-up(lg) {
-    max-width: 571px;
+    // max-width: 571px;
     margin-top: 0;
   }
 }

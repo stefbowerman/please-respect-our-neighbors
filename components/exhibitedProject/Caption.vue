@@ -69,7 +69,7 @@ export default {
   .small {
     line-height: 1.1;
     font-size: 19px;
-    max-width: 31em;
+    max-width: 40em;
     margin-left: auto;
     margin-right: auto;
 
@@ -78,7 +78,10 @@ export default {
     }
 
     /deep/ p + p {
-      margin-top: 20px;
+      
+      @include bp-up(md) {
+        margin-top: 20px;
+      }
     }
   }
 

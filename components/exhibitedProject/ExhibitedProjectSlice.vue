@@ -144,11 +144,18 @@ export default {
 }
 
 .exhibited-project-slice__contain {
-  height: 100vh;
+  padding-top: calc(var(--page-title-height) + 15px);
+
+  // These don't have much content so make them go 100vh on small screens
+  .exhibited-project-slice.accent-image &,
+  .exhibited-project-slice.video & {
+    height: 100vh;
+  }
   
   @include bp-up(lg) {
+    height: 100vh;
     padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
-    padding-top: calc(var(--page-title-height) + 15px);
+    // padding-top: calc(var(--page-title-height) + 15px);
   }
 }
 

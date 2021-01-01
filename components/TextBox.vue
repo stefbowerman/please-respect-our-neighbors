@@ -12,13 +12,14 @@
       <div
         v-if="content"
         v-html="content"
-        class="text-box-content"
+        :class="contentClasses"
       />
     </div>      
   </simplebar>
 </template>
 
 <script>
+import _kebabCase from 'lodash/kebabCase'
 import simplebar from 'simplebar-vue'
 
 export default {
@@ -33,6 +34,14 @@ export default {
     content: {
       type: String,
       required: false
+    },
+    textSize: {
+      type: String,
+      required: false,
+      validator(val) {
+        // 'Large' is the default (it doesn't really do anything)
+        return ['Small', 'Large'].includes(val)
+      }
     }
   },
   computed: {
@@ -45,6 +54,12 @@ export default {
       const year  = d.getFullYear().toString()
 
       return `${day.length === 1 ? `0${day}` : day}<br />${month.length === 1 ? `0${month}` : month}<br />${year}`
+    },
+    contentClasses() {
+      return [
+        'text-box-content',
+        (this.textSize && `size-${_kebabCase(this.textSize)}`)
+      ]
     }
   }
 }
@@ -120,6 +135,14 @@ export default {
   @include bp-down(lg) {
     font-size: 35px;
     line-height: 1;
+  }
+
+  &.size-small {
+    @include text-med-screen;
+
+    p + p {
+      margin-top: 1.5em;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {

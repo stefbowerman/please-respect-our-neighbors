@@ -68,7 +68,6 @@ export default {
   img {
     margin: 0 auto;
     display: block;
-    border: 1px solid $black;
     height: 100%;
     max-height: 450px;
     width: auto;
@@ -78,8 +77,11 @@ export default {
 }
 
 .text-box-wrapper {
+  height: 100%;
+
   .text-box {
     height: 60vh;
+    max-height: 100%;
 
     /deep/ .scroller {
       height: 100%; // @TODO - Remove the 'height' from this inside the text-box component ?

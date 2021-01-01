@@ -128,8 +128,7 @@ export default {
       previewerWidth: 0,
       isIntroduced: false,
       isIntroductionComplete: false,
-      isHighlighted: false,
-      horizontalScrollSet: false,
+      isHighlighted: false
     }
   },
   mounted() {
@@ -189,16 +188,6 @@ export default {
     setPreviewerWidth() {
       // Update the previewer width
       this.previewerWidth = this.$store.state.windowWidth * this.project.slices.length / 2.5
-
-      if (this.previewerWidth === 0 || this.horizontalScrollSet) return
-
-      // scroll to the middle of the project slices
-      this.$nextTick(() => {
-        const previewOverflow = this.$refs['preview-overflow']
-        previewOverflow.scrollLeft = (previewOverflow.scrollWidth - previewOverflow.clientWidth) / 2
-        
-        this.horizontalScrollSet = true
-      })
     },
     setCaptionHeight() {
       let h = 0
