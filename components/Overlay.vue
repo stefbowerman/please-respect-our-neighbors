@@ -109,15 +109,18 @@ export default {
   position: fixed;
   display: inline-block;
   z-index: 1;
-  top: 77px;
-  right: 11px;
+  top: 67px;
+  right: 1px;
+  padding: 10px;
   font-size: 15px; // @TODO - Var this
   font-weight: $font-weight-light;
   cursor: pointer;
 
   @include bp-up(md) {
+    top: 77px;
     right: 53px;
     font-size: 46px; // @TODO - Var this
+    padding: 0;
   }
 
   // Need this here so we can apply the transition to .close

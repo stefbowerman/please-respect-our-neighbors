@@ -4,14 +4,21 @@
       <div class="slide-content-frame">
         <div class="slide-content-interactive-area">
           <template v-if="type === 'video'">
-            <video class="plyr" playsinline controls>
-              <source :src="item.video_file_url.url" type="video/mp4" />
+            <video 
+              class="plyr slide-media"
+              playsinline
+              controls
+            >
+              <source
+                :src="item.video_file_url.url"
+                type="video/mp4" 
+              />
             </video>
           </template>          
           <template v-else-if="type === 'image'">
             <prismic-image
               :field="item.image"
-              class="slide-image"
+              class="slide-media"
               :data-height="item.image.dimensions.height"
               :data-width="item.image.dimensions.width"
             />
@@ -64,15 +71,12 @@ export default {
   justify-content: center;
 
   img,
-  iframe,
   video {
     height: 100%;
     width: 100%;
   }
 
-  iframe,
-  video {
-    object-fit: contain;
+  div.plyr {
     opacity: 0;
     transition: opacity 1s ease-out;
 
@@ -90,10 +94,6 @@ export default {
 
   .plyr__captions {
     display: none;
-  }
-
-  .plyr.is-loaded video {
-    opacity: 1;
   }
 }  
 </style>

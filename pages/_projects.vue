@@ -188,6 +188,10 @@ export default {
     margin-top: 40px;
   }
 
+  @media (min-width: map-get($breakpoints, 'md')) and (max-height: 700px) {
+    margin-top: 80px;
+  }
+
   @media (min-height: 1000px) {
     margin-top: 0;
   }

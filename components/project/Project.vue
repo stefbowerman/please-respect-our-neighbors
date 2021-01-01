@@ -3,7 +3,6 @@
     :class="[
       'project',
       { 'is-introduced': isIntroduced },
-      { 'is-introduction-complete': isIntroductionComplete },
       { 'is-highlighted': isHighlighted },
       { 'is-ready': isReady }
     ]"
@@ -35,7 +34,6 @@
             :max-padding-percentage="maxPaddingPercentage"
             @click="onProjectPreviewClick(i)"
             @mouseenter="onProjectPreviewMouseenter(i)"
-            @intro-complete="onProjectPreviewIntroComplete"
           />
         </div>
       </div>
@@ -132,7 +130,6 @@ export default {
       isIntroductionComplete: false,
       isHighlighted: false,
       horizontalScrollSet: false,
-      slicesIntroducedCount: 0
     }
   },
   mounted() {
@@ -247,13 +244,6 @@ export default {
       if (detail.isIntersecting && this.isIntroduced === false) {
         this.isIntroduced = true
       }
-    },
-    onProjectPreviewIntroComplete() {
-      this.slicesIntroducedCount++
-
-      if (this.slicesIntroducedCount === this.project.slices.length) {
-        this.isIntroductionComplete = true
-      }
     }
   }
 }
@@ -271,7 +261,8 @@ export default {
   max-height: 850px;
 
   @include bp-up(md) {
-    height: calc(100vh - var(--page-title-height));    
+    height: calc(100vh - var(--page-title-height));
+    min-height: 450px;
   }
 
   opacity: 0;

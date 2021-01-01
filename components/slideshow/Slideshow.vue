@@ -135,7 +135,7 @@ export default {
         }
       })
 
-      p.on('ready', e => {
+      p.on('ready', e => {     
         const player = e.detail.plyr;
         const controls = player.elements.controls
 
@@ -145,13 +145,20 @@ export default {
           controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)
           controls.addEventListener('mouseleave', e => this.videoControlsHovered = false)
         }
-
-        el.classList.add('is-loaded')
       })
+
+      // Need the height and width so that we can properly size the video
+      p.on('loadedmetadata', e => {
+        el.dataset.height = el.videoHeight
+        el.dataset.width  = el.videoWidth
+        this.onResize()
+
+        p.elements.container.classList.add('is-loaded')
+      })      
 
       p.on('ended', e => {
         p.currentTime = 0
-        this.next()
+        p.toggleControls(true)
       })
 
       return p
@@ -232,15 +239,15 @@ export default {
 
       this.swiper.slides.forEach(slide => {
         const contentFrame = slide.querySelector('.slide-content-frame')
-        const img          = slide.querySelector('.slide-image')
+        const media        = slide.querySelector('.slide-media')
 
-        if (contentFrame && img) {
-          const imgHeight    = parseInt(img.dataset.height)
-          const imgWidth     = parseInt(img.dataset.width)          
-          const { width, height } = contain(contentFrame.clientWidth, contentFrame.clientHeight, imgWidth, imgHeight)
+        if (contentFrame && media) {
+          const naturalHeight    = parseInt(media.dataset.height)
+          const naturalWidth     = parseInt(media.dataset.width)          
+          const { width, height } = contain(contentFrame.clientWidth, contentFrame.clientHeight, naturalWidth, naturalHeight)
           
-          img.style.height = `${parseInt(height)}px`
-          img.style.width  = `${parseInt(width)}px`
+          media.style.height = `${parseInt(height)}px`
+          media.style.width  = `${parseInt(width)}px`
         }
       })
     },

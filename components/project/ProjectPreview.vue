@@ -120,10 +120,6 @@ export default {
                 this.visible = true
               }, _random(0, 250)) 
             )
-
-            this.timeouts.push(
-              setTimeout(() => this.$emit('intro-complete'), 350)
-            )
           }, _random(0, 1000))
         )  
       }
