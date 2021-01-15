@@ -56,7 +56,13 @@ body {
 
 body.overlay-open,
 body.mobile-menu-open {
+  // None of this seems to work
+  height: 100%;
   overflow: hidden;
+  touch-action: none;
+  -webkit-overflow-scrolling: none;
+  /* Other browsers */
+  overscroll-behavior: none;  
 }
 
 a {

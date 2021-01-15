@@ -240,7 +240,7 @@ export default {
       }
     },
     onProjectOverlayClose() {
-      this.resetSlices()
+      this.selectedSliceIndex = -1
     },
     onHasIntersected({ detail }) {
       if (detail.isIntersecting && this.isIntroduced === false) {
