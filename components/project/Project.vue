@@ -11,7 +11,10 @@
     }"
     @has-intersected="onHasIntersected"
   >
-    <div class="project-preview-wrapper">
+    <div
+      class="project-preview-wrapper"
+      @mouseenter="$emit('interaction')"
+    >
       <div
         class="project-preview-overflow"
         @click="onProjectPreviewOverflowClick"
@@ -78,7 +81,6 @@
         ref="captions"
       >
         <Caption
-          :progress="slice.items.length && `1/${slice.items.length}`"
           :caption-html="$prismic.asHtml(slice.primary.detail_title)"
         />
       </div>
@@ -117,6 +119,10 @@ export default {
       type: Object,
       required: true,
       default: () => {}
+    },
+    interacting: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -178,6 +184,11 @@ export default {
       if (newVal > 0 && this.isReady === false) {
         this.isReady = true
       }
+    },
+    interacting() {
+      if (this.interacting === false) {
+        this.resetSlices()
+      }
     }
   },
   methods: {
@@ -186,7 +197,6 @@ export default {
       return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
     },
     setPreviewerWidth() {
-      // Update the previewer width
       this.previewerWidth = this.$store.state.windowWidth * this.project.slices.length / 2.5
     },
     setCaptionHeight() {
@@ -198,6 +208,9 @@ export default {
       }
       
       this.captionsHeight = h
+    },
+    resetSlices() {
+      this.activeSliceIndex = -1
     },
     onResize() {
       this.setCaptionHeight()
@@ -216,7 +229,7 @@ export default {
     },
     onProjectPreviewBottomLayerClick() {
       this.isHighlighted = true
-      this.activeSliceIndex = -1
+      this.resetSlices()
     },
     onProjectPreviewTopLayerClick() {
       this.isHighlighted = false
@@ -227,7 +240,7 @@ export default {
       }
     },
     onProjectOverlayClose() {
-      this.selectedSliceIndex = -1
+      this.resetSlices()
     },
     onHasIntersected({ detail }) {
       if (detail.isIntersecting && this.isIntroduced === false) {
@@ -399,8 +412,8 @@ export default {
 // This is all trash, get using it to get the idea
 .captions {
   flex: none; // Might not need this when we re-do how the container
-  margin-top: 150px;
-  margin-top: 17vh;
+  margin-top: 100px;
+  margin-top: 11vh;
   width: 100%;
   position: relative;
   text-transform: none;

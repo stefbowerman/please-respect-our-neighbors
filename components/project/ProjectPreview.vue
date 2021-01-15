@@ -14,9 +14,9 @@
     <div class="frame-wrapper">
       <div
         class="frame"
-        v-on:click="$emit('click')"
-        v-on:mouseenter="$emit('mouseenter')"
-        v-on:mouseleave="$emit('mouseleave')"
+        @click="$emit('click')"
+        @mouseenter="$emit('mouseenter')"
+        @mouseleave="$emit('mouseleave')"
       >
         <template v-if="slice.slice_type === 'detail_gallery'">
           <div class="detail-gallery">
@@ -38,6 +38,12 @@
 
         <div class="frame__overlay" />
       </div>
+
+      <div
+        v-if="slice.items && slice.items.length > 0"
+        class="frame-count"
+        v-text="countText"
+      />
     </div>
   </div>
 </template>
@@ -45,6 +51,7 @@
 <script>
 import _random from 'lodash/random'
 import _kebabCase from 'lodash/kebabCase'
+import _padStart from 'lodash/padStart'
 
 export default {
   props: {
@@ -115,6 +122,9 @@ export default {
         'text-box-content',
         (this.slice.primary.detail_text_size && `size-${_kebabCase(this.slice.primary.detail_text_size)}`)
       ]
+    },
+    countText() {
+      return `01/${_padStart(this.slice.items.length, 2, '0')}`
     }
   },
   watch: {
@@ -144,6 +154,7 @@ export default {
 }
 
 .frame-wrapper {
+  position: relative;
   height: 100%;
   opacity: 0;
 
@@ -167,6 +178,26 @@ export default {
       opacity: 1;
       transition: opacity 350ms cubic-bezier(0.84, 0.31, 0.78, 0.86);
     }
+  }
+}
+
+.frame-count {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  padding-top: 10px;
+  transform: translateY(100%);
+  pointer-events: none;
+  font-size: 18px;
+  font-weight: $font-weight-medium;
+  opacity: 0;
+  transition: opacity $preview-highlight-transition-duration-out cubic-bezier(0.22, 0.74, 0, 0.89);
+
+  .is-active & {
+    opacity: 1;
+    transition-duration: $preview-highlight-transition-duration-in * 1.5;
   }
 }
 

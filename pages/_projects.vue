@@ -13,8 +13,10 @@
       <div class="projects-container">
         <project
           v-for="(project, i) in projects"
-          :project="project"
           :key="`project-${i}`"
+          :project="project"
+          :interacting="interactingProjectIndex === i"
+          @interaction="interactingProjectIndex = i"
           ref="projects"
         />
       </div>
@@ -45,14 +47,15 @@ export default {
       meta: {},
       projects: [],
       selectedProject: null,
-      pageTitleHeight: 0
+      pageTitleHeight: 0,
+      interactingProjectIndex: -1 // which project is being interacted with?
     }
   },  
   mounted() {
     this.$store.commit('SET_THEME', getTheme(this.$route))
 
-    this.throttledOnScroll = _throttle(this.onScroll, 100)
-    this.throttledOnResize = _throttle(this.onResize, 250)
+    // this.throttledOnScroll = _throttle(this.onScroll, 100)
+    // this.throttledOnResize = _throttle(this.onResize, 250)
 
     // If selected project, wait until after scroll is complete to attach the scroll handler ?
     // or just add a flag to ignore scroll ?
@@ -109,8 +112,7 @@ export default {
     }
   },
   async asyncData({ $prismic, store, route }) {
-    const response = await $prismic.api.getSingle('projects_page')
-    const data = response.data
+    const { data } = await $prismic.api.getSingle('projects_page')
 
     const projectUIDs = data.projects.map(({ project }) => project.uid) // i.e. ["sergio-tacchini", "undefeated", "what-a-romantic", "at-large-magazine"]
 
@@ -182,14 +184,14 @@ export default {
 }
 
 .project + .project {
-  margin-top: 80px;
+  margin-top: 120px;
 
   @include bp-up(md) {
-    margin-top: 40px;
+    margin-top: 80px;
   }
 
   @media (min-width: map-get($breakpoints, 'md')) and (max-height: 700px) {
-    margin-top: 80px;
+    margin-top: 120px;
   }
 
   @media (min-height: 1000px) {
