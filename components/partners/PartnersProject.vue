@@ -79,14 +79,14 @@ export default {
         const t = this.$prismic.asText(_get(detail, 'primary.detail_title', []))
         let truncated = t.split(' ').splice(0, 9).join(' ') // Grab the first couple words 
 
-        if (truncated.charAt(truncated.length - 1) != '.') {
+        if (truncated.length && truncated.charAt(truncated.length - 1) != '.') {
           truncated += '.'
         }
 
         return truncated
       })
 
-      return titles.join('&nbsp;')
+      return `${titles.filter(Boolean).join('&nbsp;')}&nbsp;`
     }
   }
 }

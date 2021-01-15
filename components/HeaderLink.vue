@@ -126,7 +126,6 @@ export default {
   overflow: hidden;
 
   .is-active & {
-    border-color: var(--text-color);
     background-color: var(--background-color-top);
   }
 }

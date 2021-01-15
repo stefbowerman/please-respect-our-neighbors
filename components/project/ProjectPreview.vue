@@ -30,7 +30,7 @@
         <template v-else-if="slice.slice_type === 'detail_text'">
           <div class="detail-text">
             <div
-              class="text-box-content"
+              :class="textBoxContentClasses"
               v-html="$prismic.asHtml(slice.primary.detail_rich_text)"
             />
           </div>
@@ -44,6 +44,7 @@
 
 <script>
 import _random from 'lodash/random'
+import _kebabCase from 'lodash/kebabCase'
 
 export default {
   props: {
@@ -107,6 +108,14 @@ export default {
   },
   beforeDestroy() {
     this.timeouts.forEach(tO => clearTimeout(tO))
+  },
+  computed: {
+    textBoxContentClasses() {
+      return [
+        'text-box-content',
+        (this.slice.primary.detail_text_size && `size-${_kebabCase(this.slice.primary.detail_text_size)}`)
+      ]
+    }
   },
   watch: {
     introduced(newVal, oldVal) {
@@ -222,7 +231,7 @@ export default {
 
 .detail-text {
   @include fill;
-  color: white;
+  color: $white;
   background: $darker-grey;
   white-space: nowrap;
 }

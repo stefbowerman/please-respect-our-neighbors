@@ -163,6 +163,11 @@ export default {
   ul + p {
     margin-top: 1em;
   }
+
+  a {
+    color: currentColor;
+    text-decoration: underline;
+  }
 }
 
 .text-box-scroll-bar {

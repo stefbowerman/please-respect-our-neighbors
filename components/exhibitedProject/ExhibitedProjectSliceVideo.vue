@@ -4,7 +4,6 @@
       <div class="primary-column gutter-less">
         <video-plyr
           :url="videoUrl"
-          :loop="true"
           :autoplay="true"
         />
       </div>

@@ -117,10 +117,9 @@ export default {
   cursor: pointer;
 
   @include bp-up(md) {
-    top: 77px;
-    right: 53px;
-    font-size: 46px; // @TODO - Var this
-    padding: 0;
+    top: 62px;
+    right: 38px;
+    font-size: 40px;
   }
 
   // Need this here so we can apply the transition to .close

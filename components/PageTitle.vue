@@ -91,6 +91,11 @@ export default {
   }
 }
 
+.title,
+.subtitle {
+  font-weight: $font-weight-normal;
+}
+
 .title {
   @include text-title;
   margin-left: auto;
@@ -111,7 +116,6 @@ export default {
 
 .subtitle {
   @include text-subtitle;
-  font-weight: $font-weight-medium;
   margin: 2px 0 0;
 
   // @include bp-up(lg) {

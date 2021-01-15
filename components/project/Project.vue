@@ -87,10 +87,10 @@
     <portal to="overlays">
       <project-overlay
         v-for="(slice, j) in project.slices"
-        @close="onProjectOverlayClose"
         :key="`project-overlay-${project.uid}-${j}`"
         :show="j === selectedSliceIndex"
         :slice="slice"
+        @close="onProjectOverlayClose"
       />
     </portal>
   </div>  
@@ -100,11 +100,11 @@
 import _kebabCase from 'lodash/kebabCase'
 import _clamp from 'lodash/clamp'
 
+import { MONTHS } from '~/utils/constants'
+
 import ProjectPreview from '~/components/project/ProjectPreview'
 import ProjectOverlay from '~/components/project/ProjectOverlay'
 import Caption from '~/components/Caption'
-
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 export default {
   components: {
@@ -183,7 +183,7 @@ export default {
   methods: {
     formatDate(_d) {
       const d = new Date(_d)
-      return `${months[d.getMonth()]} ${d.getFullYear()}`
+      return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
     },
     setPreviewerWidth() {
       // Update the previewer width
@@ -403,6 +403,7 @@ export default {
   margin-top: 17vh;
   width: 100%;
   position: relative;
+  text-transform: none;
 
   display: none;
 

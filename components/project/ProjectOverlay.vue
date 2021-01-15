@@ -9,7 +9,10 @@
     :show="show"
   >
     <template slot="body">
-      <div class="viewer" :style="{ '--caption-height': `${this.captionHeight}px` }">
+      <div
+        class="viewer"
+        :style="{ '--caption-height': `${this.captionHeight}px` }"
+      >
         <template v-if="slice.slice_type === 'detail_gallery'">
           <Slideshow
             :slice="slice"
@@ -25,6 +28,7 @@
           <div class="viewer-content project-overlay-text-box">
             <TextBox
               :content="$prismic.asHtml(slice.primary.detail_rich_text)"
+              :text-size="slice.primary.detail_text_size"
             />
           </div>
         </template>
@@ -140,7 +144,7 @@ export default {
   @include bp-up(md) {
     padding-top: 165px;
     padding-bottom: 165px;
-    padding-top: unquote('max(165px, var(--caption-height))');
+    padding-top: unquote('max(155px, var(--caption-height))');
     padding-bottom: unquote('max(165px, var(--caption-height))');
   }
 }
@@ -151,7 +155,8 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 45px 0;  
+  padding: 45px 0;
+  text-transform: none;
   opacity: 0;
   transition: opacity 1s $easing-ease-out-quart;
 

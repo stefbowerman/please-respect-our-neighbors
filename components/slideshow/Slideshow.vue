@@ -85,6 +85,7 @@ export default {
       slideContentHovered: false,
       videoControlsHovered: false,
       slideshowDisabled: false,
+      mouseMoved: false,
       floatingProgressTransX: 0,
       floatingProgressTransY: 0
     }
@@ -198,7 +199,12 @@ export default {
       return this.fullyVisible
     },
     showFloatingProgress() {
-      return this.fullyVisible && this.slideContentHovered && this.hasArrows && !this.videoControlsHovered
+      return  this.fullyVisible &&
+              this.mouseMoved &&
+              this.slideContentHovered &&
+              this.hasArrows &&
+             !this.videoControlsHovered
+             
     },
     floatingProgressTransform() {
       if (this.floatingProgressTransX === 0 && this.floatingProgressTransY === 0) {
@@ -225,6 +231,8 @@ export default {
     },
     onMousemove(e) {
       if (!this.$refs.floatingProgress || this.$store.state.isTouch) return
+
+      this.mouseMoved = true // Set interaction flag
 
       const { height, width } = this.$refs.floatingProgress.getBoundingClientRect()
 
@@ -397,7 +405,7 @@ $arrow-slot-width-xxxl: 450px;
   flex-direction: column;
   justify-content: center;
   height: 110px;
-  max-height: 80%;
+  max-height: 82%;
   width: 100%;
   padding: 11px;
   border: 1px solid var(--text-color);

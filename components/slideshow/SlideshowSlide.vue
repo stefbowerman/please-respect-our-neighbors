@@ -7,7 +7,9 @@
             <video 
               class="plyr slide-media"
               playsinline
-              controls
+              :controls="item.video_controls !== false /* can be null which should default to true */"
+              autoplay="true"
+              loop="true"
             >
               <source
                 :src="item.video_file_url.url"

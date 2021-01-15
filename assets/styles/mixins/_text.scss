@@ -98,9 +98,11 @@
     line-height: (70px/80px);
   }
 
-  // Responsive type kicks in above lg
+  // Responsive type
+  font-size: clamp(27px, calc(15px + 1.8vw), 33px);
+
   @include bp-up(lg) {
-    font-size: clamp(27px, calc(27px + 2.8vw), 80px);
+    font-size: clamp(33px, calc(18px + 2vw), 59px);
   }
 }
 
@@ -113,9 +115,11 @@
     line-height: (18px/15px);
   }
 
-  // Responsive type kicks in above lg
+  // Responsive type
+  font-size: clamp(15px, calc(8px + 1.25vw), 20px);
+
   @include bp-up(lg) {
-    font-size: clamp(15px, calc(15px + 1.75vw), 46px);
+    font-size: clamp(20px, calc(12px + 1.45vw), 46px);
   }
 }
 

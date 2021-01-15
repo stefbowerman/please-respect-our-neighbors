@@ -39,14 +39,16 @@
 .plyr--full-ui.plyr--video input[type='range'] {
 
   &::-webkit-slider-runnable-track {
-    background-color: transparent;
+    background-color: var(--text-color);
     background-image: none;
+    height: 1px;
   }
 
   &::-webkit-slider-thumb {
     box-shadow: none;
     background-color: var(--text-color);
     cursor: grab;
+    top: -2px;
   }
 
   &:active::-webkit-slider-thumb {
@@ -54,11 +56,12 @@
     cursor: grabbing;
   }
 
-  // // Mozilla
+  // Mozilla
   &::-moz-range-track,
   &::-moz-range-progress {
-    background-color: transparent;
+    background-color: var(--text-color);
     background-image: none;
+    height: 1px;
   }
 
   &::-moz-range-thumb {
