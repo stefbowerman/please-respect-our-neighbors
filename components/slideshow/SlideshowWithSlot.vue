@@ -315,7 +315,6 @@ $arrow-slot-width-xxxl: 450px;
 }
 
 .swiper-container {
-  // @TODO - Use var for the container
   /deep/ .slide-inner {
     padding-left: 12px;
     padding-right: 12px;
