@@ -21,12 +21,12 @@
         ref="preview-overflow"
       >
         <div
-          v-if="project.slices.length"
+          v-if="slices.length"
           class="project-previewer"
           :style="previewerStyle"
         >
           <project-preview
-            v-for="(slice, i) in project.slices"
+            v-for="(slice, i) in slices"
             :slice="slice"
             :key="`slice-${i}`"
             :active="activeSliceIndex === i"
@@ -73,7 +73,7 @@
       :style="captionsStyle"
     >
       <div
-        v-for="(slice, k) in project.slices"
+        v-for="(slice, k) in slices"
         :class="[
           'caption-holder',
           { 'is-visible': k === activeSliceIndex }
@@ -87,11 +87,11 @@
     </div>    
 
     <portal to="overlays">
-      <project-overlay
-        v-for="(slice, j) in project.slices"
-        :key="`project-overlay-${project.uid}-${j}`"
-        :show="j === selectedSliceIndex"
-        :slice="slice"
+      <ProjectOverlay
+        :show="selectedSliceIndex > -1"
+        :slices="slices"
+        :selected-slice-index="selectedSliceIndex"
+        @progress="onProjectOverlayProgress"
         @close="onProjectOverlayClose"
       />
     </portal>
@@ -127,11 +127,11 @@ export default {
   },
   data() {
     return {
-      isReady: false,
       activeSliceIndex: -1,
       selectedSliceIndex: -1,
       captionsHeight: 0,
       previewerWidth: 0,
+      isReady: false,
       isIntroduced: false,
       isIntroductionComplete: false,
       isHighlighted: false
@@ -141,9 +141,12 @@ export default {
     this.onResize()
   },
   computed: {
+    slices() {
+      return this.project.slices || []
+    },
     maxPaddingPercentage() {
       // As we have *more* slices, we need to reduce the max padding percentage
-      return _clamp(2, 12 - this.project.slices.length, 8)
+      return _clamp(2, 12 - this.slices.length, 8)
     },
     fullDescription() {
       const title = this.$prismic.asText(this.project.title)
@@ -197,7 +200,7 @@ export default {
       return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
     },
     setPreviewerWidth() {
-      this.previewerWidth = this.$store.state.windowWidth * this.project.slices.length / 2.5
+      this.previewerWidth = this.$store.state.windowWidth * this.slices.length / 2.5
     },
     setCaptionHeight() {
       let h = 0
@@ -219,7 +222,7 @@ export default {
     onProjectPreviewMouseenter(i) {
       this.activeSliceIndex = i
     },
-     onProjectPreviewClick(i) {
+    onProjectPreviewClick(i) {
       if (!this.$store.state.isTouch) {
         // don't activate on touch screens
         this.activeSliceIndex = i // Make up for mouseleave happening on modal open
@@ -238,6 +241,9 @@ export default {
       if (e && e.target === this.$refs['preview-overflow']) {
         this.onProjectPreviewBottomLayerClick()
       }
+    },
+    onProjectOverlayProgress(sliceIndex) {
+      this.activeSliceIndex = sliceIndex
     },
     onProjectOverlayClose() {
       this.selectedSliceIndex = -1
