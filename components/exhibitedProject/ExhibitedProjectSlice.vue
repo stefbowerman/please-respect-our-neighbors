@@ -19,7 +19,10 @@
       ref="caption"
     />
 
-    <div class="exhibited-project-slice__accent-bg" v-if="showAccentBg" />    
+    <div
+      v-if="showAccentBg"
+      class="exhibited-project-slice__accent-bg"
+    />
   </div>
 </template>
 
@@ -90,12 +93,11 @@ export default {
     },
     setCaptionSafeSpace() {
       let space = 0
-      let captionRect = this.$refs.caption.$el.getBoundingClientRect()
-      let h = captionRect.height
-      let bottomOffset = window.innerHeight - captionRect.top - h
+      const { height, top } = this.$refs.caption.$el.getBoundingClientRect()
+      const bottomOffset = window.innerHeight - (top + height)
 
-      if (h > 0) {
-        space = h + (bottomOffset * 2)
+      if (height > 0) {
+        space = height + (bottomOffset * 2)
       }
 
       this.captionSafeSpace = space

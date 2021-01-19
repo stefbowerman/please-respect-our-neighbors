@@ -21,12 +21,12 @@
         ref="preview-overflow"
       >
         <div
-          v-if="project.slices.length"
+          v-if="slices.length"
           class="project-previewer"
           :style="previewerStyle"
         >
           <project-preview
-            v-for="(slice, i) in project.slices"
+            v-for="(slice, i) in slices"
             :slice="slice"
             :key="`slice-${i}`"
             :active="activeSliceIndex === i"
@@ -68,30 +68,17 @@
       </div>      
     </div>
 
-    <div
-      class="captions"
-      :style="captionsStyle"
-    >
-      <div
-        v-for="(slice, k) in project.slices"
-        :class="[
-          'caption-holder',
-          { 'is-visible': k === activeSliceIndex }
-        ]"
-        ref="captions"
-      >
-        <Caption
-          :caption-html="$prismic.asHtml(slice.primary.detail_title)"
-        />
-      </div>
-    </div>    
+    <CaptionSwitcher
+      :captions="captions"
+      :active-index="activeSliceIndex"
+    />    
 
     <portal to="overlays">
-      <project-overlay
-        v-for="(slice, j) in project.slices"
-        :key="`project-overlay-${project.uid}-${j}`"
-        :show="j === selectedSliceIndex"
-        :slice="slice"
+      <ProjectOverlay
+        :show="selectedSliceIndex > -1"
+        :slices="slices"
+        :selected-slice-index="selectedSliceIndex"
+        @slide-change-start="onProjectOverlaySlideChangeStart"
         @close="onProjectOverlayClose"
       />
     </portal>
@@ -101,18 +88,19 @@
 <script>
 import _kebabCase from 'lodash/kebabCase'
 import _clamp from 'lodash/clamp'
+import _get from 'lodash/get'
 
 import { MONTHS } from '~/utils/constants'
 
 import ProjectPreview from '~/components/project/ProjectPreview'
 import ProjectOverlay from '~/components/project/ProjectOverlay'
-import Caption from '~/components/Caption'
+import CaptionSwitcher from '~/components/CaptionSwitcher'
 
 export default {
   components: {
     ProjectPreview,
     ProjectOverlay,
-    Caption
+    CaptionSwitcher
   },
   props: {
     project: {
@@ -127,11 +115,11 @@ export default {
   },
   data() {
     return {
-      isReady: false,
       activeSliceIndex: -1,
       selectedSliceIndex: -1,
       captionsHeight: 0,
       previewerWidth: 0,
+      isReady: false,
       isIntroduced: false,
       isIntroductionComplete: false,
       isHighlighted: false
@@ -141,9 +129,15 @@ export default {
     this.onResize()
   },
   computed: {
+    slices() {
+      return this.project.slices || []
+    },
+    captions() {
+      return this.slices.map(slice => this.$prismic.asHtml(_get(slice, 'primary.detail_title', [])))
+    },
     maxPaddingPercentage() {
       // As we have *more* slices, we need to reduce the max padding percentage
-      return _clamp(2, 12 - this.project.slices.length, 8)
+      return _clamp(2, 12 - this.slices.length, 8)
     },
     fullDescription() {
       const title = this.$prismic.asText(this.project.title)
@@ -169,11 +163,6 @@ export default {
     },
     previewerStyle() {
       return { width: `${this.previewerWidth}px`}
-    },
-    captionsStyle() {
-      if (process.server) return {}
-
-      return { height: `${this.captionsHeight}px`}
     }
   },
   watch: {
@@ -197,29 +186,18 @@ export default {
       return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
     },
     setPreviewerWidth() {
-      this.previewerWidth = this.$store.state.windowWidth * this.project.slices.length / 2.5
-    },
-    setCaptionHeight() {
-      let h = 0
-
-      if (this.$refs.captions) {
-        const heights = this.$refs.captions.map(el => el.clientHeight)  
-        h = Math.max(...heights)
-      }
-      
-      this.captionsHeight = h
+      this.previewerWidth = this.$store.state.windowWidth * this.slices.length / 2.5
     },
     resetSlices() {
       this.activeSliceIndex = -1
     },
     onResize() {
-      this.setCaptionHeight()
       this.setPreviewerWidth()
     },
     onProjectPreviewMouseenter(i) {
       this.activeSliceIndex = i
     },
-     onProjectPreviewClick(i) {
+    onProjectPreviewClick(i) {
       if (!this.$store.state.isTouch) {
         // don't activate on touch screens
         this.activeSliceIndex = i // Make up for mouseleave happening on modal open
@@ -238,6 +216,9 @@ export default {
       if (e && e.target === this.$refs['preview-overflow']) {
         this.onProjectPreviewBottomLayerClick()
       }
+    },
+    onProjectOverlaySlideChangeStart(sliceIndex) {
+      this.activeSliceIndex = sliceIndex
     },
     onProjectOverlayClose() {
       this.selectedSliceIndex = -1
@@ -410,7 +391,7 @@ export default {
 }
 
 // This is all trash, get using it to get the idea
-.captions {
+.caption-switcher {
   flex: none; // Might not need this when we re-do how the container
   margin-top: 100px;
   margin-top: 11vh;
@@ -422,20 +403,6 @@ export default {
 
   @include bp-up(md) {
     display: block;
-  }
-}
-
-.caption-holder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  pointer-events: none;
-
-  &.is-visible {
-    opacity: 1;
-    pointer-events: auto;
   }
 }
 </style>
