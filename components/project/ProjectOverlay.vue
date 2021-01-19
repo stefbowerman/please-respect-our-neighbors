@@ -18,6 +18,7 @@
             :fully-visible="fullyVisible"
             :initial-slide="initialSlide"
             :loop="false"
+            :custom-progress-text="progressText"
             @slide-change-start="onSlideChangeStart"
             @progress="onProgress"
             class="viewer-content"

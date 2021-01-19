@@ -37,7 +37,7 @@
         class="floating-progress"
         :style="{ transform: floatingProgressTransform }"
         ref="floatingProgress"
-        v-text="progressText"
+        v-text="displayProgressText"
       />
     </template>
   </div> 
@@ -85,6 +85,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    // Allows us to override the default progressText
+    customProgressText: {
+      type: String,
+      required: false
     }
   },
   data() {
@@ -219,8 +224,7 @@ export default {
               this.mouseMoved &&
               this.slideContentHovered &&
               this.hasArrows &&
-             !this.videoControlsHovered
-             
+             !this.videoControlsHovered   
     },
     floatingProgressTransform() {
       if (this.floatingProgressTransX === 0 && this.floatingProgressTransY === 0) {
@@ -229,6 +233,9 @@ export default {
       else {
         return `translate(${this.floatingProgressTransX}px, ${this.floatingProgressTransY }px)`
       }
+    },
+    displayProgressText() {
+      return this.customProgressText || this.progressText
     }
   },
   methods: {
