@@ -17,6 +17,8 @@
           <SlideshowWithSlot
             :fully-visible="fullyVisible"
             :initial-slide="initialSlide"
+            :loop="false"
+            @slide-change-start="onSlideChangeStart"
             @progress="onProgress"
             class="viewer-content"
             ref="slideshow"
@@ -187,9 +189,11 @@ export default {
 
       this.progressText = `${numerator}/${denominator}` 
       this.captionHtml = this.$prismic.asHtml(_get(slice, 'primary.detail_title', []))
-
-      this.$emit('progress', sliceIndex)
-    },    
+    },
+    onSlideChangeStart(index) {
+      const { sliceIndex } = this.items[index]
+      this.$emit('slide-change-start', sliceIndex)
+    },
     prev() {
       this.$refs.slideshow && this.$refs.slideshow.prev()
     },

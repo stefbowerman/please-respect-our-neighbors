@@ -20,14 +20,14 @@
     <template v-if="hasArrows">
       <transition name="arrow-left-fade">
         <div class="arrow-slot left" v-show="showArrows">
-          <div class="arrow" @click="prev">
+          <div class="arrow" ref="prevArrow">
             <svg-slide-arrow />
           </div>
         </div>
       </transition>
       <transition name="arrow-right-fade">
         <div class="arrow-slot right" v-show="showArrows">
-          <div class="arrow" @click="next">
+          <div class="arrow" ref="nextArrow">
             <svg-slide-arrow />
           </div>
         </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Swiper from 'swiper'
+import Swiper, { Navigation } from 'swiper'
 import Plyr from 'plyr'
 import _padStart from 'lodash/padStart'
 import _round from 'lodash/round'
@@ -53,6 +53,8 @@ import { contain } from 'intrinsic-scale'
 
 import SlideshowSlide from '~/components/slideshow/SlideshowSlide'
 import SvgSlideArrow from '~/assets/svg/slide-arrow.svg'
+
+Swiper.use([Navigation])
 
 export default {
   components: {
@@ -78,6 +80,11 @@ export default {
       type: String,
       required: false,
       default: 'SlideshowSlideForSlot' // @TODO - Eventually switch this back to SlideshowSlide once we're done with these changes
+    },
+    loop: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   data() {
@@ -97,10 +104,15 @@ export default {
     this.swiper = new Swiper(this.$refs.swiper, {
       init: false,
       initialSlide: this.initialSlide,
-      loop: true,
+      loop: this.loop,
       speed: 450,
       simulateTouch: false,
       watchOverflow: true,
+      navigation: {
+        nextEl: this.$refs.nextArrow,
+        prevEl: this.$refs.prevArrow,
+        disabledClass: 'is-disabled'
+      },
       on: {
         slideChangeTransitionStart: this.onSlideChangeTransitionStart,
         slideChangeTransitionEnd: this.onSlideChangeTransitionEnd
@@ -199,7 +211,6 @@ export default {
       
       return flag
     },
-    // @TODO - Might not need this computed property...
     showArrows() {
       return this.fullyVisible
     },
@@ -221,8 +232,41 @@ export default {
     }
   },
   methods: {
-    onSlideChangeTransitionStart({ realIndex }) {
+    update() {
+      this.swiper.update()
+      this.setProgress()
+    },
+    reset() {
+      this.swiper.slideTo(1, 0)
+      this.setProgress()
+    },
+    destroySwiper() {
+      this.swiper && this.swiper.destroy()
+      delete this.swiper
+    },
+    setProgress() {      
+      const index = this.swiper.realIndex
+
+      const i = _padStart(index+1, 2, '0')
+      const total = _padStart(this.slideCount, 2, '0')
+      const progressText = `${i}/${total}`
+
+      this.progressText = progressText
+
+      this.$emit('progress', { index, progressText })
+    },
+    pausePlyrs() {
+      this.plyrs.forEach(p => p.pause())
+    },
+    prev() {
+      this.swiper.slidePrev()
+    },
+    next() {
+      this.swiper.slideNext()
+    },
+    onSlideChangeTransitionStart() {
       this.pausePlyrs()
+      this.$emit('slide-change-start', this.swiper.realIndex)
     },
     onSlideChangeTransitionEnd() {
       this.setProgress()
@@ -263,38 +307,6 @@ export default {
           media.style.width  = `${parseInt(width)}px`
         }
       })
-    },
-    update() {
-      this.swiper.update()
-      this.setProgress()
-    },
-    prev() {
-      this.swiper.slidePrev()
-    },
-    next() {
-      this.swiper.slideNext()
-    },
-    reset() {
-      this.swiper.slideTo(1, 0)
-      this.setProgress()
-    },
-    destroySwiper() {
-      this.swiper && this.swiper.destroy()
-      delete this.swiper
-    },
-    setProgress() {      
-      const index = this.swiper.realIndex
-
-      const i = _padStart(index+1, 2, '0')
-      const total = _padStart(this.slideCount, 2, '0')
-      const progressText = `${i}/${total}`
-
-      this.progressText = progressText
-
-      this.$emit('progress', { index, progressText })
-    },
-    pausePlyrs() {
-      this.plyrs && this.plyrs.forEach(p => p.pause())
     }
   }
 }
@@ -415,6 +427,8 @@ $arrow-slot-width-xxxl: 450px;
   width: 100%;
   padding: 11px;
   border: 1px solid var(--text-color);
+  transition: opacity 300ms ease-out,
+              filter 300ms ease-out;
 
   .arrow-slot.left & {
     transform: scaleX(-1);
@@ -443,6 +457,12 @@ $arrow-slot-width-xxxl: 450px;
         stroke-width: 2px;
       }   
     }
+  }
+
+  &.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(1);
   }
 }
 

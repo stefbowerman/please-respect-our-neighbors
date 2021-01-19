@@ -91,7 +91,7 @@
         :show="selectedSliceIndex > -1"
         :slices="slices"
         :selected-slice-index="selectedSliceIndex"
-        @progress="onProjectOverlayProgress"
+        @slide-change-start="onProjectOverlaySlideChangeStart"
         @close="onProjectOverlayClose"
       />
     </portal>
@@ -242,7 +242,7 @@ export default {
         this.onProjectPreviewBottomLayerClick()
       }
     },
-    onProjectOverlayProgress(sliceIndex) {
+    onProjectOverlaySlideChangeStart(sliceIndex) {
       this.activeSliceIndex = sliceIndex
     },
     onProjectOverlayClose() {
