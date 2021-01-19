@@ -10,59 +10,54 @@
   >
     <template slot="body">
       <div
-          v-if="visible"
-          class="viewer"
-          :style="{ '--caption-height': `${captionHeight}px` }"
+        v-if="visible"
+        class="viewer"
+        :style="{ '--caption-height': `${captionHeight}px` }"
+      >
+        <Slideshow
+          :fully-visible="fullyVisible"
+          :initial-slide="initialSlide"
+          :loop="false"
+          :custom-progress-text="progressText"
+          @slide-change-start="onSlideChangeStart"
+          @progress="onProgress"
+          class="viewer-content"
+          ref="slideshow"
         >
-          <SlideshowWithSlot
-            :fully-visible="fullyVisible"
-            :initial-slide="initialSlide"
-            :loop="false"
-            :custom-progress-text="progressText"
-            @slide-change-start="onSlideChangeStart"
-            @progress="onProgress"
-            class="viewer-content"
-            ref="slideshow"
+          <template
+            v-for="(slice, s) in slices"
           >
-            <template
-              v-for="(slice, s) in slices"
-            >
-              <template
-                v-if="slice.slice_type === 'detail_gallery'"
-              >
-                <SlideshowSlideForSlot
-                  v-for="(item, i) in slice.items"
-                  :key="`${s}${i}-item`"
-                  :item="item"
-                  :type="itemType(item)"
-                />
-              </template>
-              <template
-                v-else-if="slice.slice_type === 'detail_text'"
-              >
-                <SlideshowSlideForSlot
-                  type="text"
-                  :text-content="$prismic.asHtml(slice.primary.detail_rich_text)"
-                  :text-size="slice.primary.detail_text_size"
-                />
-              </template>
-            </template>
-          </SlideshowWithSlot>
-
-          <div
-            v-if="progressText || captionHtml"
-            :class="[
-              'viewer-caption',
-              { 'is-visible' : fullyVisible }
-            ]"
-            ref="viewerCaption"
-          >
-            <Caption
-              :progress="progressText"
-              :captionHtml="captionHtml"
+            <SlideshowSlide
+              v-if="slice.slice_type === 'detail_gallery'"
+              v-for="(item, i) in slice.items"
+              :key="`${s}${i}-item`"
+              :item="item"
+              :type="itemType(item)"
             />
-          </div>    
-        </div>
+
+            <SlideshowSlide
+              v-else-if="slice.slice_type === 'detail_text'"
+              type="text"
+              :text-content="$prismic.asHtml(slice.primary.detail_rich_text)"
+              :text-size="slice.primary.detail_text_size"
+            />
+          </template>
+        </Slideshow>
+
+        <div
+          :class="[
+            'viewer-caption',
+            { 'is-visible' : fullyVisible }
+          ]"            
+        >
+          <CaptionSwitcher
+            :captions="sliceCaptions"
+            :progress="progressText"
+            :active-index="slideshowSliceIndex"
+            @height-change="h => captionHeight = h"
+          />
+        </div>   
+      </div>
     </template>
   </overlay>
 </template>
@@ -74,17 +69,17 @@ import _padStart from 'lodash/padStart'
 
 import Overlay from '~/components/Overlay'
 import TextBox from '~/components/TextBox'
-import Caption from '~/components/Caption'
-import SlideshowWithSlot from '~/components/slideshow/SlideshowWithSlot'
-import SlideshowSlideForSlot from '~/components/slideshow/SlideshowSlideForSlot'
+import CaptionSwitcher from '~/components/CaptionSwitcher'
+import Slideshow from '~/components/slideshow/Slideshow'
+import SlideshowSlide from '~/components/slideshow/SlideshowSlide'
 
 export default {
   components: {
     Overlay,
     TextBox,
-    SlideshowWithSlot,
-    SlideshowSlideForSlot,
-    Caption    
+    Slideshow,
+    SlideshowSlide,
+    CaptionSwitcher
   },
   props: {
     slices: {
@@ -94,7 +89,7 @@ export default {
     },
     selectedSliceIndex: {
       type: Number,
-      default: 0,
+      default: 0
     },
     show: {
       type: Boolean,
@@ -107,20 +102,12 @@ export default {
       visible: false,
       fullyVisible: false,
       progressText: '',
-      captionHtml: '',
-      captionHeight: 0
+      captionHeight: 0,
+      slideshowSliceIndex: 0,
     }
   },
   mounted() {
-    this.throttledResize = _throttle(this.onResize, 150)
-    
-    window.addEventListener('resize', this.throttledResize)
-    
-    this.onResize()
     this.$refs.slideshow && this.$refs.slideshow.update()
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.throttledResize)
   },
   computed: {
     items() {
@@ -150,6 +137,9 @@ export default {
         })
       }).flat()
     },
+    sliceCaptions() {
+      return this.slices.map(slice => this.$prismic.asHtml(_get(slice, 'primary.detail_title', [])))
+    },
     initialSlide() {
       return this.items.findIndex(item => item.sliceIndex === this.selectedSliceIndex)
     }
@@ -178,9 +168,6 @@ export default {
 
       return t
     },
-    onResize() {
-      this.captionHeight = this.$refs.viewerCaption ? this.$refs.viewerCaption.clientHeight : 0
-    },
     onProgress({ index }) {
       const { sliceIndex, sliceItemIndex, sliceItemsCount } = this.items[index]
 
@@ -189,7 +176,7 @@ export default {
       const denominator = _padStart(sliceItemsCount, 2, '0')
 
       this.progressText = `${numerator}/${denominator}` 
-      this.captionHtml = this.$prismic.asHtml(_get(slice, 'primary.detail_title', []))
+      this.slideshowSliceIndex = sliceIndex
     },
     onSlideChangeStart(index) {
       const { sliceIndex } = this.items[index]
@@ -246,17 +233,20 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 45px 0;
   text-transform: none;
   opacity: 0;
   transition: opacity 1s $easing-ease-out-quart;
 
-  @include bp-up(lg) {
-    padding: 25px 0;
-  }
-
   &.is-visible {
     opacity: 1;
+  }
+
+  .caption-switcher /deep/ .holder {
+    padding: 45px 0;
+
+    @include bp-up(lg) {
+      padding: 25px 0;
+    }    
   }
 }
 </style>

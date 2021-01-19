@@ -12,26 +12,22 @@
         'swiper-wrapper',
         { 'is-disabled': this.slideshowDisabled }
       ]">
-        <slideshow-slide
-          v-for="(item, j) in slice.items"
-          :key="`slide-${j}`"
-          :item="item"
-          ref="slides"
-        />
+        <!-- Put SlideshowSlide components here -->
+        <slot />
       </div>        
     </div>
 
     <template v-if="hasArrows">
       <transition name="arrow-left-fade">
         <div class="arrow-slot left" v-show="showArrows">
-          <div class="arrow" @click="prev">
+          <div class="arrow" ref="prevArrow">
             <svg-slide-arrow />
           </div>
         </div>
       </transition>
       <transition name="arrow-right-fade">
         <div class="arrow-slot right" v-show="showArrows">
-          <div class="arrow" @click="next">
+          <div class="arrow" ref="nextArrow">
             <svg-slide-arrow />
           </div>
         </div>
@@ -41,33 +37,29 @@
         class="floating-progress"
         :style="{ transform: floatingProgressTransform }"
         ref="floatingProgress"
-        v-text="progressText"
+        v-text="displayProgressText"
       />
     </template>
   </div> 
 </template>
 
 <script>
-import Swiper from 'swiper'
+import Swiper, { Navigation } from 'swiper'
 import Plyr from 'plyr'
 import _padStart from 'lodash/padStart'
 import _round from 'lodash/round'
 import _throttle from 'lodash/throttle'
 import { contain } from 'intrinsic-scale'
 
-import SlideshowSlide from '~/components/slideshow/SlideshowSlide'
 import SvgSlideArrow from '~/assets/svg/slide-arrow.svg'
+
+Swiper.use([Navigation])
 
 export default {
   components: {
-    SlideshowSlide,
     SvgSlideArrow
   },
   props: {
-    slice: {
-      type: Object,
-      required: false
-    },
     visible: {
       type: Boolean,
       required: false,
@@ -77,6 +69,25 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    initialSlide: {
+      type: Number,
+      default: 0
+    },
+    slideTagName: {
+      type: String,
+      required: false,
+      default: 'SlideshowSlide'
+    },
+    loop: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    // Allows us to override the default progressText
+    customProgressText: {
+      type: String,
+      required: false
     }
   },
   data() {
@@ -95,10 +106,16 @@ export default {
 
     this.swiper = new Swiper(this.$refs.swiper, {
       init: false,
-      loop: true,
+      initialSlide: this.initialSlide,
+      loop: this.loop,
       speed: 450,
       simulateTouch: false,
       watchOverflow: true,
+      navigation: {
+        nextEl: this.$refs.nextArrow,
+        prevEl: this.$refs.prevArrow,
+        disabledClass: 'is-disabled'
+      },
       on: {
         slideChangeTransitionStart: this.onSlideChangeTransitionStart,
         slideChangeTransitionEnd: this.onSlideChangeTransitionEnd
@@ -107,7 +124,7 @@ export default {
 
     this.swiper.init()
 
-    if (this.slice.items.length <= 1) {
+    if (this.slideCount <= 1) {
       this.slideshowDisabled = true
     }
 
@@ -184,17 +201,19 @@ export default {
       }
     }
   },
-  computed: {  
+  computed: {
+    slideCount() {
+      return this.$slots.default.filter(({ tag }) => tag && tag.match(`^vue-component-\\d+-${this.slideTagName}$`) !== null).length || 0
+    },
     hasArrows() {
       let flag = false
 
-      if (this.slice.items.length > 1 && this.$store.state.isTouch === false) {
+      if (this.slideCount > 1 && this.$store.state.isTouch === false) {
         flag = true
       }
       
       return flag
     },
-    // @TODO - Might not need this computed property...
     showArrows() {
       return this.fullyVisible
     },
@@ -203,8 +222,7 @@ export default {
               this.mouseMoved &&
               this.slideContentHovered &&
               this.hasArrows &&
-             !this.videoControlsHovered
-             
+             !this.videoControlsHovered   
     },
     floatingProgressTransform() {
       if (this.floatingProgressTransX === 0 && this.floatingProgressTransY === 0) {
@@ -213,11 +231,47 @@ export default {
       else {
         return `translate(${this.floatingProgressTransX}px, ${this.floatingProgressTransY }px)`
       }
+    },
+    displayProgressText() {
+      return this.customProgressText || this.progressText
     }
   },
   methods: {
+    update() {
+      this.swiper.update()
+      this.setProgress()
+    },
+    reset() {
+      this.swiper.slideTo(1, 0)
+      this.setProgress()
+    },
+    destroySwiper() {
+      this.swiper && this.swiper.destroy()
+      delete this.swiper
+    },
+    setProgress() {      
+      const index = this.swiper.realIndex
+
+      const i = _padStart(index+1, 2, '0')
+      const total = _padStart(this.slideCount, 2, '0')
+      const progressText = `${i}/${total}`
+
+      this.progressText = progressText
+
+      this.$emit('progress', { index, progressText })
+    },
+    pausePlyrs() {
+      this.plyrs.forEach(p => p.pause())
+    },
+    prev() {
+      this.swiper.slidePrev()
+    },
+    next() {
+      this.swiper.slideNext()
+    },
     onSlideChangeTransitionStart() {
       this.pausePlyrs()
+      this.$emit('slide-change-start', this.swiper.realIndex)
     },
     onSlideChangeTransitionEnd() {
       this.setProgress()
@@ -258,36 +312,6 @@ export default {
           media.style.width  = `${parseInt(width)}px`
         }
       })
-    },
-    update() {
-      this.swiper.update()
-      this.setProgress(this.swiper.activeIndex)
-    },
-    prev() {
-      this.swiper.slidePrev()
-    },
-    next() {
-      this.swiper.slideNext()
-    },
-    reset() {
-      this.swiper.slideTo(1, 0)
-      this.setProgress()
-    },
-    destroySwiper() {
-      this.swiper && this.swiper.destroy()
-      delete this.swiper
-    },
-    setProgress(index = undefined) {
-      let i = index != undefined ? index : this.swiper.realIndex+1
-          i = _padStart(i, 2, '0')
-      const total = _padStart(this.slice.items.length, 2, '0')
-
-      this.progressText = `${i}/${total}`
-
-      this.$emit('progress', this.progressText)
-    },
-    pausePlyrs() {
-      this.plyrs && this.plyrs.forEach(p => p.pause())
     }
   }
 }
@@ -308,7 +332,6 @@ $arrow-slot-width-xxxl: 450px;
 }
 
 .swiper-container {
-  // @TODO - Use var for the container
   /deep/ .slide-inner {
     padding-left: 12px;
     padding-right: 12px;
@@ -409,6 +432,8 @@ $arrow-slot-width-xxxl: 450px;
   width: 100%;
   padding: 11px;
   border: 1px solid var(--text-color);
+  transition: opacity 300ms ease-out,
+              filter 300ms ease-out;
 
   .arrow-slot.left & {
     transform: scaleX(-1);
@@ -437,6 +462,12 @@ $arrow-slot-width-xxxl: 450px;
         stroke-width: 2px;
       }   
     }
+  }
+
+  &.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(1);
   }
 }
 

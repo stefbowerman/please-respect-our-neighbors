@@ -1,9 +1,14 @@
 <template>
-  <div class="swiper-slide">
+  <div
+    :class="[
+      'swiper-slide',
+      (type && `swiper-slide--${type}`)
+    ]
+  ">
     <div class="slide-inner">
       <div class="slide-content-frame">
-        <div class="slide-content-interactive-area">
-          <template v-if="type === 'video'">
+        <template v-if="type === 'video'">
+          <div class="slide-content-interactive-area">
             <video 
               class="plyr slide-media"
               playsinline
@@ -16,16 +21,24 @@
                 type="video/mp4" 
               />
             </video>
-          </template>          
-          <template v-else-if="type === 'image'">
+          </div>
+        </template>
+        <template v-else-if="type === 'image'">
+          <div class="slide-content-interactive-area">
             <prismic-image
               :field="item.image"
               class="slide-media"
               :data-height="item.image.dimensions.height"
               :data-width="item.image.dimensions.width"
             />
-          </template>
-        </div>
+          </div>
+        </template>          
+        <template v-else-if="type === 'text'">
+          <TextBox
+            :content="textContent"
+            :text-size="textSize"
+          />
+        </template>
       </div>
     </div>
   </div>
@@ -34,26 +47,27 @@
 <script>
 import _get from 'lodash/get'
 
+import TextBox from '~/components/TextBox'
+
 export default {
+  components: {
+    TextBox
+  },
   props: {
+    type: {
+      type: String,
+      required: true,
+      validator: t => ['text', 'image', 'video'].includes(t)
+    },    
     item: {
       type: Object,
       default: () => {}      
-    }
-  },
-  computed: {
-    type() {
-      let t
-
-      // Prioritize videos in case they pass in both
-      if (_get(this.item, 'video_file_url.url', null) != null) {
-        t = 'video'
-      }
-      else if (_get(this.item, 'image.url', null) != null) {
-        t = 'image'
-      }
-
-      return t
+    },
+    textContent: {
+      type: String
+    },
+    textSize: {
+      type: String
     }
   }
 }

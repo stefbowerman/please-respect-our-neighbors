@@ -68,23 +68,10 @@
       </div>      
     </div>
 
-    <div
-      class="captions"
-      :style="captionsStyle"
-    >
-      <div
-        v-for="(slice, k) in slices"
-        :class="[
-          'caption-holder',
-          { 'is-visible': k === activeSliceIndex }
-        ]"
-        ref="captions"
-      >
-        <Caption
-          :caption-html="$prismic.asHtml(slice.primary.detail_title)"
-        />
-      </div>
-    </div>    
+    <CaptionSwitcher
+      :captions="captions"
+      :active-index="activeSliceIndex"
+    />    
 
     <portal to="overlays">
       <ProjectOverlay
@@ -101,18 +88,19 @@
 <script>
 import _kebabCase from 'lodash/kebabCase'
 import _clamp from 'lodash/clamp'
+import _get from 'lodash/get'
 
 import { MONTHS } from '~/utils/constants'
 
 import ProjectPreview from '~/components/project/ProjectPreview'
 import ProjectOverlay from '~/components/project/ProjectOverlay'
-import Caption from '~/components/Caption'
+import CaptionSwitcher from '~/components/CaptionSwitcher'
 
 export default {
   components: {
     ProjectPreview,
     ProjectOverlay,
-    Caption
+    CaptionSwitcher
   },
   props: {
     project: {
@@ -144,6 +132,9 @@ export default {
     slices() {
       return this.project.slices || []
     },
+    captions() {
+      return this.slices.map(slice => this.$prismic.asHtml(_get(slice, 'primary.detail_title', [])))
+    },
     maxPaddingPercentage() {
       // As we have *more* slices, we need to reduce the max padding percentage
       return _clamp(2, 12 - this.slices.length, 8)
@@ -172,11 +163,6 @@ export default {
     },
     previewerStyle() {
       return { width: `${this.previewerWidth}px`}
-    },
-    captionsStyle() {
-      if (process.server) return {}
-
-      return { height: `${this.captionsHeight}px`}
     }
   },
   watch: {
@@ -202,21 +188,10 @@ export default {
     setPreviewerWidth() {
       this.previewerWidth = this.$store.state.windowWidth * this.slices.length / 2.5
     },
-    setCaptionHeight() {
-      let h = 0
-
-      if (this.$refs.captions) {
-        const heights = this.$refs.captions.map(el => el.clientHeight)  
-        h = Math.max(...heights)
-      }
-      
-      this.captionsHeight = h
-    },
     resetSlices() {
       this.activeSliceIndex = -1
     },
     onResize() {
-      this.setCaptionHeight()
       this.setPreviewerWidth()
     },
     onProjectPreviewMouseenter(i) {
@@ -416,7 +391,7 @@ export default {
 }
 
 // This is all trash, get using it to get the idea
-.captions {
+.caption-switcher {
   flex: none; // Might not need this when we re-do how the container
   margin-top: 100px;
   margin-top: 11vh;
@@ -428,20 +403,6 @@ export default {
 
   @include bp-up(md) {
     display: block;
-  }
-}
-
-.caption-holder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  pointer-events: none;
-
-  &.is-visible {
-    opacity: 1;
-    pointer-events: auto;
   }
 }
 </style>
