@@ -56,12 +56,16 @@ export default {
   justify-content: center;
 
   @include bp-up(lg) {
-    max-width: 80%;
+    max-width: 88%;
     padding: 60px 0;
 
     .text-box {
       max-height: 600px;
     }    
+  }
+
+  @include bp-up(xxl) {
+    max-width: 80%;
   }
 }
 </style>

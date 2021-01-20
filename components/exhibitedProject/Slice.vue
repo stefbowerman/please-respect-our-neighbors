@@ -150,16 +150,18 @@ export default {
   padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
   padding-bottom: unquote('max(40px, var(--caption-safe-space))');  
 
-  // These don't have much content so make them go 100vh on small screens
-  .exhibited-project-slice.accent-image &,
-  .exhibited-project-slice.text-box & {
-    height: 100vh;
-  }
+  @include bp-down(md) {
+    // These don't have much content so make them go 100vh on small screens
+    .exhibited-project-slice.accent-image &,
+    .exhibited-project-slice.text-box & {
+      height: 100vh;
+    }
 
-  .exhibited-project-slice.video &,
-  .exhibited-project-slice.zoom-image & {
-    min-height: 100vh;
-    height: auto;
+    .exhibited-project-slice.video &,
+    .exhibited-project-slice.zoom-image & {
+      min-height: 100vh;
+      height: auto;
+    }
   }
   
   @include bp-up(lg) {
@@ -184,8 +186,10 @@ export default {
   height: 100%;
 
   .text-box {
-    height: 60vh;
-    max-height: 100%;
+    @include bp-down(md) {
+      height: 50vh;
+      max-height: 100%;      
+    }
 
     /deep/ .scroller {
       height: 100%; // @TODO - Remove the 'height' from this inside the text-box component ?
