@@ -1,9 +1,9 @@
 <template>
-  <div :class="classes">
-    <div
-      class="exhibited-project-slice__contain"
-      :style="containStyle"
-    >
+  <div
+    :class="classes"
+    :style="{ '--caption-safe-space': `${this.captionSafeSpace}px` }"
+  >
+    <div class="exhibited-project-slice__contain">
       <div class="exhibited-project-slice__component">
         <component
           :is="sliceComponentName"
@@ -33,13 +33,13 @@ import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 
 import ExhibitedProjectCaption from '~/components/exhibitedProject/Caption'
-import ExhibitedProjectSliceZoomImage from '~/components/exhibitedProject/ExhibitedProjectSliceZoomImage'
-import ExhibitedProjectSliceImagePair from '~/components/exhibitedProject/ExhibitedProjectSliceImagePair'
-import ExhibitedProjectSliceAccentImage from '~/components/exhibitedProject/ExhibitedProjectSliceAccentImage'
-import ExhibitedProjectSliceImageGallery from '~/components/exhibitedProject/ExhibitedProjectSliceImageGallery'
-import ExhibitedProjectSliceImageTextBox from '~/components/exhibitedProject/ExhibitedProjectSliceImageTextBox'
-import ExhibitedProjectSliceTextBox from '~/components/exhibitedProject/ExhibitedProjectSliceTextBox'
-import ExhibitedProjectSliceVideo from '~/components/exhibitedProject/ExhibitedProjectSliceVideo'
+import ExhibitedProjectSliceZoomImage from '~/components/exhibitedProject/slices/ZoomImage'
+import ExhibitedProjectSliceImagePair from '~/components/exhibitedProject/slices/ImagePair'
+import ExhibitedProjectSliceAccentImage from '~/components/exhibitedProject/slices/AccentImage'
+import ExhibitedProjectSliceImageGallery from '~/components/exhibitedProject/slices/ImageGallery'
+import ExhibitedProjectSliceImageTextBox from '~/components/exhibitedProject/slices/ImageTextBox'
+import ExhibitedProjectSliceTextBox from '~/components/exhibitedProject/slices/TextBox'
+import ExhibitedProjectSliceVideo from '~/components/exhibitedProject/slices/Video'
 
 export default {
   components: {
@@ -77,19 +77,18 @@ export default {
     this.throttledOnResize = _throttle(this.onResize, 250)
     window.addEventListener('resize', this.throttledOnResize)
 
-    this.onResize()
+    this.$nextTick(this.onResize)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.throttledOnResize)
   },
   watch: {
-    pageTitleHeight() {
-      this.$refs.slice.onResize && this.$refs.slice.onResize()
-    }
+    pageTitleHeight: 'onResize'
   },
   methods: {
     onResize() {
       this.setCaptionSafeSpace()
+      this.$refs.slice.onResize && this.$refs.slice.onResize()
     },
     setCaptionSafeSpace() {
       let space = 0
@@ -137,32 +136,34 @@ export default {
   flex-direction: column;
   justify-content: center;
 
-  @include bp-up(lg) {
-    &.zoom-image {
-      padding-bottom: 100px;
+  @include bp-down(md) {
+    .primary-column + .secondary-column {
+      margin-top: var(--page-title-height);
     }
-  }
-
-  & + & {
-    padding-top: 150px;
   }
 }
 
 .exhibited-project-slice__contain {
   position: relative;
   z-index: 1;
-  padding-top: calc(var(--page-title-height) + 15px);
+  padding-top: calc(var(--page-title-height) + 40px);
+  padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
+  padding-bottom: unquote('max(40px, var(--caption-safe-space))');  
 
   // These don't have much content so make them go 100vh on small screens
   .exhibited-project-slice.accent-image &,
-  .exhibited-project-slice.video & {
+  .exhibited-project-slice.text-box & {
     height: 100vh;
+  }
+
+  .exhibited-project-slice.video &,
+  .exhibited-project-slice.zoom-image & {
+    min-height: 100vh;
+    height: auto;
   }
   
   @include bp-up(lg) {
     height: 100vh;
-    padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
-    // padding-top: calc(var(--page-title-height) + 15px);
   }
 }
 
@@ -176,5 +177,19 @@ export default {
   background-color: $red;
   z-index: $zindex-accent-bg;
   transform: translate3d(0, 0, 0); // Fix a chrome bug where it was disappearing randomly?
+}
+
+
+.exhibited-project-slice .text-box-wrapper {
+  height: 100%;
+
+  .text-box {
+    height: 60vh;
+    max-height: 100%;
+
+    /deep/ .scroller {
+      height: 100%; // @TODO - Remove the 'height' from this inside the text-box component ?
+    }
+  }
 }
 </style>

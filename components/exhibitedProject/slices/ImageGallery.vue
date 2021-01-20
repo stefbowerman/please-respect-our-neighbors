@@ -12,7 +12,10 @@
       />
     </Slideshow>
 
-    <div class="gallery-caption">
+    <div
+      v-if="slice.items.length > 1"    
+      class="gallery-caption"
+    >
       <Caption
         :progress="progressText"
       />
@@ -35,7 +38,7 @@ export default {
     slice: {
       type: Object,
       default: () => ({}),
-      validator: s => s.slice_type === 'image_gallery'
+      validator: ({ slice_type }) => slice_type === 'image_gallery'
     }
   },
   data() {
@@ -61,6 +64,12 @@ export default {
   /deep/ .arrow-slot {
     padding-top: 30px;
     padding-bottom: 30px;
+  }
+
+  @include bp-down(md) {
+    .slideshow {
+      height: 75vh;
+    }
   }
 }
 

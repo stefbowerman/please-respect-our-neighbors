@@ -30,7 +30,7 @@ import { stripTags } from '~/utils/tools'
 import getTheme from '~/utils/getTheme'
 
 import PageTitle from '~/components/PageTitle'    
-import ExhibitedProjectSlice from '~/components/exhibitedProject/ExhibitedProjectSlice'
+import ExhibitedProjectSlice from '~/components/exhibitedProject/Slice'
 
 export default {
   components: {

@@ -43,32 +43,21 @@ export default {
   props: {
     slice: {
       type: Object,
-      default: () => {},
-      validator(s) {
-        return s.slice_type === 'image_text_box'
-      } 
+      default: () => ({}),
+      validator: ({ slice_type }) => slice_type === 'image_text_box' 
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.container,
-.row,
-.primary-column,
-.secondary-column,
-.image {
-  height: 100%;
-}
-
-.image,
-.text-box-wrapper {
-  @include bp-down(lg) {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100vh;
-    min-height: var(--unit-100vh);  
+@include bp-up(lg) {
+  .container,
+  .row,
+  .primary-column,
+  .secondary-column,
+  .image {
+    height: 100%;
   }
 }
 
@@ -78,29 +67,20 @@ export default {
   img {
     margin: 0 auto;
     display: block;
-    height: 100%;
-    max-height: 450px;
     width: auto;
     max-width: 100%;
     object-fit: contain;
+    object-position: top;
     border: 1px solid transparent;
+
+    @include bp-up(lg) {
+      max-height: 450px;
+      height: 100%;
+    }
   }
 
   a:hover img {
     border-color: var(--link-color);
-  }
-}
-
-.text-box-wrapper {
-  height: 100%;
-
-  .text-box {
-    height: 60vh;
-    max-height: 100%;
-
-    /deep/ .scroller {
-      height: 100%; // @TODO - Remove the 'height' from this inside the text-box component ?
-    }
   }
 }
 </style>

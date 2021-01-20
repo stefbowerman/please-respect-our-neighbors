@@ -56,10 +56,8 @@ export default {
   props: {
     slice: {
       type: Object,
-      default: () => {},
-      validator(s) {
-        return s.slice_type === 'image_pair'
-      } 
+      default: () => ({}),
+      validator: ({ slice_type }) => slice_type === 'image_pair'
     }
   },
   computed: {

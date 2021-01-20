@@ -122,7 +122,7 @@ export default {
 
 .bounds {
   position: relative;
-  border: 1px solid transparent;
+  border: 1px solid currentColor;
   overflow: hidden;
 
   .is-active & {

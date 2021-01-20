@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="primary-column gutter-less">
+      <div class="primary-column">
         <video-plyr
           :url="videoUrl"
           :autoplay="true"
@@ -23,10 +23,8 @@ export default {
   props: {
     slice: {
       type: Object,
-      default: () => {},
-      validator(s) {
-        return s.slice_type === 'video'
-      }      
+      default: () => ({}),
+      validator: ({ slice_type }) => slice_type === 'video'
     }
   },
   computed: {
@@ -39,11 +37,13 @@ export default {
 
 
 <style lang="scss" scoped>
-.container,
-.row,
-.primary-column,
-.video-plyr {
-  height: 100%;
+@include bp-up(lg) {
+  .container,
+  .row,
+  .primary-column,
+  .video-plyr {
+    height: 100%;
+  }
 }
 
 .primary-column {

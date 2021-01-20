@@ -22,10 +22,8 @@ export default {
   props: {
     slice: {
       type: Object,
-      default: () => {},
-      validator(s) {
-        return s.slice_type === 'text_box'
-      } 
+      default: () => ({}),
+      validator: ({ slice_type }) => slice_type === 'text_box'
     }
   },
   computed: {
@@ -43,9 +41,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container,
-.text-box-wrapper {
-  height: 100%;
+@include bp-up(lg) {
+  .container,
+  .text-box-wrapper {
+    height: 100%;
+  }
 }
 
 .text-box-wrapper {

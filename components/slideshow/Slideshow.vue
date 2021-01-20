@@ -368,6 +368,8 @@ $arrow-slot-width-xxxl: 450px;
 }
 
 .swiper-wrapper {
+  align-items: center;
+  
   body:not(.is-touch) & {
     transition-timing-function: cubic-bezier(0.5, 0.1, 0, 0.99) !important;
   } 

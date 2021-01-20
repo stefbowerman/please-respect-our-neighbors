@@ -22,9 +22,7 @@ export default {
     slice: {
       type: Object,
       default: () => {},
-      validator(s) {
-        return s.slice_type === 'accent_image'
-      }      
+      validator: ({ slice_type }) => slice_type === 'accent_image'
     }
   },
   computed: {
