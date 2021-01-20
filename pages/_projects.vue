@@ -44,9 +44,13 @@ export default {
     return {
       title: '',
       subtitle: '',
-      meta: {},
+      meta: {
+        title: '',
+        description: '',
+        imageUrl: ''
+      },
       projects: [],
-      selectedProject: null,
+      selectedProjectUID: null,
       pageTitleHeight: 0,
       interactingProjectIndex: -1 // which project is being interacted with?
     }
@@ -62,19 +66,19 @@ export default {
     // window.addEventListener('scroll', this.throttledOnScroll)
     // window.addEventListener('resize', this.throttledOnResize)    
 
-    if (this.selectedProject) {
-      const projectIndex = this.projects.findIndex(project => project.uid === this.selectedProject)
+    if (this.selectedProjectUID) {
+      const projectIndex = this.projects.findIndex(({ uid }) => uid === this.selectedProjectUID)
 
-      // need to scroll the *bottom* of the selected project into view...
-      const rect = this.$refs.projects[projectIndex].$el.getBoundingClientRect()
-      const scrollTo = rect.top - (window.innerHeight - rect.height)
+      if (this.$refs.projects[projectIndex]) {
+        setTimeout(() => {
+          const top = this.$refs.projects[projectIndex].$el.offsetTop - this.pageTitleHeight
 
-      setTimeout(() => {
-        window.scrollTo({
-          top: scrollTo,
-          behavior: 'smooth'
-        });
-      }, 2000)
+          window.scrollTo({
+            top,
+            behavior: 'smooth'
+          });
+        }, 2000)        
+      }
     }  
   },
   beforeDestroy() {
@@ -114,36 +118,49 @@ export default {
   async asyncData({ $prismic, store, route }) {
     const { data } = await $prismic.api.getSingle('projects_page')
 
-    const projectUIDs = data.projects.map(({ project }) => project.uid) // i.e. ["sergio-tacchini", "undefeated", "what-a-romantic", "at-large-magazine"]
-
-    const title = $prismic.asText(_get(data, 'title', []))
-    const subtitle = $prismic.asText(_get(data, 'subtitle', []))
-    const meta = {
-      title: $prismic.asText(_get(data, 'meta_title', [])),
-      description: stripTags($prismic.asHtml(_get(data, 'meta_description', []))),
-      imageUrl: _get(data, 'meta_image.url')
-    }
+    const projectUIDs = data.projects.map(({ project }) => project.uid) // i.e. ["sergio-tacchini", "undefeated", "what-a-romantic"]
 
     // Only show the projects as specified in the projects_page settings
-    const projects = projectUIDs.map(uid => {
-      return store.state.projects.find(p => p.uid === uid)
-    })
+    const projects = projectUIDs.map(uid => store.state.projects.find(p => p.uid === uid))
 
-    const selectedProject = Boolean(route.params.uid) ? route.params.uid : null
+    const selectedProjectUID = Boolean(route.params.uid) ? route.params.uid : null
+    const selectedProject = projects.find(({ uid }) => uid === selectedProjectUID)
 
-    // @TODO - If route.params.uid and no project exists with that UID, redirect to /projects?
-    // Don't want bad SEO
+    // Page title + subtitle
+    const title = $prismic.asText(_get(data, 'title', []))
+    const subtitle = $prismic.asText(_get(data, 'subtitle', []))
+
+    // Meta Info - Pull from the single 'projects_page' settings
+    let metaTitle = $prismic.asText(_get(data, 'meta_title', []))
+    let metaDescription = $prismic.asHtml(_get(data, 'meta_description', []))
+    let metaImageUrl = _get(data, 'meta_image.url')
+
+    metaTitle = metaTitle || title
+    metaDescription = subtitle
+
+    // Or pull from individual project settings if a project is specified
+    if (selectedProject) {
+      metaTitle = $prismic.asText(selectedProject.title)
+      metaDescription = $prismic.asHtml(selectedProject.description)
+      metaImageUrl = _get(selectedProject, 'featured_image.url')
+    }
+
+    const meta = {
+      title: metaTitle,
+      description: metaDescription,
+      imageUrl: metaImageUrl
+    }
 
     return {
       title,
       subtitle,
       meta,
       projects,
-      selectedProject
+      selectedProjectUID
     }
   },  
   head() {
-    const title = this.meta.title || this.title
+    const title = this.meta.title || this.title // Allows the text in the page title component and the page *meta* title to be different
     const meta = [
       {
         hid: 'title',
@@ -154,7 +171,7 @@ export default {
         hid: 'description',
         name: 'description',
         property: 'og:description',
-        content: stripTags(this.meta.description || this.description)
+        content: stripTags(this.meta.description)
       }
     ]
 
