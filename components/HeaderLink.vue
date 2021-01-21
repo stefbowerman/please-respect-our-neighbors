@@ -106,23 +106,22 @@ export default {
 
   a {
     display: inline-block;
-    padding: 9px 2px;
+    padding: 10px 2px;
 
     @include bp-up(xxl) {
-      padding-left: 6px;
-      padding-right: 6px;
+      padding-left: 8px;
+      padding-right: 8px;
     }
 
     @include bp-up(xxxl) {
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 12px;
+      padding-right: 12px;
     }
   }
 }
 
 .bounds {
   position: relative;
-  border: 1px solid currentColor;
   overflow: hidden;
 
   .is-active & {

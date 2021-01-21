@@ -26,6 +26,7 @@
         <template v-else-if="type === 'image'">
           <div class="slide-content-interactive-area">
             <prismic-image
+              v-if="item.image && item.image.dimensions"
               :field="item.image"
               class="slide-media"
               :data-height="item.image.dimensions.height"

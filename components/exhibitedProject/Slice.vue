@@ -73,7 +73,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.slice)
     this.throttledOnResize = _throttle(this.onResize, 250)
     window.addEventListener('resize', this.throttledOnResize)
 
