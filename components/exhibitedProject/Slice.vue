@@ -69,6 +69,7 @@ export default {
   },
   data() {
     return {
+      ready: false,
       captionSafeSpace: 0
     }
   },
@@ -76,7 +77,11 @@ export default {
     this.throttledOnResize = _throttle(this.onResize, 250)
     window.addEventListener('resize', this.throttledOnResize)
 
-    this.$nextTick(this.onResize)
+    this.setCaptionSafeSpace()
+    this.$nextTick(() => {
+      this.onResize()
+      this.ready = true
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.throttledOnResize)
@@ -92,20 +97,24 @@ export default {
     setCaptionSafeSpace() {
       let space = 0
       const { height, top } = this.$refs.caption.$el.getBoundingClientRect()
-      const bottomOffset = window.innerHeight - (top + height)
+      // const bottomOffset = window.innerHeight - (top + height)
+      // const bottomOffset = window.innerHeight - (this.$refs.caption.$el.offsetTop + height)
+      // Calculating bottomOffset doesn't work if you transition to the exhibited project page since it starts way offscreen
+      const bottomOffset = 30
 
       if (height > 0) {
         space = height + (bottomOffset * 2)
       }
 
-      this.captionSafeSpace = space
+      this.captionSafeSpace = space < 0 ? 0 : space
     }
   },
   computed: {
     classes() {
       return [
         'exhibited-project-slice',
-        _kebabCase(this.slice.slice_type)
+        _kebabCase(this.slice.slice_type),
+        { 'is-ready': this.ready }
       ]
     },
     sliceComponentName() {
@@ -134,6 +143,13 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+
+  &.is-ready {
+    opacity: 1;
+  }
 
   @include bp-down(md) {
     .primary-column + .secondary-column {
@@ -184,14 +200,10 @@ export default {
 .exhibited-project-slice .text-box-wrapper {
   height: 100%;
 
-  .text-box {
+  /deep/ .text-box {
     @include bp-down(md) {
       height: 50vh;
       max-height: 100%;      
-    }
-
-    /deep/ .scroller {
-      height: 100%; // @TODO - Remove the 'height' from this inside the text-box component ?
     }
   }
 }

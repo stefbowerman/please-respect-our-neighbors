@@ -65,27 +65,28 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .text-box {
   height: 100%;
+  transition: opacity 200ms ease-out;
 
-  .simplebar-wrapper {
+  /deep/ .simplebar-wrapper {
     margin-right: 17px !important;
     border: 1px solid var(--text-color);
     background-color: $off-white;
   }
 
   // Need this otherwise the text overflows on top of the border
-  .simplebar-mask {
+  /deep/ .simplebar-mask {
     top: 1px;
     bottom: 1px;
   }
 
-  .simplebar-track {
+  /deep/ .simplebar-track {
     border: 1px solid var(--text-color);
   }
 
-  .simplebar-scrollbar {
+  /deep/ .simplebar-scrollbar {
     background-color: var(--text-color);
 
     &:before {

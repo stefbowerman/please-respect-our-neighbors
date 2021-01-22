@@ -201,7 +201,7 @@ export default {
 
   /deep/ .text-box {
     height: 100%;
-    width: 100%;
+    flex: 1;
     margin-left: auto;
     margin-right: auto;
     color: $white;

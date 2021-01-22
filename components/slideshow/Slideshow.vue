@@ -108,7 +108,7 @@ export default {
       init: false,
       initialSlide: this.initialSlide,
       loop: this.loop,
-      speed: 450,
+      speed: 380,
       simulateTouch: false,
       watchOverflow: true,
       navigation: {
