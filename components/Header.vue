@@ -10,7 +10,7 @@
           <nav>
             <div class="links">
               <header-link to="/" text="Please Respect Our Neighbors Inc."/>
-              <br />
+              <div class="break" />
               <header-link to="/projects" text="Accumulated Projects"/>
               <header-link to="/info" text="Office Info"/>
               <header-link to="/partners" text="Current Partners"/>
@@ -58,5 +58,15 @@ nav {
   @include bp-up(lg) {
     display: block;
   }
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.break {
+  flex: 0 0 100%;
 }
 </style>

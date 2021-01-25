@@ -1,9 +1,18 @@
 <template>
   <simplebar
-    class="text-box"
+    :class="[
+      'text-box',
+      { 'is-locked': locked }
+    ]"
     data-simplebar-auto-hide="false"
   >
-    <div class="text-box-inner">
+    <div
+      class="text-box-inner"
+      @mouseenter="onMouseenter"
+      @mouseleave="onMouseleave"
+      @mousemove="locked = false"
+      @touchstart="locked = false"
+    >
       <div
         v-if="formattedDate"
         v-html="formattedDate"
@@ -44,6 +53,14 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      locked: true
+    }
+  },
+  created() {
+    this.mouseenterTimeout = null
+  },
   computed: {
     formattedDate() {
       if (!this.date) return null
@@ -61,6 +78,17 @@ export default {
         (this.textSize && `size-${_kebabCase(this.textSize)}`)
       ]
     }
+  },
+  methods: {
+    onMouseenter() {
+      this.mouseenterTimeout = setTimeout(() => {
+        this.locked = false
+      }, 700)
+    },
+    onMouseleave() {
+      clearTimeout(this.mouseenterTimeout)
+      this.locked = true
+    }
   }
 }
 </script>
@@ -76,22 +104,44 @@ export default {
     background-color: $off-white;
   }
 
+  /deep/ .simplebar-content-wrapper {
+    overflow-x: hidden !important;
+  }
+
+  &.is-locked /deep/ .simplebar-content-wrapper {
+    overflow-y: hidden !important;
+  }  
+
   // Need this otherwise the text overflows on top of the border
   /deep/ .simplebar-mask {
     top: 1px;
     bottom: 1px;
+    right: 18px;
   }
 
   /deep/ .simplebar-track {
     border: 1px solid var(--text-color);
+
+    &.simplebar-horizontal {
+      display: none;
+    }
   }
 
   /deep/ .simplebar-scrollbar {
+    pointer-events: auto;
     background-color: var(--text-color);
+
+    &.simplebar-hover {
+      cursor: grab;
+    }
 
     &:before {
       display: none;
     }
+  }
+
+  &.simplebar-dragging /deep/ .simplebar-scrollbar {
+    cursor: grabbing !important;
   }
 
   // Prevent scrolling for small touch devices
@@ -132,6 +182,7 @@ export default {
 .text-box-content {
   @include text-bigger;
   text-transform: none;
+  word-break: break-word;
 
   @include bp-down(lg) {
     font-size: 35px;

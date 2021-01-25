@@ -106,16 +106,11 @@ export default {
 
   a {
     display: inline-block;
-    padding: 10px 2px;
-
-    @include bp-up(xxl) {
-      padding-left: 8px;
-      padding-right: 8px;
-    }
+    padding: 10px 12px;
 
     @include bp-up(xxxl) {
-      padding-left: 12px;
-      padding-right: 12px;
+      padding-left: 14px;
+      padding-right: 14px;
     }
   }
 }
