@@ -208,7 +208,7 @@ export default {
     hasArrows() {
       let flag = false
 
-      if (this.slideCount > 1 && this.$store.state.isTouch === false) {
+      if (this.slideCount > 1 && (this.$store.state.isTouch === false || this.$store.state.windowWidth > 1024)) {
         flag = true
       }
       
