@@ -3,6 +3,7 @@
     <div class="row">
       <div class="primary-column">
         <video-plyr
+          v-if="videoUrl"
           :url="videoUrl"
           :autoplay="true"
         />
