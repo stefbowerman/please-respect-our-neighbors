@@ -67,7 +67,7 @@ export default {
     pointer-events: auto;
   }
 
-  /deep/ a {
+  ::v-deep a {
     text-decoration: underline;
   }
 
@@ -82,7 +82,7 @@ export default {
       font-size: 13px;
     }
 
-    /deep/ p + p {
+    ::v-deep p + p {
       
       @include bp-up(md) {
         margin-top: 20px;

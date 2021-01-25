@@ -98,28 +98,28 @@ export default {
   height: 100%;
   transition: opacity 200ms ease-out;
 
-  /deep/ .simplebar-wrapper {
+  ::v-deep .simplebar-wrapper {
     margin-right: 17px !important;
     border: 1px solid var(--text-color);
     background-color: $off-white;
   }
 
-  /deep/ .simplebar-content-wrapper {
+  ::v-deep .simplebar-content-wrapper {
     overflow-x: hidden !important;
   }
 
-  &.is-locked /deep/ .simplebar-content-wrapper {
+  &.is-locked ::v-deep .simplebar-content-wrapper {
     overflow-y: hidden !important;
   }  
 
   // Need this otherwise the text overflows on top of the border
-  /deep/ .simplebar-mask {
+  ::v-deep .simplebar-mask {
     top: 1px;
     bottom: 1px;
     right: 18px;
   }
 
-  /deep/ .simplebar-track {
+  ::v-deep .simplebar-track {
     border: 1px solid var(--text-color);
 
     &.simplebar-horizontal {
@@ -127,7 +127,7 @@ export default {
     }
   }
 
-  /deep/ .simplebar-scrollbar {
+  ::v-deep .simplebar-scrollbar {
     pointer-events: auto;
     background-color: var(--text-color);
 
@@ -140,25 +140,9 @@ export default {
     }
   }
 
-  &.simplebar-dragging /deep/ .simplebar-scrollbar {
+  &.simplebar-dragging ::v-deep .simplebar-scrollbar {
     cursor: grabbing !important;
   }
-
-  // Prevent scrolling for small touch devices
-  // Force them to drag the scrollbar up and down
-  // @TODO - This doesn't work :-/  Need to map touch events to mousepointer events
-  // https://github.com/createlogic/map-touch-events-to-mouse-handlers
-  
-  // body.is-touch & {
-  //   @include bp-down(md) {
-  //     .simplebar-mask {
-  //       pointer-events: none;
-  //     }
-  //     .simplebar-track {
-  //       pointer-events: auto;
-  //     }
-  //   }
-  // }
 }
 
 .text-box-inner {

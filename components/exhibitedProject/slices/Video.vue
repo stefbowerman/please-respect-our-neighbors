@@ -58,7 +58,7 @@ export default {
   width: auto;
   max-width: 770px;
 
-  /deep/ .plyr {
+  ::v-deep .plyr {
     height: auto;
 
     video {

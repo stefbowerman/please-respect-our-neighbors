@@ -59,7 +59,7 @@ export default {
     max-width: 88%;
     padding: 60px 0;
 
-    /deep/ .text-box {
+    .text-box {
       max-height: 600px;
     }    
   }

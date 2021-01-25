@@ -332,7 +332,7 @@ $arrow-slot-width-xxxl: 450px;
 }
 
 .swiper-container {
-  /deep/ .slide-inner {
+  ::v-deep .slide-inner {
     padding-left: 12px;
     padding-right: 12px;
   }
@@ -342,7 +342,7 @@ $arrow-slot-width-xxxl: 450px;
   }
 
   .slideshow.has-arrows & {
-    /deep/ .slide-inner {
+    ::v-deep .slide-inner {
       padding-left: $arrow-slot-width-sm;
       padding-right: $arrow-slot-width-sm;
 
@@ -359,7 +359,7 @@ $arrow-slot-width-xxxl: 450px;
   }
 
   // In this case we don't show arrows so reset the padding back to the small version
-  body.is-touch & /deep/ .slide-inner {
+  body.is-touch & ::v-deep .slide-inner {
     @include bp-down(md) {
       padding-left: 12px;
       padding-right: 12px;

@@ -46,7 +46,7 @@ export default {
     }
   }
 
-  /deep/ a {
+  ::v-deep a {
     border-bottom: 2px solid; // Duplicated across Project.vue
   }
 }

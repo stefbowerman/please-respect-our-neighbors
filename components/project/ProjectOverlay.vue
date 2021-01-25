@@ -217,14 +217,14 @@ export default {
   width: 100%;
 
 
-  /deep/ .text-box {
+  ::v-deep .text-box {
     height: 100%;
     flex: 1;
     margin-left: auto;
     margin-right: auto;
     color: $white;
 
-    /deep/ .simplebar-wrapper {
+    .simplebar-wrapper {
       background-color: $off-black;
       background-image: $dark-gradient;
     }
@@ -259,7 +259,7 @@ export default {
     opacity: 1;
   }
 
-  .caption-switcher /deep/ .holder {
+  .caption-switcher ::v-deep .holder {
     padding: 45px 0;
 
     @include bp-up(lg) {

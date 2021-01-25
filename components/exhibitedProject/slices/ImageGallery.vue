@@ -61,7 +61,7 @@ export default {
 .gallery {
   height: 100%;
 
-  /deep/ .arrow-slot {
+  ::v-deep .arrow-slot {
     padding-top: 30px;
     padding-bottom: 30px;
   }

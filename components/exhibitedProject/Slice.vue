@@ -199,9 +199,9 @@ export default {
 
 .exhibited-project-slice .text-box-wrapper {
   height: 100%;
-
-  /deep/ .text-box {
-    @include bp-down(md) {
+  
+  @include bp-down(md) {
+    .text-box {  
       height: 50vh;
       max-height: 100%;      
     }

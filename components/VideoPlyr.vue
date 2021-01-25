@@ -81,7 +81,7 @@ export default {
 
 <style lang="scss" scoped>
 .video-plyr {
-  /deep/ .plyr__video-wrapper {
+  ::v-deep .plyr__video-wrapper {
     background-color: $black;
     background-image: $dark-gradient;
   }

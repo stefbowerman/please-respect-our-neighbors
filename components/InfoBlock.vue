@@ -70,7 +70,7 @@ export default {
       line-height: 17px;
     }
 
-    /deep/ p + p {
+    ::v-deep p + p {
       margin-top: 16px;
 
       @include bp-up(lg) {
@@ -81,7 +81,7 @@ export default {
   }
 
   &--text {
-    /deep/ p + p {
+    ::v-deep p + p {
       margin-top: 22px;
 
       @include bp-up(lg) {
@@ -99,7 +99,7 @@ export default {
       }
     }
     
-    /deep/ a {
+    ::v-deep a {
       text-decoration: underline;
     }  
   }
