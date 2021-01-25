@@ -17,6 +17,8 @@
           :project="project"
           :interacting="interactingProjectIndex === i"
           @interaction="interactingProjectIndex = i"
+          @overlay-enter="onOverlayEnter(project)"
+          @overlay-leave="onOverlayLeave"
           ref="projects"
         />
       </div>
@@ -25,12 +27,14 @@
 </template>
 
 <script>
+import animateScrollTo from 'animated-scroll-to'
 import _get from 'lodash/get'
 import _uniq from 'lodash/uniq'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
 import { stripTags } from '~/utils/tools'
 import getTheme from '~/utils/getTheme'
+import { easeInOutCubic } from '~/utils/easings'
 
 import PageTitle from '~/components/PageTitle'   
 import Project from '~/components/project/Project'
@@ -58,14 +62,6 @@ export default {
   mounted() {
     this.$store.commit('SET_THEME', getTheme(this.$route))
 
-    // this.throttledOnScroll = _throttle(this.onScroll, 100)
-    // this.throttledOnResize = _throttle(this.onResize, 250)
-
-    // If selected project, wait until after scroll is complete to attach the scroll handler ?
-    // or just add a flag to ignore scroll ?
-    // window.addEventListener('scroll', this.throttledOnScroll)
-    // window.addEventListener('resize', this.throttledOnResize)    
-
     if (this.selectedProjectUID) {
       const projectIndex = this.projects.findIndex(({ uid }) => uid === this.selectedProjectUID)
 
@@ -73,46 +69,20 @@ export default {
         setTimeout(() => {
           const top = this.$refs.projects[projectIndex].$el.offsetTop - this.pageTitleHeight
 
-          window.scrollTo({
-            top,
-            behavior: 'smooth'
-          });
+          animateScrollTo(top, {
+            easing: easeInOutCubic,
+            speed: 750
+          })
         }, 2000)        
       }
     }  
   },
-  beforeDestroy() {
-    // window.removeEventListener('scroll', this.throttledOnScroll)
-    // window.removeEventListener('resize', this.throttledOnResize)
-  },
   methods: {
-    onScroll() {
-      // this.checkVisibleProject()
+    onOverlayEnter(project) {
+      window.history.replaceState({}, null, `/projects/${project.uid}`)
     },
-    onResize() {
-      // this.checkVisibleProject()
-    },
-    checkVisibleProject() {
-      // @TODO - this.$refs.project-* should maybe just be this.$refs.projects and pull based on index?
-
-      // const winH = window.innerHeight
-      // const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      // const triggerPoint = scrollTop + (winH * 0.4) // Slice is ~40% on screen
-
-      // // Find the project which straddles the triggerPoint of the screen
-      // const i = this.$refs.projects.findIndex(ref => {
-      //   const rect = ref.$el.getBoundingClientRect()
-      //   const h = rect.height
-      //   const top = rect.y
-      //   const bottom = top + h
-
-      //   return top < triggerPoint && bottom >= triggerPoint
-      // })
-
-      // // i can be -1 if none found
-      // this.currentSliceIndex = _clamp(i, 0, this.projects.length - 1)
-
-      // console.log(this.currentSliceIndex) 
+    onOverlayLeave() {
+      window.history.replaceState({}, null, `/projects`)
     }
   },
   async asyncData({ $prismic, store, route }) {

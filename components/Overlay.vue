@@ -3,6 +3,7 @@
     name="overlay"
     v-on:enter="enter"
     v-on:after-enter="afterEnter"
+    v-on:leave="leave"
     v-on:after-leave="afterLeave"
   >
     <div class="overlay" v-show="show">
@@ -78,6 +79,9 @@ export default {
       // Make sure we're always scrolled to the top
       this.$refs.dialog.scrollTop = 0
       this.$emit('enter')
+    },
+    leave() {
+      this.$emit('leave')
     },
     afterEnter() {
       this.$emit('after-enter')

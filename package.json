@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nuxtjs/prismic": "^1.2.4",
+    "animated-scroll-to": "^2.0.12",
     "intrinsic-scale": "^3.0.4",
     "lodash": "^4.17.20",
     "nuxt": "^2.0.0",

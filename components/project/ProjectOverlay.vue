@@ -2,10 +2,11 @@
   <overlay
     @enter="onEnter"
     @after-enter="onAfterEnter"
+    @leave="onLeave"
     @after-leave="onAfterLeave"
     @left-key="prev"
     @right-key="next"
-    @close="$emit('close', $event)"
+    @close="close"
     :show="show"
   >
     <template slot="body">
@@ -108,7 +109,12 @@ export default {
   },
   mounted() {
     this.$refs.slideshow && this.$refs.slideshow.update()
+
+    window.addEventListener('popstate', this.onPopstate)
   },
+  beforeDestroy() {
+    window.removeEventListener('popstate', this.onPopstate)
+  },  
   computed: {
     items() {
       return this.slices.map((slice, i) => {
@@ -145,11 +151,20 @@ export default {
     }
   },  
   methods: {
+    onPopstate() {
+      if (this.visible) {
+        this.close()
+      }
+    },
     onEnter() {
       this.visible = true
+      this.$emit('enter')
     },
     onAfterEnter() {
       this.fullyVisible = true
+    },
+    onLeave() {
+      this.$emit('leave')
     },
     onAfterLeave() {
       this.visible = false
@@ -182,6 +197,9 @@ export default {
       const { sliceIndex } = this.items[index]
       this.$emit('slide-change-start', sliceIndex)
     },
+    close() {
+      this.$emit('close')
+    },    
     prev() {
       this.$refs.slideshow && this.$refs.slideshow.prev()
     },

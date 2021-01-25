@@ -78,8 +78,10 @@
         :show="selectedSliceIndex > -1"
         :slices="slices"
         :selected-slice-index="selectedSliceIndex"
-        @slide-change-start="onProjectOverlaySlideChangeStart"
-        @close="onProjectOverlayClose"
+        @slide-change-start="onOverlaySlideChangeStart"
+        @enter="$emit('overlay-enter')"
+        @leave="$emit('overlay-leave')"
+        @close="onOverlayClose"
       />
     </portal>
   </div>  
@@ -217,10 +219,10 @@ export default {
         this.onProjectPreviewBottomLayerClick()
       }
     },
-    onProjectOverlaySlideChangeStart(sliceIndex) {
+    onOverlaySlideChangeStart(sliceIndex) {
       this.activeSliceIndex = sliceIndex
     },
-    onProjectOverlayClose() {
+    onOverlayClose() {
       this.selectedSliceIndex = -1
     },
     onHasIntersected({ detail }) {
