@@ -1,0 +1,49 @@
+.text-box-date {
+  @include text-massive;
+  margin-bottom: 30px;
+  color: $white;
+  font-weight: $font-weight-light;
+}
+
+.text-box-content {
+  @include text-bigger;
+  text-transform: none;
+  word-break: break-word;
+
+  @include bp-down(lg) {
+    font-size: 35px;
+    line-height: 1;
+  }
+
+  &.size-small {
+    @include text-med-screen;
+  }
+
+  p + p {
+    margin-top: 1.5em;
+  }  
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: $font-weight-normal;
+    margin-bottom: 1em;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin-left: 1em;
+    }
+  }
+
+  ul + p {
+    margin-top: 1em;
+  }
+
+  a {
+    color: currentColor;
+    text-decoration: underline;
+  }
+}
