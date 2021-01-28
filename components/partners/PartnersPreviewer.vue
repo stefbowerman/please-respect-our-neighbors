@@ -1,48 +1,52 @@
 <template>
   <span
     :class="[
-      'link-previewer',
-      {'is-active': show },
-      {'loaded': iframeLoaded }
+      'previewer',
+      { 'is-active': show },
+      { 'is-ready': ready }
     ]"
   >
     <span
       class="text"
       v-text="text"
-      @click="onClick"
+      @click="show = !show"
     />
 
     <transition
       name="preview-window"
+      v-on:enter="onPreviewWindowEnter"
       v-on:after-leave="onPreviewWindowAfterLeave"
     >
       <div
-        ref="preview"
         :class="[
           'preview-window',
           { 'is-visible': showPreviewWindow }
         ]"
         :style="previewWindowStyle"
         v-show="showPreviewWindow"
+        ref="preview"        
       >
         <div
           class="preview-frame"
           :style="previewFrameStyle"
         >
           <iframe
-            v-if="loadable"
+            v-if="url"
             :src="url"
-            ref="iframe"
-            :class="[
-              { 'is-loaded': iframeLoaded }
-            ]"
             @load="onIframeLoad"
             @onload="onIframeLoad"
           />
-          <div class="iframe-mask" />
+          <div
+            v-else
+            class="content"
+            v-html="content"
+            ref="content"
+          />
+
+          <div class="mask" />
 
           <div
-            class="preview-frame__scale-control"
+            class="scale-control"
             v-dragged="onScaleControlDrag"
           >
             <svg-dragger />
@@ -62,6 +66,7 @@ const PREVIEW_PADDING = 100 // How much space between the preview and the edge o
 const PREVIEW_INITIAL_HEIGHT = 200
 const PREVIEW_INITIAL_WIDTH = 300
 const PREVIEW_FRAME_HEIGHT = 800
+const ASPECT_RATIO = (2/3)
 
 export default {
   components: {
@@ -75,28 +80,29 @@ export default {
     url: {
       type: String,
       default: ''
+    },
+    content: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       show: false,
-      loadable: false,
+      ready: false,
       iframeLoaded: false,
       previewHeight: PREVIEW_INITIAL_HEIGHT,
-      previewWidth: PREVIEW_INITIAL_WIDTH,
-      aspectRatio: (2/3)
+      previewWidth: PREVIEW_INITIAL_WIDTH
     }
   },
-  mounted() {
-    // AJAX check if iframe has x-frame-options same origin
-    // https://stackoverflow.com/questions/15273042/catch-error-if-iframe-src-fails-to-load-error-refused-to-display-http-ww
-    // this.loadable = true / false
-
-    this.loadable = true
+  created() {
+    if (!this.url) {
+      this.ready = true
+    }
   },
   computed: {
     showPreviewWindow() {
-      return this.show && this.iframeLoaded
+      return this.show // && this.iframeLoaded
     },
     previewWindowStyle() {
       return {
@@ -111,14 +117,17 @@ export default {
     }
   },
   methods: {
+    onPreviewWindowEnter() {
+      if (this.$refs.content) {
+        this.$refs.content.scrollTop = 0
+      }
+    },
     onPreviewWindowAfterLeave() {
       this.previewHeight = PREVIEW_INITIAL_HEIGHT
       this.previewWidth  = PREVIEW_INITIAL_WIDTH
     },
-    onClick() {
-      this.show = !this.show
-    },
     onIframeLoad() {
+      this.ready = true
       this.iframeLoaded = true
     },
     onScaleControlDrag({ deltaX, deltaY, first, last }) {
@@ -129,9 +138,9 @@ export default {
         this.$store.commit('SET_IS_DRAGGING', false)
       }
 
-      const previewRect = this.$refs.preview.getBoundingClientRect()
+      const { x, width } = this.$refs.preview.getBoundingClientRect()
       const isMin = this.previewWidth < PREVIEW_INITIAL_WIDTH
-      const isMax = (previewRect.x + previewRect.width + PREVIEW_PADDING) > window.innerWidth
+      const isMax = (x + width + PREVIEW_PADDING) > window.innerWidth
 
       if ((isMin && deltaX < 0) || (isMax && deltaX > 0)) {
         return
@@ -141,12 +150,12 @@ export default {
       if (deltaX != 0) {
         // Resize on X
         this.previewWidth  += (deltaX || 0)
-        this.previewHeight  = this.previewWidth * this.aspectRatio
+        this.previewHeight  = this.previewWidth * ASPECT_RATIO
       }
       else if (deltaY != 0) {
         // resize on Y
         this.previewHeight += (deltaY || 0)
-        this.previewWidth   = this.previewHeight * (1 / this.aspectRatio)
+        this.previewWidth   = this.previewHeight * (1 / ASPECT_RATIO)
       }
     }
   }
@@ -154,21 +163,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.link-previewer {
+.previewer {
   position: relative;
 }
 
 .text {
   transition: color 250ms ease-out;
 
-  .loaded & {
+  .is-ready & {
     cursor: pointer;
   }
 
-  .link-previewer:hover &,
-  .link-previewer.is-active & {
+  .previewer:hover &,
+  .previewer.is-active & {
     color: $white;
     transition: color 150ms ease-out;
+  }
+
+  .previewer:hover & {
+    transition-duration: 400ms; // Make up for some weird lag?
   }
 }
 
@@ -192,24 +205,40 @@ export default {
   transform-origin: top left;
   transform: scale(0.25);
 
+  .is-dragging & {
+    pointer-events: none;
+  }  
+
   iframe {
     height: 100%;
     width: 100%;
     opacity: 0;
     transition: opacity 0.8s $easing-ease-out-quart;
-
-    &.is-loaded {
-      opacity: 1;
-    }
   }
 
-  .is-dragging & {
-    pointer-events: none;
+  .is-ready & iframe {
+    opacity: 1;
+  }
+}
+
+.content {
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  padding: 100px;
+  background-color: $red;
+  color: $white;
+  font-size: 65px;
+  font-weight: $font-weight-normal;
+
+  ::v-deep p + p {
+    margin-top: 1em;
   }
 }
 
 
-.iframe-mask {
+.mask {
   position: absolute;
   top: -2px;
   left: -2px;
@@ -222,7 +251,7 @@ export default {
               inset 0px 0px 175px 100px $red;
 }
 
-.preview-frame__scale-control {
+.scale-control {
   position: absolute;
   z-index: 1;
   bottom: 15px;

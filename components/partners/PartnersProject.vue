@@ -1,16 +1,10 @@
 <template>
   <span class="partners-project">
     <span class="main">
-      <PartnersProjectLinkPreviewer
-        v-if="projectPreviewUrl"
-        :url="projectPreviewUrl"
+      <PartnersTitle
         :text="`${$prismic.asText(project.title)}.`"
+        :url="projectPreviewUrl"
       />
-      <span
-        v-else
-        v-text="`${$prismic.asText(project.title)}.`"
-      />
-
       <span v-text="`${$prismic.asText(project.description)}.`" />
       <span
         v-if="projectYear"
@@ -19,11 +13,13 @@
       <template
         v-for="(partner, j) in project.partners"
       >
-        <PartnersProjectPartnerName
-          :partner="partner"
+        <PartnersTitle
+          :text="$prismic.asText(partner.name)"
+          :url="getPartnerUrl(partner)"
+          :content="$prismic.asHtml(partner.bio)"
           :active="activePartnerUID === partner.uid"
           @mouseenter.native="$emit('partner-mouseenter', partner.uid)"
-          @mouseleave.native="$emit('partner-mouseleave')"
+          @mouseleave.native="$emit('partner-mouseleave')"          
         /><span
           v-if="j === project.partners.length - 1"
           v-html="`.&nbsp;`"
@@ -43,13 +39,11 @@
 <script>
 import _get from 'lodash/get'
 
-import PartnersProjectPartnerName from '~/components/partners/PartnersProjectPartnerName'
-import PartnersProjectLinkPreviewer from '~/components/partners/PartnersProjectLinkPreviewer'
+import PartnersTitle from '~/components/partners/PartnersTitle'
 
 export default {
   components: {
-    PartnersProjectPartnerName,
-    PartnersProjectLinkPreviewer
+    PartnersTitle
   },
   props: {
     project: {
@@ -87,6 +81,11 @@ export default {
       })
 
       return `${titles.filter(Boolean).join('&nbsp;')}&nbsp;`
+    }
+  },
+  methods: {
+    getPartnerUrl({ website_url }) {
+      return website_url && website_url.link_type === 'Web' ? website_url.url : null
     }
   }
 }

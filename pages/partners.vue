@@ -14,8 +14,8 @@
               :key="`project-${i}`"
               :project="project"
               :activePartnerUID="activePartnerUID"
-              @partner-mouseenter="onPartnerMouseenter"
-              @partner-mouseleave="onPartnerMouseleave"
+              @partner-mouseenter="uid => activePartnerUID = uid"
+              @partner-mouseleave="activePartnerUID = null"
             />
           </div>
         </div>
@@ -47,14 +47,6 @@ export default {
   },
   mounted() {
     this.$store.commit('SET_THEME', getTheme(this.$route))
-  },
-  methods: {
-    onPartnerMouseenter(partnerUID) {
-      this.activePartnerUID = partnerUID
-    },
-    onPartnerMouseleave() {
-      this.activePartnerUID = null
-    }
   },
   async asyncData({ $prismic, error, store }) {
     const response = await $prismic.api.getSingle('partners_page')
