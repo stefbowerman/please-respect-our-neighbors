@@ -9,7 +9,7 @@
     <span
       class="text"
       v-text="text"
-      @click="show = !show"
+      @click="onTextClick"
     />
 
     <transition
@@ -60,11 +60,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import _clamp from 'lodash/clamp'
 import SvgDragger from '~/assets/svg/dragger.svg'
 
 const PREVIEW_PADDING = 100 // How much space between the preview and the edge of the screen
-const PREVIEW_INITIAL_HEIGHT = 200
-const PREVIEW_INITIAL_WIDTH = 300
+const PREVIEW_BASE_HEIGHT = 200
+const PREVIEW_BASE_WIDTH = 300
 const PREVIEW_FRAME_HEIGHT = 800
 const ASPECT_RATIO = (2/3)
 
@@ -91,8 +93,10 @@ export default {
       show: false,
       ready: false,
       iframeLoaded: false,
-      previewHeight: PREVIEW_INITIAL_HEIGHT,
-      previewWidth: PREVIEW_INITIAL_WIDTH
+      previewTop: '',
+      previewLeft: '',
+      previewHeight: PREVIEW_BASE_HEIGHT,
+      previewWidth: PREVIEW_BASE_WIDTH
     }
   },
   created() {
@@ -101,11 +105,16 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'windowWidth'
+    ]),
     showPreviewWindow() {
       return this.show // && this.iframeLoaded
     },
     previewWindowStyle() {
       return {
+        top: `${this.previewTop}`,
+        left: `${this.previewLeft}`,
         height: `${this.previewHeight}px`,
         width: `${this.previewWidth}px`
       }
@@ -117,14 +126,33 @@ export default {
     }
   },
   methods: {
+    setPreviewSize(reset = false) {
+      const w = reset ? PREVIEW_BASE_WIDTH  : _clamp(window.innerWidth/2, PREVIEW_BASE_WIDTH, 600)
+      const h = reset ? PREVIEW_BASE_HEIGHT : w * ASPECT_RATIO
+
+      this.previewWidth  = w
+      this.previewHeight = h
+    },
+    onTextClick({ pageY, clientX}) {
+      const top = pageY + 5
+      const left = clientX + 5
+
+      if (!this.show) {
+        this.previewTop = `${top}px`
+        this.previewLeft = `${(left * 100) / window.innerWidth}%`
+      }
+
+      this.show = !this.show
+    },
     onPreviewWindowEnter() {
+      this.setPreviewSize()
+
       if (this.$refs.content) {
         this.$refs.content.scrollTop = 0
       }
     },
     onPreviewWindowAfterLeave() {
-      this.previewHeight = PREVIEW_INITIAL_HEIGHT
-      this.previewWidth  = PREVIEW_INITIAL_WIDTH
+      this.setPreviewSize(true)
     },
     onIframeLoad() {
       this.ready = true
@@ -139,7 +167,7 @@ export default {
       }
 
       const { x, width } = this.$refs.preview.getBoundingClientRect()
-      const isMin = this.previewWidth < PREVIEW_INITIAL_WIDTH
+      const isMin = this.previewWidth < PREVIEW_BASE_WIDTH
       const isMax = (x + width + PREVIEW_PADDING) > window.innerWidth
 
       if ((isMin && deltaX < 0) || (isMax && deltaX > 0)) {
@@ -158,23 +186,28 @@ export default {
         this.previewWidth   = this.previewHeight * (1 / ASPECT_RATIO)
       }
     }
+  },
+  watch: {
+    windowWidth() {
+      this.show = false
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .previewer {
-  position: relative;
+
 }
 
 .text {
   transition: color 250ms ease-out;
 
   .is-ready & {
-    cursor: pointer;
+    cursor: pointer;   
   }
 
-  .previewer:hover &,
+  .previewer.is-ready:hover &,
   .previewer.is-active & {
     color: $white;
     transition: color 150ms ease-out;
@@ -230,10 +263,18 @@ export default {
   background-color: $red;
   color: $white;
   font-size: 65px;
+  line-height: 1.1;
   font-weight: $font-weight-normal;
 
-  ::v-deep p + p {
-    margin-top: 1em;
+  ::v-deep {
+    a {
+      color: $white;
+      text-decoration: underline;
+    }
+
+    p + p {
+      margin-top: 1em;
+    }
   }
 }
 
@@ -272,8 +313,11 @@ export default {
   opacity: 0;
 }
 
-.preview-window-enter-active,
+.preview-window-enter-active {
+  transition: opacity 0.4s cubic-bezier(0.46, 0.44, 0.28, 0.93)  
+}
+
 .preview-window-leave-active {
-  transition: opacity 0.5s $easing-ease-out-quart;
+  transition: opacity 0.75s cubic-bezier(0.54, 0.46, 0.04, 0.96);
 }
 </style>

@@ -4,6 +4,7 @@
       <PartnersTitle
         :text="`${$prismic.asText(project.title)}.`"
         :url="projectPreviewUrl"
+        :content="$prismic.asHtml(project.long_description)"
       />
       <span v-text="`${$prismic.asText(project.description)}.`" />
       <span
@@ -38,6 +39,7 @@
 
 <script>
 import _get from 'lodash/get'
+import { getUrl } from '~/utils/prismic'
 
 import PartnersTitle from '~/components/partners/PartnersTitle'
 
@@ -64,7 +66,7 @@ export default {
       return `${d.getFullYear()}.`
     },
     projectPreviewUrl() {
-      return this.project.website_url && this.project.website_url.link_type === 'Web' ? this.project.website_url.url : null
+      return getUrl(this.project.website_url)
     },
     codedDetails() {
       if (!this.project.body) return null
@@ -85,7 +87,7 @@ export default {
   },
   methods: {
     getPartnerUrl({ website_url }) {
-      return website_url && website_url.link_type === 'Web' ? website_url.url : null
+      return getUrl(website_url)
     }
   }
 }
