@@ -61,9 +61,9 @@ export default {
   },
   methods: {
     setHeight() {
-      const rect = this.$el.getBoundingClientRect()
+      const { height } = this.$el.getBoundingClientRect()
       
-      this.height = rect.height
+      this.height = height
     }
   },
   watch: {

@@ -41,6 +41,7 @@ import ExhibitedProjectSliceImageTextBox from '~/components/exhibitedProject/sli
 import ExhibitedProjectSliceTextBox from '~/components/exhibitedProject/slices/TextBox'
 import ExhibitedProjectSliceVideo from '~/components/exhibitedProject/slices/Video'
 import ExhibitedProjectSliceStatement from '~/components/exhibitedProject/slices/Statement'
+import ExhibitedProjectSliceFullBleedImage from '~/components/exhibitedProject/slices/FullBleedImage'
 
 export default {
   components: {
@@ -52,7 +53,8 @@ export default {
     ExhibitedProjectSliceImageTextBox,
     ExhibitedProjectSliceTextBox,
     ExhibitedProjectSliceVideo,
-    ExhibitedProjectSliceStatement
+    ExhibitedProjectSliceStatement,
+    ExhibitedProjectSliceFullBleedImage
   },
   props: {
     slice: {
@@ -163,7 +165,7 @@ export default {
 .exhibited-project-slice__contain {
   position: relative;
   z-index: 1;
-  padding-top: calc(var(--page-title-height) + 40px);
+  padding-top: unquote('max(calc(var(--page-title-height) + 40px), 200px)');
   padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
   padding-bottom: unquote('max(40px, var(--caption-safe-space))');  
 
