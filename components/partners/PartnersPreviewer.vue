@@ -208,13 +208,10 @@ export default {
   }
 
   .previewer.is-ready:hover &,
-  .previewer.is-active & {
+  // .is-active class is set on the parent component
+  .is-active .previewer & {
     color: $white;
     transition: color 150ms ease-out;
-  }
-
-  .previewer:hover & {
-    transition-duration: 400ms; // Make up for some weird lag?
   }
 }
 

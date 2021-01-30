@@ -13,6 +13,7 @@
     />
     <span
       v-else
+      class="text"
       v-text="text"
     />
   </span>
@@ -44,12 +45,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title {  
+.title {
+
+}
+
+.text {
+  cursor: default;
   transition: color 250ms ease-out;
   
-  &.is-active {
+  .is-active & {
     color: $white;
     transition: color 150ms ease-out;
-  }
+  }  
 }
 </style>

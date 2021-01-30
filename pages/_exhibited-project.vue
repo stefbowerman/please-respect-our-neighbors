@@ -63,15 +63,13 @@ export default {
   },
   methods: {
     setCurrentSlice() {
-      const triggerPoint = (window.innerHeight * 0.4) // Slice is ~40% on screen
+      const triggerPoint = window.innerHeight * 0.4 // Slice is ~40% on screen
 
       // Find the slice which straddles the triggerPoint of the screen
       const i = this.$refs.slices.findIndex((slice, j) => {
-        const rect = slice.$el.getBoundingClientRect()
-        const top = rect.top
-        const bottom = rect.bottom
+        const { top, bottom } = slice.$el.getBoundingClientRect()
 
-        return rect.top < triggerPoint && rect.bottom >= triggerPoint
+        return top < triggerPoint && bottom >= triggerPoint
       })
 
       // i can be -1 if none found

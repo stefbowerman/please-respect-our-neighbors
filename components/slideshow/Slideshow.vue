@@ -203,7 +203,7 @@ export default {
   },
   computed: {
     slideCount() {
-      return this.$slots.default.filter(({ tag }) => tag && tag.match(`^vue-component-\\d+-${this.slideTagName}$`) !== null).length || 0
+      return Array.isArray(this.$slots.default) && this.$slots.default.filter(({ tag }) => tag && tag.match(`^vue-component-\\d+-${this.slideTagName}$`) !== null).length || 0
     },
     hasArrows() {
       let flag = false

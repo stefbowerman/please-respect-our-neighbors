@@ -40,6 +40,7 @@ import ExhibitedProjectSliceImageGallery from '~/components/exhibitedProject/sli
 import ExhibitedProjectSliceImageTextBox from '~/components/exhibitedProject/slices/ImageTextBox'
 import ExhibitedProjectSliceTextBox from '~/components/exhibitedProject/slices/TextBox'
 import ExhibitedProjectSliceVideo from '~/components/exhibitedProject/slices/Video'
+import ExhibitedProjectSliceStatement from '~/components/exhibitedProject/slices/Statement'
 
 export default {
   components: {
@@ -50,7 +51,8 @@ export default {
     ExhibitedProjectSliceImageGallery,
     ExhibitedProjectSliceImageTextBox,
     ExhibitedProjectSliceTextBox,
-    ExhibitedProjectSliceVideo
+    ExhibitedProjectSliceVideo,
+    ExhibitedProjectSliceStatement
   },
   props: {
     slice: {
@@ -181,6 +183,11 @@ export default {
   
   @include bp-up(lg) {
     height: 100vh;
+
+    .exhibited-project-slice.statement & {
+      height: auto;
+      min-height: 100vh;
+    }
   }
 }
 

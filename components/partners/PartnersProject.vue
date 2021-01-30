@@ -6,7 +6,7 @@
         :url="projectPreviewUrl"
         :content="$prismic.asHtml(project.long_description)"
       />
-      <span v-text="`${$prismic.asText(project.description)}.`" />
+      <span v-text="`${$prismic.asText(project.description).trim()}.`" />
       <span
         v-if="projectYear"
         v-text="projectYear"
@@ -73,9 +73,10 @@ export default {
 
       const titles = this.project.body.map(detail => {
         const t = this.$prismic.asText(_get(detail, 'primary.detail_title', []))
-        let truncated = t.split(' ').splice(0, 9).join(' ') // Grab the first couple words 
+        let truncated = t.split(' ').splice(0, 9).join(' ').trim() // Grab the first couple words 
+            truncated = truncated.replace(/([.,\/#!$%\^&\*;:{}=\-_`~()\]\[])+$/g, "") // remove any trailing punctuation
 
-        if (truncated.length && truncated.charAt(truncated.length - 1) != '.') {
+        if (truncated.length) {
           truncated += '.'
         }
 
@@ -94,6 +95,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.partners-project {
+  span,
+  ::v-deep span {
+    margin-right: -0.07em; // Fix for adjacent span element gaps
+  }
+}
 .main {
   font-weight: $font-weight-medium;
 }

@@ -101,7 +101,7 @@ main {
   color: var(--background-color);
 }
 
-// Text sixes
+// Text sizes
 .text-massive {
   @include text-massive
 }
@@ -120,4 +120,8 @@ main {
 
 .text-large {
   @include text-large;
+}
+
+.text-statement {
+  @include text-statement;
 }
