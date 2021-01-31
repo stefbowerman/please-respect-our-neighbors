@@ -28,11 +28,21 @@ export default {
 
 <style lang="scss" scoped>
 .text-statement {
-  margin-top: 50px;
+  padding-left: 12px;
+  padding-right: 12px;
+
+  @include bp-up(lg) {
+    margin-top: 50px;
+    padding: 0;
+  }
 
   ::v-deep {
     p {
-      text-indent: 1.5;
+      text-indent: 1em;
+
+      @include bp-up(md) {
+        text-indent: 1.5em;
+      }
     }
 
     p + p {

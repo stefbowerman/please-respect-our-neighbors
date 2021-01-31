@@ -18,8 +18,9 @@ $dark-gradient:  linear-gradient(0deg, $dark-gradient-bottom, $dark-gradient-top
 $light-gradient: linear-gradient(0deg, $light-gradient-bottom, $light-gradient-top);
 $red-gradient:   linear-gradient(0deg, $red, $red);
 
-$font-family-primary:   'Swiss 721', 'Helvetica', sans-serif;
+$font-family-primary:   'Helvetica', sans-serif;
 $font-family-secondary: 'Roboto', sans-serif;
+$font-family-tertiary:  'JHA Times Now', serif;
 
 $font-size-base: 1.3125rem; // 21px @ 16px root
 $line-height-base: (25/21);

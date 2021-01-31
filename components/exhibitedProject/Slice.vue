@@ -165,7 +165,8 @@ export default {
 .exhibited-project-slice__contain {
   position: relative;
   z-index: 1;
-  padding-top: unquote('max(calc(var(--page-title-height) + 40px), 200px)');
+  // padding-top: unquote('max(calc(var(--page-title-height) + 40px), 200px)');
+  padding-top: 200px;
   padding-bottom: 40px; // Random number...something reasonable in case there's no caption  
   padding-bottom: unquote('max(40px, var(--caption-safe-space))');  
 

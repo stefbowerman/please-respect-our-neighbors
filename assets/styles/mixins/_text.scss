@@ -141,12 +141,18 @@
 }
 
 @mixin text-statement {
-  font-size: 45px;
-  line-height: 1.1;
+  font-family: $font-family-tertiary;
+  font-size: 36px;
+  line-height: 1.15;
   text-transform: none;
 
+  @include bp-up(sm) {
+    font-size: 45px;
+    line-height: 1.05;
+  }
+
   @include bp-up(md) {
-    font-size: 4.2vw;
+    font-size: 5vw;
   }
 
   @include bp-up(xxl) {
