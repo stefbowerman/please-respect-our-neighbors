@@ -144,6 +144,7 @@
   font-family: $font-family-tertiary;
   font-size: 36px;
   line-height: 1.15;
+  letter-spacing: -0.015em;
   text-transform: none;
 
   @include bp-up(sm) {
@@ -153,6 +154,7 @@
 
   @include bp-up(md) {
     font-size: 5vw;
+    letter-spacing: -0.02em;
   }
 
   @include bp-up(xxl) {
