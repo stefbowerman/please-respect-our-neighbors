@@ -31,12 +31,28 @@ export default {
   padding-left: 12px;
   padding-right: 12px;
 
+  &, 
+  ::v-deep a {
+    color: $red;
+  }  
+  
+  .is-accented & {
+    &, 
+    ::v-deep a {
+      color: $black;
+    }
+  }
+
   @include bp-up(lg) {
     margin-top: 50px;
     padding: 0;
   }
 
   ::v-deep {
+    a {
+      border-bottom: 1px solid;
+    }
+
     p {
       text-indent: 1em;
 

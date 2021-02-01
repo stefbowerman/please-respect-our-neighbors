@@ -118,14 +118,15 @@ export default {
       return [
         'exhibited-project-slice',
         _kebabCase(this.slice.slice_type),
-        { 'is-ready': this.ready }
+        { 'is-ready': this.ready },
+        { 'is-accented': this.showAccentBg }
       ]
     },
     sliceComponentName() {
       return `ExhibitedProjectSlice${this.slice.slice_type.split('_').map(t => _capitalize(t)).join('')}` // 'zoom_image' => 'ExhibitedProjectSliceZoomImage'
     },
     showAccentBg() {
-     return _get(this.slice, 'primary.accent_background', false)
+      return _get(this.slice, 'primary.accent_background', false)
     },
     containStyle() {
       let s = {}
