@@ -1,0 +1,22 @@
+input:focus {
+  outline: none;
+}
+
+[type="tel"],
+[type="url"],
+[type="email"],
+[type="number"],
+[type="text"],
+[type="date"] {
+  display: block;
+  width: 100%;
+  padding: 3px 0;
+  border: 2px solid var(--text-color);
+  border-width: 0 0 2px;
+  background-color: transparent;
+  appearance: none;
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
+}

@@ -11,7 +11,8 @@ export const state = () => ({
     exhibitedProjectUID: '',
     faviconImage: {},
     touchIcon: {},
-    gaMeasurementID:  ''
+    gaMeasurementID:  '',
+    mailchimpFormUrl: ''
   },
   windowWidth: 0,
   theme: '',
@@ -67,10 +68,8 @@ export const actions = {
   },
 
   async QUERY_SETTINGS({ dispatch, commit }) {
-    const response = await this.$prismic.api.getSingle('site_settings')
+    const { data } = await this.$prismic.api.getSingle('site_settings')
     
-    const data = response.data
-
     const settings = {
       title: this.$prismic.asText(data.title),
       description: this.$prismic.asText(data.description),
@@ -79,7 +78,8 @@ export const actions = {
       exhibitedProjectUID: _get(data, 'exhibited_project.uid', ''),
       faviconImage: _get(data, 'favicon_image', {}),
       touchIcon: _get(data, 'touch_icon', {}),
-      gaMeasurementID: this.$prismic.asText(data.ga_measurement_id)
+      gaMeasurementID: data.ga_measurement_id,
+      mailchimpFormUrl: data.mailchimp_form_url
     }
 
     commit('SET_SITE_SETTINGS', settings)

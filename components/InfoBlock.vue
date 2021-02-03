@@ -1,11 +1,22 @@
 <template>
   <div :class="classes">
     <element-highlighter>
-      <h3 class="block__title">
+      <h3
+        v-if="title"
+        class="block__title"
+        >
         <!--  Add extra span for highlight effect-->
         <span v-text="title" />
       </h3>
-      <div class="block__content" v-html="content"></div> 
+      <div class="block__content">
+        <mailing-list
+          v-if="type === 'newsletter'"
+          :action-url="$store.state.siteSettings.mailchimpFormUrl"
+        />
+        <div
+          v-html="content"
+        />
+      </div>
     </element-highlighter>
   </div>
 </template>
@@ -15,10 +26,12 @@ import _get from 'lodash/get'
 import _kebabCase from 'lodash/kebabCase'
 
 import ElementHighlighter from '~/components/ElementHighlighter'
+import MailingList from '~/components/MailingList'
 
 export default {
   components: {
-    ElementHighlighter
+    ElementHighlighter,
+    MailingList
   },  
   props: {
     type: {
@@ -50,26 +63,7 @@ export default {
   text-align: center;
   word-break: break-word;
 
-  &--description,
-  &--text,
-  &--links {
-    @include text-big;
-
-    @include bp-down(md) {
-      font-size: 18px;
-      line-height: 22px;
-    }
-  }
-
   &--contact {
-    // @TODO - Make this scale?
-    @include text-large;
-
-    @include bp-down(md) {
-      font-size: 13px;
-      line-height: 17px;
-    }
-
     ::v-deep p + p {
       margin-top: 16px;
 
@@ -106,8 +100,8 @@ export default {
 }
 
 .block__title {
-  margin-bottom: 3px;
-  @include text-huge;
+  margin-bottom: 13px;
+  @include text-title;
 
   @include bp-down(md) {
     font-size: 27px;
@@ -116,6 +110,24 @@ export default {
 }
 
 .block__content {
+  @include text-subtitle;
+}
 
+.mailing-list {
+  text-align: center;
+
+  ::v-deep form {
+    width: 80%;
+    margin: 0.5em auto;    
+  }
+
+  ::v-deep input[type="email"] {
+    text-align: center;
+    text-transform: uppercase;
+
+    @include bp-up(lg) {
+      border-bottom-width: 3px;
+    }
+  }
 }
 </style>

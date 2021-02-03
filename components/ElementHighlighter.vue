@@ -36,10 +36,13 @@ export default {
   watch: {
     hoveredEl(newEl, oldEl) {
       if (newEl && newEl !== this.$el) {
-        this.boxTop = newEl.offsetTop
-        this.boxLeft = newEl.offsetLeft
-        this.boxWidth = newEl.offsetWidth
-        this.boxHeight = newEl.offsetHeight
+        const parentRect = this.$el.getBoundingClientRect()
+        const { top, x, height, width } = newEl.getBoundingClientRect()
+
+        this.boxTop = top - parentRect.top
+        this.boxLeft = x - parentRect.x
+        this.boxHeight = height
+        this.boxWidth = width
       }
     }
   },  
