@@ -12,17 +12,15 @@
 </template>
 
 <script>
-import getTheme from '~/utils/getTheme'
+import pageMixin from '~/mixins/page'
 
 export default {
+  mixins: [pageMixin],
   data() {
     return {
       images: [],
       selectedImageIndex: 0
     }
-  },  
-  mounted() {
-    this.$store.commit('SET_THEME', getTheme(this.$route))
   },
   created() {
     // Get a random index

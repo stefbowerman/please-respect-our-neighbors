@@ -26,8 +26,8 @@
 import _get from 'lodash/get'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
+import pageMixin from '~/mixins/page'
 import { stripTags } from '~/utils/tools'
-import getTheme from '~/utils/getTheme'
 
 import PageTitle from '~/components/PageTitle'    
 import ExhibitedProjectSlice from '~/components/exhibitedProject/Slice'
@@ -37,6 +37,7 @@ export default {
     PageTitle,
     ExhibitedProjectSlice
   },
+  mixins: [pageMixin],
   data() {
     return {
       title: '',
@@ -47,8 +48,6 @@ export default {
     }
   },
   mounted() {
-    this.$store.commit('SET_THEME', getTheme(this.$route))
-
     this.setCurrentSlice()
 
     this.throttledOnScroll = _throttle(this.onScroll, 100)

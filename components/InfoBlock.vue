@@ -64,6 +64,12 @@ export default {
   word-break: break-word;
 
   &--contact {
+    .block__content {
+      @include bp-down(xs) {
+        font-size: 13px;
+        line-height: (16px/13px);
+      }
+    }
     ::v-deep p + p {
       margin-top: 16px;
 
@@ -110,15 +116,19 @@ export default {
 }
 
 .block__content {
-  @include text-subtitle;
+  @include text-subtitle;  
 }
 
 .mailing-list {
   text-align: center;
 
   ::v-deep form {
-    width: 80%;
-    margin: 0.5em auto;    
+    margin: 0.5em auto;
+    width: 90%;
+
+    @include bp-up(sm) {
+      width: 80%;  
+    }
   }
 
   ::v-deep input[type="email"] {

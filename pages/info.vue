@@ -33,7 +33,7 @@
 import _get from 'lodash/get'
 import _kebabCase from 'lodash/kebabCase'
 import { stripTags } from '~/utils/tools'
-import getTheme from '~/utils/getTheme'
+import pageMixin from '~/mixins/page'
 
 import PageTitle from '~/components/PageTitle'
 import InfoBlock from '~/components/InfoBlock'
@@ -43,6 +43,7 @@ export default {
     PageTitle,
     InfoBlock
   },
+  mixins: [pageMixin],
   data() {
     return {
       title: '',
@@ -50,9 +51,6 @@ export default {
       meta: {},
       slices: []
     }
-  },
-  mounted() {
-    this.$store.commit('SET_THEME', getTheme(this.$route))
   },
   async asyncData({ $prismic }) {
     const response = await $prismic.api.getSingle('about_page')

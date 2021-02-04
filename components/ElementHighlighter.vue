@@ -61,6 +61,8 @@ export default {
   },
   methods: {
     onMouseenter(e) {
+      if (this.$store.state.isTouch) return
+        
       this.hovered = true
       this.hoveredEl = e.target
     },

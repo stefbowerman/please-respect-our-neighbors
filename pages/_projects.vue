@@ -32,8 +32,8 @@ import _get from 'lodash/get'
 import _uniq from 'lodash/uniq'
 import _throttle from 'lodash/throttle'
 import _clamp from 'lodash/clamp'
+import pageMixin from '~/mixins/page'
 import { stripTags } from '~/utils/tools'
-import getTheme from '~/utils/getTheme'
 import { easeInOutCubic } from '~/utils/easings'
 
 import PageTitle from '~/components/PageTitle'   
@@ -44,6 +44,7 @@ export default {
     PageTitle,
     Project
   },
+  mixins: [pageMixin],
   data() {
     return {
       title: '',
@@ -60,8 +61,6 @@ export default {
     }
   },  
   mounted() {
-    this.$store.commit('SET_THEME', getTheme(this.$route))
-
     if (this.selectedProjectUID) {
       const projectIndex = this.projects.findIndex(({ uid }) => uid === this.selectedProjectUID)
 

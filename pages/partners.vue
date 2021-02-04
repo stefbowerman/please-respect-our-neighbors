@@ -27,7 +27,7 @@
 <script>
 import _get from 'lodash/get'
 import { stripTags } from '~/utils/tools'
-import getTheme from '~/utils/getTheme'
+import pageMixin from '~/mixins/page'
 
 import PageTitle from '~/components/PageTitle'
 import PartnersProject from '~/components/partners/PartnersProject'
@@ -37,6 +37,7 @@ export default {
     PageTitle,
     PartnersProject
   },
+  mixins: [pageMixin],
   data() {
     return {
       title: '',
@@ -44,9 +45,6 @@ export default {
       meta: {},
       activePartnerUID: null
     }
-  },
-  mounted() {
-    this.$store.commit('SET_THEME', getTheme(this.$route))
   },
   async asyncData({ $prismic, error, store }) {
     const response = await $prismic.api.getSingle('partners_page')
