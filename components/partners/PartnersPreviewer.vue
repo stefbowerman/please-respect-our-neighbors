@@ -31,8 +31,8 @@
           :style="previewFrameStyle"
         >
           <iframe
-            v-if="url"
-            :src="url"
+            v-if="parsedUrl"
+            :src="parsedUrl"
             @load="onIframeLoad"
             @onload="onIframeLoad"
           />
@@ -123,6 +123,10 @@ export default {
       return {
         transform: `scale(${this.previewHeight / PREVIEW_FRAME_HEIGHT})`
       }
+    },
+    parsedUrl() {
+      // https://domainname.com => //domainname.com - avoid mixed content warnings
+      return (this.url && `//${this.url.replace(/(^\w+:|^)\/\//, '')}`) || null
     }
   },
   methods: {
@@ -133,7 +137,7 @@ export default {
       this.previewWidth  = w
       this.previewHeight = h
     },
-    onTextClick({ pageY, clientX}) {
+    onTextClick({ pageY, clientX }) {
       const top = pageY + 5
       const left = clientX + 5
 
@@ -208,6 +212,7 @@ export default {
   }
 
   .previewer.is-ready:hover &,
+  .previewer.is-active &,
   // .is-active class is set on the parent component
   .is-active .previewer & {
     color: $white;
@@ -232,6 +237,7 @@ export default {
 .preview-frame {
   height: 800px;
   width: 1200px;
+  background-color: $red;
   transform-origin: top left;
   transform: scale(0.25);
 
@@ -257,7 +263,7 @@ export default {
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
   padding: 100px;
-  background-color: $red;
+  // background-color: $red;
   color: $white;
   font-size: 65px;
   line-height: 1.1;
