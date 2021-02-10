@@ -49,6 +49,7 @@ import Plyr from 'plyr'
 import _padStart from 'lodash/padStart'
 import _round from 'lodash/round'
 import _throttle from 'lodash/throttle'
+import _get from 'lodash/get'
 import { contain } from 'intrinsic-scale'
 
 import SvgSlideArrow from '~/assets/svg/slide-arrow.svg'
@@ -128,58 +129,72 @@ export default {
       this.slideshowDisabled = true
     }
 
-    // Add a mouseenter, leave and mouse listener to each slide's interactive area
-    // Nuxt is mad if we don't assign to a var
-    const evts = [...this.swiper.el.querySelectorAll('.slide-content-interactive-area')].map(el => {
-      el.addEventListener('mouseenter', e => this.slideContentHovered = true)
-      el.addEventListener('mouseleave', e => this.slideContentHovered = false)
+    this.swiper.slides.forEach($slide => {
+      const $interactiveArea = $slide.querySelector('.slide-content-interactive-area')
+      const $plyr = $slide.querySelector('.plyr')
 
-      const img = el.querySelector('img')
+      if ($interactiveArea) {
+        $interactiveArea.addEventListener('mouseenter', e => this.slideContentHovered = true)
+        $interactiveArea.addEventListener('mouseleave', e => this.slideContentHovered = false)
 
-      img && img.addEventListener('click', this.onSlideContentImageClick)
-    })
+        const img = $interactiveArea.querySelector('img')
 
-    // Initialize all the players
-    this.plyrs = [...this.swiper.el.querySelectorAll('.plyr')].map(el => {
-      const p = new Plyr(el, {
-        controls: ['play', 'progress'],
-        disableContextMenu: false,
-        fullscreen: {
-          enabled: false
-        },
-        tooltips: {
-          controls: false,
-          seek: false
+        img && img.addEventListener('click', this.onSlideContentImageClick)
+      }
+
+      if ($plyr) {
+        const p = new Plyr($plyr, {
+          controls: ['play', 'progress'],
+          disableContextMenu: false,
+          fullscreen: {
+            enabled: false
+          },
+          tooltips: {
+            controls: false,
+            seek: false
+          }
+        })
+
+        p.on('ready', e => {     
+          const player = e.detail.plyr;
+          const controls = player.elements.controls
+
+          player.pip = false // Turn off
+
+          if (controls) {
+            controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)
+            controls.addEventListener('mouseleave', e => this.videoControlsHovered = false)
+          }
+        })
+
+        // Need the height and width so that we can properly size the video
+        p.on('loadedmetadata', e => {
+          $plyr.dataset.height = $plyr.videoHeight
+          $plyr.dataset.width  = $plyr.videoWidth
+
+          this.onResize()
+
+          p.elements.container.classList.add('is-loaded')
+        })
+
+        p.on('ended', e => {
+          p.currentTime = 0
+          p.toggleControls(true)
+        })
+
+        const $range = _get(p, 'elements.inputs.seek')
+
+        if ($range) {
+          $range.addEventListener('touchmove', e => {
+            e.stopPropagation() // Stop bubbling so that the slider doesn't move when we drag the range input
+          })
         }
-      })
 
-      p.on('ready', e => {     
-        const player = e.detail.plyr;
-        const controls = player.elements.controls
+        // Attach it to the DOM element so we can reference it later
+        $slide.plyr = p
 
-        player.pip = false // Turn off
-
-        if (controls) {
-          controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)
-          controls.addEventListener('mouseleave', e => this.videoControlsHovered = false)
-        }
-      })
-
-      // Need the height and width so that we can properly size the video
-      p.on('loadedmetadata', e => {
-        el.dataset.height = el.videoHeight
-        el.dataset.width  = el.videoWidth
-        this.onResize()
-
-        p.elements.container.classList.add('is-loaded')
-      })      
-
-      p.on('ended', e => {
-        p.currentTime = 0
-        p.toggleControls(true)
-      })
-
-      return p
+        this.plyrs.push(p)
+      }
     })
 
     this.throttledResize = _throttle(this.onResize, 250)  
@@ -198,6 +213,9 @@ export default {
     fullyVisible(newViz, oldViz) {
       if (newViz === false) {
         this.pausePlyrs()
+      }
+      else {
+        this.playCurrentSlidePlyr()        
       }
     }
   },
@@ -263,6 +281,13 @@ export default {
     pausePlyrs() {
       this.plyrs.forEach(p => p.pause())
     },
+    playCurrentSlidePlyr() {
+      const $currentSlide = this.swiper.slides[this.swiper.realIndex]
+
+      if ($currentSlide.plyr) {
+        $currentSlide.plyr.play()
+      }
+    },
     prev() {
       this.swiper.slidePrev()
     },
@@ -275,6 +300,7 @@ export default {
     },
     onSlideChangeTransitionEnd() {
       this.setProgress()
+      this.playCurrentSlidePlyr()
     },
     onSlideContentImageClick(e) {
       if (this.$store.state.isTouch) return

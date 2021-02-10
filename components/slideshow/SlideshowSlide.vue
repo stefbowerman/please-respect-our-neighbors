@@ -13,7 +13,6 @@
               class="plyr slide-media"
               playsinline
               :controls="item.video_controls !== false /* can be null which should default to true */"
-              autoplay="true"
               loop="true"
             >
               <source
