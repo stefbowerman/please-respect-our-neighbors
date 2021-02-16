@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import _clamp from 'lodash/clamp'
 import SvgDragger from '~/assets/svg/dragger.svg'
 
@@ -69,6 +69,8 @@ const PREVIEW_BASE_HEIGHT = 200
 const PREVIEW_BASE_WIDTH = 300
 const PREVIEW_FRAME_HEIGHT = 800
 const ASPECT_RATIO = (2/3)
+
+let uuid = 0
 
 export default {
   components: {
@@ -96,9 +98,15 @@ export default {
       previewTop: '',
       previewLeft: '',
       previewHeight: PREVIEW_BASE_HEIGHT,
-      previewWidth: PREVIEW_BASE_WIDTH
+      previewWidth: PREVIEW_BASE_WIDTH,
+      previewTransformX: 0,
+      previewTransformY: 0
     }
   },
+  beforeCreate() {
+    this.uuid = uuid.toString()
+    uuid++
+  },  
   created() {
     if (!this.url) {
       this.ready = true
@@ -106,7 +114,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'windowWidth'
+      'windowWidth',
+      'visiblePartnerPreviewUUID'
     ]),
     showPreviewWindow() {
       return this.show // && this.iframeLoaded
@@ -116,7 +125,8 @@ export default {
         top: `${this.previewTop}`,
         left: `${this.previewLeft}`,
         height: `${this.previewHeight}px`,
-        width: `${this.previewWidth}px`
+        width: `${this.previewWidth}px`,
+        transform: `translate(${this.previewTransformX}, ${this.previewTransformY})`
       }
     },
     previewFrameStyle() {
@@ -130,6 +140,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setVisiblePreviewUUID: 'SET_VISIBLE_PARTNER_PREVIEW_UUID'
+    }),
     setPreviewSize(reset = false) {
       const w = reset ? PREVIEW_BASE_WIDTH  : _clamp(window.innerWidth/2, PREVIEW_BASE_WIDTH, 600)
       const h = reset ? PREVIEW_BASE_HEIGHT : w * ASPECT_RATIO
@@ -137,16 +150,29 @@ export default {
       this.previewWidth  = w
       this.previewHeight = h
     },
-    onTextClick({ pageY, clientX }) {
-      const top = pageY + 5
-      const left = clientX + 5
+    hide() {
+      this.setVisiblePreviewUUID(null)
+    },
+    unhide() {
+      this.setVisiblePreviewUUID(this.uuid)
+    },
+    onTextClick({ clientX, pageY, clientY }) {
+      if (this.show) {
+        this.hide()
+      }
+      else {
+        const top = pageY + 5
+        const left = clientX + 5
+        const screenPositionX = clientX / window.innerWidth
+        const screenPositionY = clientY / window.innerHeight
 
-      if (!this.show) {
         this.previewTop = `${top}px`
         this.previewLeft = `${(left * 100) / window.innerWidth}%`
-      }
+        this.previewTransformX = screenPositionX > 0.5 ? '-100%' : '0%'
+        this.previewTransformY = screenPositionY > 0.5 ? '-100%' : '0%'        
 
-      this.show = !this.show
+        this.unhide()
+      }
     },
     onPreviewWindowEnter() {
       this.setPreviewSize()
@@ -193,7 +219,10 @@ export default {
   },
   watch: {
     windowWidth() {
-      this.show = false
+      this.hide()
+    },
+    visiblePartnerPreviewUUID() {
+      this.show = this.visiblePartnerPreviewUUID === this.uuid
     }
   }
 }
@@ -243,7 +272,7 @@ export default {
 
   .is-dragging & {
     pointer-events: none;
-  }  
+  }
 
   iframe {
     height: 100%;

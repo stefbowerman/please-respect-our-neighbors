@@ -21,7 +21,8 @@ export const state = () => ({
   isTouch: false,
   isDragging: false,
   indexViewed: false,
-  projects: []
+  projects: [],
+  visiblePartnerPreviewUUID: null
 })
 
 // Define mutations
@@ -52,6 +53,9 @@ export const mutations = {
   },
   SET_PROJECTS(state, data) {
     state.projects = data
+  },
+  SET_VISIBLE_PARTNER_PREVIEW_UUID(state, data) {
+    state.visiblePartnerPreviewUUID = data
   }
 }
 
