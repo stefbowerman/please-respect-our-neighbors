@@ -50,7 +50,7 @@ export default {
       links: [
         {
           title: 'Exhibited Project',
-          url: '/exhibited-project'
+          url: '/exhibited'
         },
         {
           title: 'Current Partners',

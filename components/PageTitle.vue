@@ -101,35 +101,10 @@ export default {
   margin-left: auto;
   margin-right: auto;
   max-width: 20em;
-
-  // @include bp-up(lg) {
-  //   .route-projects &,
-  //   .route-projects-uid &,
-  //   .route-exhibited-project & {
-  //     font-size: clamp(27px, calc(4px + 3.3vw), 70px);
-  //   }
-  //   .route-partners & {
-  //     font-size: clamp(27px, calc(4px + 4.2vw), 80px);
-  //   }
-  // }
 }
 
 .subtitle {
   @include text-subtitle;
-  margin: 2px 0 0;
-
-  // @include bp-up(lg) {
-  //   .route-projects &,
-  //   .route-projects-uid &,
-  //   .route-exhibited-project & {
-  //     // Same as text-subtitle but just make sure the lower value is smaller on this route to match the title
-  //     font-size: clamp(15px, calc(5px + 2.25vw), 46px);
-  //   }
-
-  //   .route-partners & {
-  //     // Same as text-subtitle but just make sure the lower value is smaller on this route to match the title
-  //     font-size: clamp(15px, calc(5px + 2.15vw), 46px);
-  //   }    
-  // }  
+  margin: 2px 0 0; 
 }
 </style>

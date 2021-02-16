@@ -93,8 +93,8 @@ export default {
 
   .route-index &,
   .route-info &,
-  .route-exhibited-project &,
-  .route-exhibited-project-uid & {
+  .route-exhibited &,
+  .route-exhibited-uid & {
     background-image: $light-gradient;
   }
 

@@ -9,12 +9,12 @@
         <div class="secondary-column">
           <nav>
             <div class="links">
-              <header-link to="/" text="Please Respect Our Neighbors Inc."/>
+              <header-link to="/" text="Please Respect Our Neighbors Inc." />
               <div class="break" />
-              <header-link to="/projects" text="Accumulated Projects"/>
-              <header-link to="/info" text="Office Info"/>
-              <header-link to="/partners" text="Current Partners"/>
-              <header-link to="/exhibited-project" text="Exhibited Project"/>
+              <header-link to="/projects" text="Accumulated Projects" />
+              <header-link to="/info" text="Office Info" />
+              <header-link to="/partners" text="Current Partners" />
+              <header-link to="/exhibited" text="Exhibited Project" />
             </div>
           </nav>
         </div>
