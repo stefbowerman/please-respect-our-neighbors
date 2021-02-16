@@ -1,5 +1,10 @@
 <template>
-  <div class="video-plyr">
+  <div
+    :class="[
+      'video-plyr',
+      (theme && `theme--${theme}`)
+    ]"
+  >
     <video
       :class="classes"
       :loop="loop"
@@ -41,6 +46,11 @@ export default {
     controls: {
       type: Boolean,
       default: true
+    },
+    theme: {
+      type: String,
+      required: false,
+      validator: t => ['dark', 'red'].includes(t)
     }
   },
   data() {

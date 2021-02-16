@@ -4,12 +4,17 @@
 :root {
   --plyr-range-thumb-height: 15px;
   --plyr-control-spacing: 80px;
+  --plyr-theme-color: var(--text-color)
+}
+
+.theme--red {
+  --plyr-theme-color: #{$red}; 
 }
 
 .plyr--video {
   .plyr__controls {
     padding: 10px 17px;
-    border: 1px solid var(--text-color);
+    border: 1px solid var(--plyr-theme-color);
 
     @include bp-up(md) {
       padding: 23px 30px 22px;
@@ -18,13 +23,13 @@
 
   .plyr__control {
     padding: 0;
-    color: var(--text-color); // so SVGs can pick up with currentColor
+    color: var(--plyr-theme-color); // so SVGs can pick up with currentColor
 
     &.plyr__tab-focus,
     &:hover,
     &[aria-expanded='true'] {
       background: none; // Hide the background that shows on the control icon when hovering
-      color: var(--text-color);
+      color: var(--plyr-theme-color);
     }
   }  
 }
@@ -39,14 +44,14 @@
 .plyr--full-ui.plyr--video input[type='range'] {
 
   &::-webkit-slider-runnable-track {
-    background-color: var(--text-color);
+    background-color: var(--plyr-theme-color);
     background-image: none;
     height: 1px;
   }
 
   &::-webkit-slider-thumb {
     box-shadow: none;
-    background-color: var(--text-color);
+    background-color: var(--plyr-theme-color);
     cursor: grab;
     top: -2px;
   }
@@ -59,14 +64,14 @@
   // Mozilla
   &::-moz-range-track,
   &::-moz-range-progress {
-    background-color: var(--text-color);
+    background-color: var(--plyr-theme-color);
     background-image: none;
     height: 1px;
   }
 
   &::-moz-range-thumb {
     box-shadow: none;
-    background-color: var(--text-color);
+    background-color: var(--plyr-theme-color);
     cursor: grab;
   }
 

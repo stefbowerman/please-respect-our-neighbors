@@ -1,4 +1,4 @@
 <script>
-import Exhibited from '~/pages/_exhibited'
+import Exhibited from '~/templates/_exhibited'
 export default Exhibited
 </script>

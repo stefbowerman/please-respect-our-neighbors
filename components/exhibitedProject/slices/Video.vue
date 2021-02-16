@@ -6,6 +6,7 @@
           v-if="videoUrl"
           :url="videoUrl"
           :autoplay="true"
+          theme="red"
         />
       </div>
     </div>

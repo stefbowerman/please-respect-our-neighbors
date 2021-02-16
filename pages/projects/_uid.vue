@@ -1,4 +1,4 @@
 <script>
-import Projects from '~/pages/_projects'
+import Projects from '~/templates/_projects'
 export default Projects
 </script>
