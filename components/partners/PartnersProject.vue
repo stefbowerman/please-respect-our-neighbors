@@ -2,11 +2,12 @@
   <span class="partners-project">
     <span class="main">
       <PartnersTitle
-        :text="`${$prismic.asText(project.title)}.`"
+        :text="`${$prismic.asText(project.title)}`"
         :url="projectPreviewUrl"
         :content="$prismic.asHtml(project.long_description)"
       />
-      <span v-text="`${$prismic.asText(project.description).trim()}.`" />
+      <span>.</span>
+      <span v-text="`${$prismic.asText(project.description).trim()}`" />
       <span
         v-if="projectYear"
         v-text="projectYear"

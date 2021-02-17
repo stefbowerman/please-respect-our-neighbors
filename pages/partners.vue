@@ -17,6 +17,20 @@
               @partner-mouseenter="uid => activePartnerUID = uid"
               @partner-mouseleave="activePartnerUID = null"
             />
+
+            <div class="wall__footer">
+              <span style="font-weight: 500">
+                <PartnersPreviewer
+                  text="Pleaserespectourneighbors.com"
+                  url="https://pleaserespectourneighbors.com"
+                />.
+                Website development.
+                <PartnersPreviewer
+                  text="Stefan Bowerman"
+                  url="https://stefanbowerman.com"
+                />.
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -31,11 +45,13 @@ import pageMixin from '~/mixins/page'
 
 import PageTitle from '~/components/PageTitle'
 import PartnersProject from '~/components/partners/PartnersProject'
+import PartnersPreviewer from '~/components/partners/PartnersPreviewer'
 
 export default {
   components: {
     PageTitle,
-    PartnersProject
+    PartnersProject,
+    PartnersPreviewer
   },
   mixins: [pageMixin],
   data() {
@@ -126,5 +142,13 @@ export default {
     user-select: none;
     pointer-events: none;
   }
+}
+
+.wall__footer {
+  margin-top: 100px;
+
+  .previewer {
+    display: inline-block;
+  } 
 }
 </style>
