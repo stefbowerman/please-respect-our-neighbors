@@ -3,10 +3,9 @@
     <div class="row">
       <div class="primary-column gutter-less">
         <div class="accent-image">
-          <img
-            v-if="image"
-            :src="image.url"
-            :alt="image.alt"
+          <linkable-image
+            :image="image"
+            :link="imageLink"
           />
         </div>
       </div>
@@ -17,7 +16,12 @@
 <script>
 import _get from 'lodash/get'
 
+import LinkableImage from '~/components/LinkableImage'
+
 export default {
+  components: {
+    LinkableImage
+  },
   props: {
     slice: {
       type: Object,
@@ -28,7 +32,10 @@ export default {
   computed: {
     image() {
       return _get(this.slice, 'primary.image')
-    }
+    },
+    imageLink() {
+      return _get(this.slice, 'primary.image_link')
+    }    
   }
 }
 </script>
@@ -49,7 +56,7 @@ export default {
     padding: 0;
   }
 
-  img {
+  ::v-deep img {
     height: 100%;
     width: 100%;
     object-fit: contain;

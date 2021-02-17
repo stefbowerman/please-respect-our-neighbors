@@ -1,9 +1,8 @@
 <template>
   <div class="image">
-    <img
-      v-if="image"
-      :src="image.url"
-      :alt="image.alt"
+    <linkable-image
+      :link="imageLink"
+      :image="image"
     />
   </div>
 </template>
@@ -11,7 +10,12 @@
 <script>
 import _get from 'lodash/get'
 
+import LinkableImage from '~/components/LinkableImage'
+
 export default {
+  components: {
+    LinkableImage
+  },
   props: {
     slice: {
       type: Object,
@@ -22,6 +26,9 @@ export default {
   computed: {
     image() {
       return _get(this.slice, 'primary.image')
+    },
+    imageLink() {
+      return _get(this.slice, 'primary.image_link')
     }
   }
 }
@@ -33,11 +40,13 @@ export default {
   @include bp-up(md) {
     height: 100%;
 
-    img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }    
+    ::v-deep {
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }      
+    } 
   }
 }
 </style>

@@ -3,19 +3,9 @@
     <div class="row">
       <div class="primary-column">
         <div class="image">
-          <a
-            v-if="slice.primary.image_link.url"
-            :href="slice.primary.image_link.url"
-            :target="slice.primary.image_link.target"
-          >
-            <prismic-image
-              :field="slice.primary.image"
-            />
-          </a>
-
-          <prismic-image
-            v-else
-            :field="slice.primary.image"
+          <linkable-image
+            :link="slice.primary.image_link"
+            :image="slice.primary.image"
           />
         </div>
       </div>
@@ -35,10 +25,12 @@
 import _get from 'lodash/get'
 
 import TextBox from '~/components/TextBox'
+import LinkableImage from '~/components/LinkableImage'
 
 export default {
   components: {
-    TextBox
+    TextBox,
+    LinkableImage
   },
   props: {
     slice: {
@@ -64,23 +56,25 @@ export default {
 .image {
   margin-bottom: 50px;
 
-  img {
-    margin: 0 auto;
-    display: block;
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    object-position: top;
-    border: 1px solid transparent;
+  ::v-deep {
+    img {
+      margin: 0 auto;
+      display: block;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: top;
+      border: 1px solid transparent;
 
-    @include bp-up(lg) {
-      max-height: 450px;
-      height: 100%;
+      @include bp-up(lg) {
+        max-height: 450px;
+        height: 100%;
+      }
     }
-  }
 
-  a:hover img {
-    border-color: var(--link-color);
+    a:hover img {
+      border-color: var(--link-color);
+    }    
   }
 }
 </style>

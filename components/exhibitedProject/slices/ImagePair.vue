@@ -7,20 +7,10 @@
             v-if="firstImage"
             class="first-image"
           >
-            <a
-              v-if="firstImageLink.url"
-              :href="firstImageLink.url"
-              :target="firstImageLink.target"
-            >
-              <prismic-image
-                :field="firstImage"
-              />
-            </a>
-
-            <prismic-image
-              v-else
-              :field="firstImage"
-            />            
+            <linkable-image
+              :link="firstImageLink"
+              :image="firstImage"
+            />           
           </div>
         </div>
         <div class="secondary-column">
@@ -28,19 +18,9 @@
             v-if="secondImage"
             class="second-image"
           >
-            <a
-              v-if="secondImageLink.url"
-              :href="secondImageLink.url"
-              :target="secondImageLink.target"
-            >
-              <prismic-image
-                :field="secondImage"
-              />
-            </a>
-
-            <prismic-image
-              v-else
-              :field="secondImage"
+            <linkable-image
+              :link="secondImageLink"
+              :image="secondImage"
             />            
           </div>
         </div>   
@@ -52,7 +32,12 @@
 <script>
 import _get from 'lodash/get'
 
+import LinkableImage from '~/components/LinkableImage'
+
 export default {
+  components: {
+    LinkableImage
+  },
   props: {
     slice: {
       type: Object,
@@ -84,7 +69,7 @@ export default {
   margin-right: auto;
   text-align: center;
 
-  img {
+  ::v-deep img {
     display: inline-block;
     vertical-align: top;
     border: 1px solid $black; // ?
