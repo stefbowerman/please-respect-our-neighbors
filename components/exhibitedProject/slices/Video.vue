@@ -1,12 +1,19 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    v-intersection-observer="{
+      threshold: 0
+    }"
+    @has-intersected="onHasIntersected"
+  >
     <div class="row">
       <div class="primary-column">
         <video-plyr
           v-if="videoUrl"
           :url="videoUrl"
-          :autoplay="true"
+          :autoplay="false"
           theme="red"
+          ref="video-plyr"
         />
       </div>
     </div>
@@ -32,6 +39,12 @@ export default {
   computed: {
     videoUrl() {
       return _get(this.slice, 'primary.video_file_url.url')
+    }
+  },
+  methods: {
+    onHasIntersected() {
+      const videoPlyr = this.$refs['video-plyr'] 
+      videoPlyr && videoPlyr.play()
     }
   }
 }

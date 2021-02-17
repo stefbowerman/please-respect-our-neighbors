@@ -85,6 +85,11 @@ export default {
         { 'is-loaded': this.isLoaded }
       ]
     }
+  },
+  methods: {
+    play() {
+      this.plyr && this.plyr.play()
+    }
   }
 }
 </script>
