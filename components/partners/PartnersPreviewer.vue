@@ -266,6 +266,7 @@ export default {
 .preview-frame {
   height: 800px;
   width: 1200px;
+  overflow: hidden;
   background-color: $red;
   transform-origin: top left;
   transform: scale(0.25);

@@ -106,11 +106,15 @@ export default {
 
   ::v-deep .simplebar-content-wrapper {
     overflow-x: hidden !important;
-  }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }    
+  } 
 
   &.is-locked ::v-deep .simplebar-content-wrapper {
     overflow-y: hidden !important;
-  }  
+  }
 
   // Need this otherwise the text overflows on top of the border
   ::v-deep .simplebar-mask {

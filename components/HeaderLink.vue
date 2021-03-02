@@ -96,12 +96,26 @@ export default {
   display: inline-block;
   font-size: 16px;
 
-  @include bp-up(xxl) {
-    font-size: $font-size-base;
+  @include bp-up(lg) {
+    font-size: clamp(16px, calc(16px + 0.23vw), $font-size-base);
   }
 
-  @include bp-up(md) {
-    font-size: clamp(16px, calc(16px + 0.23vw), $font-size-base);
+  @include bp-up(xxxl) {
+    font-size: $font-size-base * 0.96;
+  }
+
+  body.no-cssclamp & {
+    @include bp-up(lg) {
+      font-size: 18px;
+    }
+
+    @include bp-up(xxl) {
+      font-size: 19.4px;
+    }
+
+    @include bp-up(xxxl) {
+      font-size: $font-size-base * 0.96;
+    }
   }
 
   a {

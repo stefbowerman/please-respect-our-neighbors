@@ -4,7 +4,12 @@
 :root {
   --plyr-range-thumb-height: 15px;
   --plyr-control-spacing: 80px;
-  --plyr-theme-color: var(--text-color)
+  --plyr-theme-color: var(--text-color);
+}
+
+// For specific routes we update the --text-color var at the body level in the DOM
+body {
+  --plyr-theme-color: var(--text-color); 
 }
 
 .theme--red {

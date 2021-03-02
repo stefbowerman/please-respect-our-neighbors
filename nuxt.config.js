@@ -26,7 +26,12 @@ export default {
   pageTransition: {
     name: 'page',
     mode: '',
+    // Callbacks need to use document.documentElement (<html>) because route transition resets all body classes
+    enter() {
+      window.document.documentElement.classList.add('transition-active')
+    },
     afterEnter(el) {
+      window.document.documentElement.classList.remove('transition-active')
       window.scrollTo(0, 0)
     }
   },   

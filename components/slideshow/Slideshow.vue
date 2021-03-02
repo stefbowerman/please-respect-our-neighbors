@@ -473,7 +473,17 @@ $arrow-slot-width-xxxl: 450px;
   }
 
   @include bp-up(lg) {
-    padding: 74px 32px;
+    padding: 20px 32px;
+
+    @media (min-height: 600px) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+
+    @media (min-height: 800px) {
+      padding-top: 74px;
+      padding-bottom: 74px;
+    }
   }
 
   svg {

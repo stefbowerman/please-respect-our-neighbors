@@ -65,6 +65,18 @@ body.mobile-menu-open {
   overscroll-behavior: none;  
 }
 
+// Any styles that need to be applied while the app is transitioning between routes
+html:not(.transition-active){
+  body.route-index {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+}
+
 a {
   color: $black;
   color: var(--link-color);
@@ -86,9 +98,14 @@ img {
 }
 
 main {
-  min-height: 100vh; // ? @TODO - Do we need this??
+  // min-height: 100vh; // ? @TODO - Do we need this??
   position: relative;
   z-index: $zindex-main;
+
+  body.route-partners & {
+    width: 100vw;
+    overflow-x: hidden;
+  }
 }
 
 ::-moz-selection {

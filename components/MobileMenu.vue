@@ -144,18 +144,27 @@ export default {
 
 nav {
   padding: 0 50px;
-  font-size: 42px; // 47px; - had to make this a little smaller to fit the text without breaking the container
+  font-size: 41px;
   line-height: 1;
   text-align: center;
   font-weight: $font-weight-medium;
   font-family: $font-family-secondary;
 
+  @media (min-width: 370px) {
+    font-size: 43px;
+  }
+
+  @include bp-up(sm) {
+    font-size: 47px;
+  }
+
   a {
     display: block;
 
     & + a {
-      margin-top: 45px;
-      margin-top: clamp(10px, calc(10vh - 27px), 45px);
+      margin-top: 40px;
+      margin-top: clamp(25px, calc(4.5vh), 50px); // For browsers that don't supprt calc + v* units
+      margin-top: clamp(25px, calc(8.5vh - 27px), 50px);
     }
   }
 }

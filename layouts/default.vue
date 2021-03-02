@@ -45,11 +45,16 @@ export default {
     return {
       showMenu: false,
       scrollTop: 0,
-      scrollDirection: 'down'
+      scrollDirection: 'down',
+      cssClampSupport: true
     }
   },
   mounted() {
     this.$store.commit('SET_IS_TOUCH', isTouch())
+
+    if (window.CSS.supports) {
+      this.cssClampSupport = window.CSS.supports('font-size', 'clamp(10px, 10vh, 20px)')
+    }
 
     // Throttle common events
     window.addEventListener('resize', _throttle(this.onResize, 250))
@@ -161,7 +166,11 @@ export default {
 
     if (this.$store.state.isDragging) {
       bodyClasses.push('is-dragging')
-    }     
+    }
+
+    if (!this.cssClampSupport) {
+      bodyClasses.push('no-cssclamp')
+    }
 
     const link = []
     const favicon = this.$store.state.siteSettings.faviconImage
