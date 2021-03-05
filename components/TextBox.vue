@@ -38,7 +38,11 @@ export default {
   props: {
     date: {
       type: String,
-      required: false
+      required: false,
+      validator(d) {
+        // Date looks like "YYYY-MM-DD"
+        return d.split('-').length === 3
+      }
     },
     content: {
       type: String,
@@ -64,10 +68,16 @@ export default {
   computed: {
     formattedDate() {
       if (!this.date) return null
+
+      let [_y, _m, _d] = this.date.split('-')
+
+      _y = parseInt(_y)
+      _m = parseInt(_m)
+      _d = parseInt(_d)
         
-      const d = new Date(this.date)
+      const d     = new Date(_y, _m, _d)
       const day   = d.getDate().toString()
-      const month = (d.getMonth() + 1).toString()
+      const month = (d.getMonth()).toString()
       const year  = d.getFullYear().toString()
 
       return `${day.length === 1 ? `0${day}` : day}<br />${month.length === 1 ? `0${month}` : month}<br />${year}`
