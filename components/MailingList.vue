@@ -1,17 +1,6 @@
 <template>
-  <div
-    :class="[
-      'mailing-list',
-      (state && `state-${state}`)
-    ]"
-  >
-    <form
-      :action="actionUrl"
-      method="GET"
-      novalidate
-      @submit.prevent="onSubmit"
-      ref="form"
-    >
+  <div :class="['mailing-list', state && `state-${state}`]">
+    <form novalidate @submit.prevent="onSubmit" ref="form">
       <input
         type="email"
         name="EMAIL"
@@ -19,121 +8,175 @@
         :disabled="isSubmitting"
       />
 
-      <input type="submit">
+      <input type="submit" />
     </form>
     <div class="message" v-text="message" />
   </div>
 </template>
 
 <script>
-import fetchJsonp from 'fetch-jsonp'
+// import fetchJsonp from "fetch-jsonp";
+import axios from "axios";
 
 export default {
   props: {
     actionUrl: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
+    klaviyoListId: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
-      email: '',
-      message: '',
+      email: "",
+      message: "",
       isSubmitting: false,
       isSuccess: false,
-      isError: false
-    }
+      isError: false,
+    };
+  },
+  mounted() {
+    console.log(this.klaviyoListId);
   },
   computed: {
     formAction() {
-      return this.actionUrl.replace("/post?", "/post-json?")
+      return this.actionUrl.replace("/post?", "/post-json?");
     },
     state() {
-      let state
+      let state;
 
       if (this.isSuccess) {
-        state = 'success'
-      }
-      else if (this.isError) {
-        state = 'error'
-      }
-      else if (this.isSubmitting) {
-        state = 'submitting'
+        state = "success";
+      } else if (this.isError) {
+        state = "error";
+      } else if (this.isSubmitting) {
+        state = "submitting";
       }
 
-      return state
-    }
+      return state;
+    },
   },
-  methods: {   
+  methods: {
     getMessageForResponse({ result, msg }) {
-      let _message
+      let _message;
 
-      if (result === 'success') {
-        _message = 'Thank you for subscribing.'
-      }
-      else {
-        if (msg.match(/(.+@.+) is already subscribed to list (.+)\..+<a href.+/) !== null) {
-          _message = 'This email is already subscribed.'
-        }
-        else if (msg.match(/.+\#6592.+/) !== null) {
-          _message = 'Too many subscribe attempts.'
-        }
-        else {
-         _message = 'Check your email and try again.' 
+      if (result === "success") {
+        _message = "Thank you for subscribing.";
+      } else {
+        if (
+          msg.match(
+            /(.+@.+) is already subscribed to list (.+)\..+<a href.+/
+          ) !== null
+        ) {
+          _message = "This email is already subscribed.";
+        } else if (msg.match(/.+\#6592.+/) !== null) {
+          _message = "Too many subscribe attempts.";
+        } else {
+          _message = "Check your email and try again.";
         }
       }
 
-      return _message
+      return _message;
     },
     onSuccess(response) {
-      this.isSuccess = true
-      this.message = this.getMessageForResponse(response)
+      this.isSuccess = true;
+      this.message = "Thank you for subscribing"; // this.getMessageForResponse(response);
 
       setTimeout(() => {
-        this.email = ''
-        this.message = ''
-        this.isSuccess = false
-      }, 3000)
+        this.email = "";
+        this.message = "";
+        this.isSuccess = false;
+      }, 3000);
     },
     onError(response) {
-      this.isError = true
-      this.message = this.getMessageForResponse(response)
+      this.isError = true;
+      this.message = "whoops"; // this.getMessageForResponse(response);
 
       setTimeout(() => {
-        this.message = ''
-        this.isError = false
-      }, 2500)
+        this.message = "";
+        this.isError = false;
+      }, 2500);
     },
     async onSubmit(e) {
-      if (this.isSubmitting) return
+      if (this.isSubmitting) return;
 
-      const formData = new FormData(this.$refs.form)
-      const serialized = [...formData.entries()].map((e) => {
-        return `${encodeURIComponent(e[0])}=${encodeURIComponent(e[1])}`
-      })
-      const fetchUrl = `${this.formAction}&${serialized.join('&')}`
+      // const formData = new FormData(this.$refs.form);
+      // const serialized = [...formData.entries()].map((e) => {
+      //   return `${encodeURIComponent(e[0])}=${encodeURIComponent(e[1])}`;
+      // });
+      // const fetchUrl = `${this.formAction}&${serialized.join("&")}`;
 
-      this.isSubmitting = true
-      this.message = 'Submitting...'
+      this.isSubmitting = true;
+      this.message = "Submitting...";
 
       try {
-        const response = await fetchJsonp(fetchUrl, { jsonpCallback: 'c' }).then(r => r.json())
+        const response = await axios({
+          method: "post",
+          crossDomain: true,
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+            "cache-control": "no-cache",
+          },
+          url: "//manage.kmail-lists.com/ajax/subscriptions/subscribe",
+          data: {
+            g: this.klaviyoListId,
+            $fields: "$source",
+            email: this.email,
+          },
+        });
 
-        if (response.result === 'success') {
-          this.onSuccess(response)
+        if (response.success) {
+          this.onSuccess(response);
+        } else {
+          this.onError(response);
         }
-        else {
-          this.onError(response)
-        }
-      }
-      catch (error) {
-        console.log(error)
+
+        console.log(response);
+      } catch (e) {
+        console.log(e);
       }
 
-      this.isSubmitting = false 
-    }
-  }
-}
+      /*
+      $.ajax({
+        async: true,
+        crossDomain: true,
+        url: '//manage.kmail-lists.com/ajax/subscriptions/subscribe',
+        method: "POST",
+        headers: {
+            "content-type": "application/x-www-form-urlencoded",
+            "cache-control": "no-cache"
+        },
+        data: {
+            "g": this.settings.listId,
+            "$fields": "$source",
+            "email": this.$input.val(),
+            "$source": this.settings.source
+        },
+        beforeSend: _this.onBeforeSend.bind(_this)
+      })
+
+      try {
+        const response = await fetchJsonp(fetchUrl, {
+          jsonpCallback: "c",
+        }).then((r) => r.json());
+
+        if (response.result === "success") {
+          this.onSuccess(response);
+        } else {
+          this.onError(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      */
+
+      this.isSubmitting = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -153,7 +196,6 @@ export default {
 }
 
 form {
-
 }
 
 .message {

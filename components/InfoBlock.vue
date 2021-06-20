@@ -1,10 +1,7 @@
 <template>
   <div :class="classes">
     <element-highlighter>
-      <h3
-        v-if="title"
-        class="block__title"
-        >
+      <h3 v-if="title" class="block__title">
         <!--  Add extra span for highlight effect-->
         <span v-text="title" />
       </h3>
@@ -12,49 +9,45 @@
         <mailing-list
           v-if="type === 'newsletter'"
           :action-url="$store.state.siteSettings.mailchimpFormUrl"
+          :klaviyo-list-id="$store.state.siteSettings.klaviyoListID"
         />
-        <div
-          v-html="content"
-        />
+        <div v-html="content" />
       </div>
     </element-highlighter>
   </div>
 </template>
 
 <script>
-import _get from 'lodash/get'
-import _kebabCase from 'lodash/kebabCase'
+import _get from "lodash/get";
+import _kebabCase from "lodash/kebabCase";
 
-import ElementHighlighter from '~/components/ElementHighlighter'
-import MailingList from '~/components/MailingList'
+import ElementHighlighter from "~/components/ElementHighlighter";
+import MailingList from "~/components/MailingList";
 
 export default {
   components: {
     ElementHighlighter,
-    MailingList
-  },  
+    MailingList,
+  },
   props: {
     type: {
       type: String,
     },
     title: {
-      type: String
+      type: String,
     },
     content: {
-      stype: String
-    }
+      stype: String,
+    },
   },
   computed: {
     classes() {
-      const t = _kebabCase(this.type).replace('-block', '')
+      const t = _kebabCase(this.type).replace("-block", "");
 
-      return [
-        'block',
-        ( t && `block--${t}` )
-      ]
-    }
-  }
-}
+      return ["block", t && `block--${t}`];
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -98,10 +91,10 @@ export default {
         margin-bottom: 2.5vw;
       }
     }
-    
+
     ::v-deep a {
       text-decoration: underline;
-    }  
+    }
   }
 }
 
@@ -116,7 +109,7 @@ export default {
 }
 
 .block__content {
-  @include text-subtitle;  
+  @include text-subtitle;
 }
 
 .mailing-list {
@@ -127,7 +120,7 @@ export default {
     width: 90%;
 
     @include bp-up(sm) {
-      width: 80%;  
+      width: 80%;
     }
   }
 
