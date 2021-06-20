@@ -60,27 +60,27 @@ export default {
     },
   },
   methods: {
-    getMessageForResponse({ result, msg }) {
-      let _message;
+    // getMessageForResponse({ result, msg }) {
+    //   let _message;
 
-      if (result === "success") {
-        _message = "Thank you for subscribing.";
-      } else {
-        if (
-          msg.match(
-            /(.+@.+) is already subscribed to list (.+)\..+<a href.+/
-          ) !== null
-        ) {
-          _message = "This email is already subscribed.";
-        } else if (msg.match(/.+\#6592.+/) !== null) {
-          _message = "Too many subscribe attempts.";
-        } else {
-          _message = "Check your email and try again.";
-        }
-      }
+    //   if (result === "success") {
+    //     _message = "Thank you for subscribing.";
+    //   } else {
+    //     if (
+    //       msg.match(
+    //         /(.+@.+) is already subscribed to list (.+)\..+<a href.+/
+    //       ) !== null
+    //     ) {
+    //       _message = "This email is already subscribed.";
+    //     } else if (msg.match(/.+\#6592.+/) !== null) {
+    //       _message = "Too many subscribe attempts.";
+    //     } else {
+    //       _message = "Check your email and try again.";
+    //     }
+    //   }
 
-      return _message;
-    },
+    //   return _message;
+    // },
     onSuccess(response) {
       this.isSuccess = true;
       this.message = "Thank you for subscribing"; // this.getMessageForResponse(response);
@@ -91,9 +91,11 @@ export default {
         this.isSuccess = false;
       }, 3000);
     },
-    onError(response) {
+    onError(errors = []) {
       this.isError = true;
-      this.message = "whoops"; // this.getMessageForResponse(response);
+      this.message = "Check your email and try again"; // this.getMessageForResponse(response);
+
+      errors.forEach((e) => console.warn(e));
 
       setTimeout(() => {
         this.message = "";
@@ -112,29 +114,30 @@ export default {
       this.isSubmitting = true;
       this.message = "Submitting...";
 
-      try {
-        const response = await axios({
-          method: "post",
-          crossDomain: true,
-          headers: {
-            "content-type": "application/x-www-form-urlencoded",
-            "cache-control": "no-cache",
-          },
-          url: "//manage.kmail-lists.com/ajax/subscriptions/subscribe",
-          data: {
-            g: this.klaviyoListId,
-            $fields: "$source",
-            email: this.email,
-          },
-        });
+      const url = "//manage.kmail-lists.com/ajax/subscriptions/subscribe";
+      const postData = {
+        g: this.klaviyoListId,
+        $fields: "$source",
+        email: this.email,
+      };
+      const config = {
+        crossDomain: true,
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          "cache-control": "no-cache",
+        },
+      };
 
-        if (response.success) {
-          this.onSuccess(response);
+      try {
+        const { data } = await axios.post(url, postData, config);
+
+        if (data.success) {
+          this.onSuccess(data.data);
         } else {
-          this.onError(response);
+          this.onError(data.errors);
         }
 
-        console.log(response);
+        console.log(data);
       } catch (e) {
         console.log(e);
       }
