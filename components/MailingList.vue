@@ -1,17 +1,6 @@
 <template>
-  <div
-    :class="[
-      'mailing-list',
-      (state && `state-${state}`)
-    ]"
-  >
-    <form
-      :action="actionUrl"
-      method="GET"
-      novalidate
-      @submit.prevent="onSubmit"
-      ref="form"
-    >
+  <div :class="['mailing-list', state && `state-${state}`]">
+    <form novalidate @submit.prevent="onSubmit" ref="form">
       <input
         type="email"
         name="EMAIL"
@@ -19,121 +8,102 @@
         :disabled="isSubmitting"
       />
 
-      <input type="submit">
+      <input type="submit" />
     </form>
     <div class="message" v-text="message" />
   </div>
 </template>
 
 <script>
-import fetchJsonp from 'fetch-jsonp'
+import axios from "axios";
 
 export default {
   props: {
-    actionUrl: {
+    klaviyoListId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      email: '',
-      message: '',
+      email: "",
+      message: "",
       isSubmitting: false,
       isSuccess: false,
-      isError: false
+      isError: false,
     }
   },
   computed: {
-    formAction() {
-      return this.actionUrl.replace("/post?", "/post-json?")
-    },
     state() {
-      let state
+      let state;
 
       if (this.isSuccess) {
-        state = 'success'
-      }
-      else if (this.isError) {
-        state = 'error'
-      }
-      else if (this.isSubmitting) {
-        state = 'submitting'
+        state = "success"
+      } else if (this.isError) {
+        state = "error"
+      } else if (this.isSubmitting) {
+        state = "submitting"
       }
 
       return state
-    }
-  },
-  methods: {   
-    getMessageForResponse({ result, msg }) {
-      let _message
-
-      if (result === 'success') {
-        _message = 'Thank you for subscribing.'
-      }
-      else {
-        if (msg.match(/(.+@.+) is already subscribed to list (.+)\..+<a href.+/) !== null) {
-          _message = 'This email is already subscribed.'
-        }
-        else if (msg.match(/.+\#6592.+/) !== null) {
-          _message = 'Too many subscribe attempts.'
-        }
-        else {
-         _message = 'Check your email and try again.' 
-        }
-      }
-
-      return _message
     },
-    onSuccess(response) {
+  },
+  methods: {
+    onSuccess(data) {
       this.isSuccess = true
-      this.message = this.getMessageForResponse(response)
+      this.message = data.is_subscribed
+        ? "You're already subscribed"
+        : "Thank you for subscribing"
 
       setTimeout(() => {
-        this.email = ''
-        this.message = ''
+        this.email = ""
+        this.message = ""
         this.isSuccess = false
       }, 3000)
     },
-    onError(response) {
+    onError(errors = []) {
       this.isError = true
-      this.message = this.getMessageForResponse(response)
+      this.message = "Check your email and try again"
+
+      errors.forEach((e) => console.warn(e))
 
       setTimeout(() => {
-        this.message = ''
+        this.message = ""
         this.isError = false
       }, 2500)
     },
     async onSubmit(e) {
       if (this.isSubmitting) return
 
-      const formData = new FormData(this.$refs.form)
-      const serialized = [...formData.entries()].map((e) => {
-        return `${encodeURIComponent(e[0])}=${encodeURIComponent(e[1])}`
-      })
-      const fetchUrl = `${this.formAction}&${serialized.join('&')}`
-
       this.isSubmitting = true
-      this.message = 'Submitting...'
+      this.message = "Submitting..."
+
+      const url = "//manage.kmail-lists.com/ajax/subscriptions/subscribe"
+      const config = { crossDomain: true }
+      const formData = new FormData()
+
+      formData.append("g", this.klaviyoListId)
+      formData.append("$fields", "$source")
+      formData.append("email", this.email)
 
       try {
-        const response = await fetchJsonp(fetchUrl, { jsonpCallback: 'c' }).then(r => r.json())
+        const { data } = await axios.post(url, formData, config)
 
-        if (response.result === 'success') {
-          this.onSuccess(response)
+        if (data.success) {
+          this.onSuccess(data.data)
+        } else {
+          this.onError(data.errors)
         }
-        else {
-          this.onError(response)
-        }
-      }
-      catch (error) {
-        console.log(error)
+
+        console.log(data)
+      } catch (e) {
+        console.log(e)
       }
 
-      this.isSubmitting = false 
-    }
-  }
-}
+      this.isSubmitting = false
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -150,10 +120,6 @@ export default {
       visibility: visible;
     }
   }
-}
-
-form {
-
 }
 
 .message {

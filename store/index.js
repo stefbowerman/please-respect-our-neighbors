@@ -12,7 +12,7 @@ export const state = () => ({
     faviconImage: {},
     touchIcon: {},
     gaMeasurementID:  '',
-    mailchimpFormUrl: ''
+    klaviyoListID: null
   },
   windowWidth: 0,
   theme: '',
@@ -83,7 +83,7 @@ export const actions = {
       faviconImage: _get(data, 'favicon_image', {}),
       touchIcon: _get(data, 'touch_icon', {}),
       gaMeasurementID: data.ga_measurement_id,
-      mailchimpFormUrl: data.mailchimp_form_url
+      klaviyoListID: data.klaviyo_list_id
     }
 
     commit('SET_SITE_SETTINGS', settings)
