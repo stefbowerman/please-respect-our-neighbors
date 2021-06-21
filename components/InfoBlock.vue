@@ -8,7 +8,6 @@
       <div class="block__content">
         <mailing-list
           v-if="type === 'newsletter'"
-          :action-url="$store.state.siteSettings.mailchimpFormUrl"
           :klaviyo-list-id="$store.state.siteSettings.klaviyoListID"
         />
         <div v-html="content" />

@@ -15,15 +15,10 @@
 </template>
 
 <script>
-// import fetchJsonp from "fetch-jsonp";
 import axios from "axios";
 
 export default {
   props: {
-    actionUrl: {
-      type: String,
-      required: true,
-    },
     klaviyoListId: {
       type: String,
       required: true,
@@ -36,149 +31,76 @@ export default {
       isSubmitting: false,
       isSuccess: false,
       isError: false,
-    };
-  },
-  mounted() {
-    console.log(this.klaviyoListId);
+    }
   },
   computed: {
-    formAction() {
-      return this.actionUrl.replace("/post?", "/post-json?");
-    },
     state() {
       let state;
 
       if (this.isSuccess) {
-        state = "success";
+        state = "success"
       } else if (this.isError) {
-        state = "error";
+        state = "error"
       } else if (this.isSubmitting) {
-        state = "submitting";
+        state = "submitting"
       }
 
-      return state;
+      return state
     },
   },
   methods: {
-    // getMessageForResponse({ result, msg }) {
-    //   let _message;
-
-    //   if (result === "success") {
-    //     _message = "Thank you for subscribing.";
-    //   } else {
-    //     if (
-    //       msg.match(
-    //         /(.+@.+) is already subscribed to list (.+)\..+<a href.+/
-    //       ) !== null
-    //     ) {
-    //       _message = "This email is already subscribed.";
-    //     } else if (msg.match(/.+\#6592.+/) !== null) {
-    //       _message = "Too many subscribe attempts.";
-    //     } else {
-    //       _message = "Check your email and try again.";
-    //     }
-    //   }
-
-    //   return _message;
-    // },
     onSuccess(data) {
-      this.isSuccess = true;
+      this.isSuccess = true
       this.message = data.is_subscribed
         ? "You're already subscribed"
-        : "Thank you for subscribing";
+        : "Thank you for subscribing"
 
       setTimeout(() => {
-        this.email = "";
-        this.message = "";
-        this.isSuccess = false;
-      }, 3000);
+        this.email = ""
+        this.message = ""
+        this.isSuccess = false
+      }, 3000)
     },
     onError(errors = []) {
-      this.isError = true;
-      this.message = "Check your email and try again";
+      this.isError = true
+      this.message = "Check your email and try again"
 
-      errors.forEach((e) => console.warn(e));
+      errors.forEach((e) => console.warn(e))
 
       setTimeout(() => {
-        this.message = "";
-        this.isError = false;
-      }, 2500);
+        this.message = ""
+        this.isError = false
+      }, 2500)
     },
     async onSubmit(e) {
-      if (this.isSubmitting) return;
+      if (this.isSubmitting) return
 
-      // const formData = new FormData(this.$refs.form);
-      // const serialized = [...formData.entries()].map((e) => {
-      //   return `${encodeURIComponent(e[0])}=${encodeURIComponent(e[1])}`;
-      // });
-      // const fetchUrl = `${this.formAction}&${serialized.join("&")}`;
+      this.isSubmitting = true
+      this.message = "Submitting..."
 
-      this.isSubmitting = true;
-      this.message = "Submitting...";
+      const url = "//manage.kmail-lists.com/ajax/subscriptions/subscribe"
+      const config = { crossDomain: true }
+      const formData = new FormData()
 
-      const url = "//manage.kmail-lists.com/ajax/subscriptions/subscribe";
-      const config = {
-        crossDomain: true,
-        // headers: {
-        //   "content-type": "application/x-www-form-urlencoded",
-        //   "cache-control": "no-cache",
-        // },
-      };
-      const formData = new FormData();
-
-      formData.append("g", this.klaviyoListId);
-      formData.append("$fields", "$source");
-      formData.append("email", this.email);
+      formData.append("g", this.klaviyoListId)
+      formData.append("$fields", "$source")
+      formData.append("email", this.email)
 
       try {
-        const { data } = await axios.post(url, formData, config);
+        const { data } = await axios.post(url, formData, config)
 
         if (data.success) {
-          this.onSuccess(data.data);
+          this.onSuccess(data.data)
         } else {
-          this.onError(data.errors);
+          this.onError(data.errors)
         }
 
-        console.log(data);
+        console.log(data)
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
 
-      /*
-      $.ajax({
-        async: true,
-        crossDomain: true,
-        url: '//manage.kmail-lists.com/ajax/subscriptions/subscribe',
-        method: "POST",
-        headers: {
-            "content-type": "application/x-www-form-urlencoded",
-            "cache-control": "no-cache"
-        },
-        data: {
-            "g": this.settings.listId,
-            "$fields": "$source",
-            "email": this.$input.val(),
-            "$source": this.settings.source
-        },
-        beforeSend: _this.onBeforeSend.bind(_this)
-      })
-
-      try {
-        const response = await fetchJsonp(fetchUrl, {
-          jsonpCallback: "c",
-        }).then((r) => r.json());
-
-        if (response.result === "success") {
-          this.onSuccess(response);
-        } else {
-          this.onError(response);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      */
-
-      this.isSubmitting = false;
+      this.isSubmitting = false
     },
   },
 };
@@ -198,9 +120,6 @@ export default {
       visibility: visible;
     }
   }
-}
-
-form {
 }
 
 .message {
