@@ -21,6 +21,17 @@ export default {
         src: 'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver',
         body: true
       }
+    ],
+    link: [
+      {
+        rel: 'dns-prefetch',
+        href: '//fonts.googleapis.com'
+      },
+      {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossorigin: true
+      }
     ]
   },
   pageTransition: {
