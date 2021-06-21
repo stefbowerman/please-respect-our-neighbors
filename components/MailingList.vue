@@ -94,8 +94,6 @@ export default {
         } else {
           this.onError(data.errors)
         }
-
-        console.log(data)
       } catch (e) {
         console.log(e)
       }
