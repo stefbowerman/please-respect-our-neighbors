@@ -81,9 +81,11 @@ export default {
 
     //   return _message;
     // },
-    onSuccess(response) {
+    onSuccess(data) {
       this.isSuccess = true;
-      this.message = "Thank you for subscribing"; // this.getMessageForResponse(response);
+      this.message = data.is_subscribed
+        ? "You're already subscribed"
+        : "Thank you for subscribing";
 
       setTimeout(() => {
         this.email = "";
@@ -93,7 +95,7 @@ export default {
     },
     onError(errors = []) {
       this.isError = true;
-      this.message = "Check your email and try again"; // this.getMessageForResponse(response);
+      this.message = "Check your email and try again";
 
       errors.forEach((e) => console.warn(e));
 
@@ -115,21 +117,21 @@ export default {
       this.message = "Submitting...";
 
       const url = "//manage.kmail-lists.com/ajax/subscriptions/subscribe";
-      const postData = {
-        g: this.klaviyoListId,
-        $fields: "$source",
-        email: this.email,
-      };
       const config = {
         crossDomain: true,
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-          "cache-control": "no-cache",
-        },
+        // headers: {
+        //   "content-type": "application/x-www-form-urlencoded",
+        //   "cache-control": "no-cache",
+        // },
       };
+      const formData = new FormData();
+
+      formData.append("g", this.klaviyoListId);
+      formData.append("$fields", "$source");
+      formData.append("email", this.email);
 
       try {
-        const { data } = await axios.post(url, postData, config);
+        const { data } = await axios.post(url, formData, config);
 
         if (data.success) {
           this.onSuccess(data.data);
