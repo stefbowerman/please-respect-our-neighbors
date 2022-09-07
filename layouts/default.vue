@@ -237,7 +237,7 @@ export default {
     display: none;
   }
 
-  /deep/ .logo__text {
+  :v-deep .logo__text {
     @include theme-text;
   }  
 }

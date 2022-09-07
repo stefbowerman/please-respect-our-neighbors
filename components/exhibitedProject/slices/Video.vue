@@ -44,6 +44,7 @@ export default {
   methods: {
     onHasIntersected() {
       const videoPlyr = this.$refs['video-plyr'] 
+      
       videoPlyr && videoPlyr.play()
     }
   }

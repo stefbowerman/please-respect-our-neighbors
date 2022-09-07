@@ -5,6 +5,12 @@
   --plyr-range-thumb-height: 15px;
   --plyr-control-spacing: 80px;
   --plyr-theme-color: var(--text-color);
+  --plyr-control-icon-size: 22px;
+
+  @include bp-up(md) {
+    --plyr-control-icon-size: 26px;
+    --plyr-range-thumb-height: 20px;
+  }
 }
 
 // For specific routes we update the --text-color var at the body level in the DOM
@@ -22,7 +28,7 @@ body {
     border: 1px solid var(--plyr-theme-color);
 
     @include bp-up(md) {
-      padding: 23px 30px 22px;
+      padding: 16px 21px 18px;
     }
   }
 
@@ -101,4 +107,15 @@ body {
   // &::-ms-thumb {
   //   display: none;
   // }
+}
+
+// This is fine because we only use the mute button, not the volume slider
+// Might need to adjust if we change this behavior in this future
+.plyr__volume {
+  width: auto;
+  min-width: 0;
+}
+
+.plyr__controls .plyr__controls__item.plyr__progress__container {
+  padding-left: 0;
 }

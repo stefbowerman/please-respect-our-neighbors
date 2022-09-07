@@ -124,7 +124,7 @@ export default {
 
   @include bp-down(md) {
     font-size: 25px;
-    line-height: (29px/25px);
+    line-height: calc(29px/25px);
   }
 
   @include bp-up(lg) {

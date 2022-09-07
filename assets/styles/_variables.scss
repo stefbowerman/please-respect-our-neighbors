@@ -23,7 +23,7 @@ $font-family-secondary: 'Roboto', sans-serif;
 $font-family-tertiary:  'JHA Times Now', serif;
 
 $font-size-base: 1.3125rem; // 21px @ 16px root
-$line-height-base: (25/21);
+$line-height-base: calc(25/21);
 
 // $font-size-huge:   80px;
 // $font-size-bigger: 74px;
