@@ -485,6 +485,7 @@ $arrow-slot-width-xxxl: 450px;
       padding-bottom: 74px;
     }
   }
+  
 
   svg {
     height: 100%;
