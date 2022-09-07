@@ -97,7 +97,7 @@ export default {
   font-size: 16px;
 
   @include bp-up(lg) {
-    font-size: clamp(16px, calc(16px + 0.23vw), $font-size-base);
+    font-size: clamp(16px, calc(16px + 0.23vw), #{$font-size-base});
   }
 
   @include bp-up(xxxl) {

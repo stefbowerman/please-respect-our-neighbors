@@ -59,7 +59,7 @@ export default {
     .block__content {
       @include bp-down(xs) {
         font-size: 13px;
-        line-height: (16px/13px);
+        line-height: (16/13);
       }
     }
     ::v-deep p + p {

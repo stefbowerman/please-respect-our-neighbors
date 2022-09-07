@@ -35,7 +35,7 @@ export default {
 
   @include bp-down(md) {
     font-size: 15px;
-    line-height: (16px/15px);
+    line-height: (16/15);
   }
 
   .container {
