@@ -9,8 +9,7 @@
       :class="classes"
       :loop="loop"
       :autoplay="autoplay"
-      :muted="muted"
-      :playsinline="playsinline"
+      :playsinline="true"
       :controls="controls"
       ref="video"
     >
@@ -49,15 +48,7 @@ export default {
     },
     autoplay: {
       type: Boolean,
-      default: true,
-    },
-    muted: {
-      type: Boolean,
-      default: true,
-    },
-    playsinline: {
-      type: Boolean,
-      default: true,
+      default: true
     },
     controls: {
       type: Boolean,
@@ -71,10 +62,13 @@ export default {
   },
   data() {
     return {
-      isLoaded: false
+      isLoaded: false,
+      muted: false
     }
   },
   mounted() {
+    this.muted = this.autoplay
+
     this.plyr = new Plyr(this.$refs.video, {
       controls: this.controls ? ['play', 'mute', 'progress'] : [],
       disableContextMenu: false,
@@ -130,11 +124,11 @@ export default {
       this.plyr && this.plyr.play()
     },
     onMuteButtonClick() {
-      if (this.plyr.volume === 0) {
-        this.plyr.muted = false
+      if (this.plyr.volume === 0 || this.muted === true) {
+        this.muted = false
         this.plyr.volume = 1
       } else {
-        this.plyr.muted = true
+        this.muted = true
         this.plyr.volume = 0
       }
     }
@@ -147,32 +141,6 @@ export default {
   ::v-deep .plyr__video-wrapper {
     background-color: $black;
     background-image: $dark-gradient;
-  }
-
-  ::v-deep .plyr__control {
-    .icon--not-pressed,
-    .play-icon {
-      display: none;
-    }
-
-    &:not(.plyr__control--pressed) .play-icon {
-      display: block;
-    }
-  }
-
-  ::v-deep .plyr__volume {
-    .icon--pressed,
-    .icon--not-pressed {
-      display: none;
-    }
-  }
-
-  ::v-deep .plyr__volume .plyr__control .volume-icon {
-    width: auto;
-  }
-
-  ::v-deep .plyr__volume .plyr__control:not(.plyr__control--pressed) .volume-icon g path:first-child {
-    fill: currentColor;
   }
 }
 

@@ -40,6 +40,22 @@
         v-text="displayProgressText"
       />
     </template>
+
+    <div style="display: none">
+      <svg class="play-icon" ref="playIcon" xmlns="http://www.w3.org/2000/svg" width="34.979" height="44.396" viewBox="0 0 34.979 44.396">
+        <path id="Polygon_2" data-name="Polygon 2" d="M22.2,0,44.4,34.978H0Z" transform="translate(34.979) rotate(90)" fill="#fd5858"/>
+      </svg>
+
+      <svg class="volume-icon" ref="volumeIcon" xmlns="http://www.w3.org/2000/svg" width="58.234" height="44.395" viewBox="0 0 58.234 44.395">
+        <g id="Polygon_4" data-name="Polygon 4" transform="translate(0 44.395) rotate(-90)" fill="none">
+          <path d="M22.2,0,44.4,34.978H0Z" stroke="none"/>
+          <path d="M 22.1976318359375 3.732572555541992 L 3.637977600097656 32.97808456420898 L 40.75728607177734 32.97808456420898 L 22.1976318359375 3.732572555541992 M 22.1976318359375 3.814697265625e-06 L 44.395263671875 34.97808456420898 L 0 34.97808456420898 L 22.1976318359375 3.814697265625e-06 Z" stroke="none" fill="#fd5858"/>
+        </g>
+        <path id="Path_81" data-name="Path 81" d="M21,0a11.953,11.953,0,0,1,0,23.907" transform="translate(16.88 10.291)" fill="none" stroke="#fd5858" stroke-width="2"/>
+        <path id="Path_82" data-name="Path 82" d="M21,0a19.355,19.355,0,0,1,0,38.711" transform="translate(16.88 2.515)" fill="none" stroke="#fd5858" stroke-width="2"/>
+        <path id="Path_83" data-name="Path 83" d="M21,0a5.9,5.9,0,0,1,0,11.8" transform="translate(16.955 15.969)" fill="none" stroke="#fd5858" stroke-width="2"/>
+      </svg>
+    </div>    
   </div> 
 </template>
 
@@ -144,7 +160,9 @@ export default {
 
       if ($plyr) {
         const p = new Plyr($plyr, {
-          controls: ['play', 'progress'],
+          controls: ['play', 'mute', 'progress'],
+          muted: true,
+          volume: 1,
           disableContextMenu: false,
           fullscreen: {
             enabled: false
@@ -155,11 +173,34 @@ export default {
           }
         })
 
+        
+        // Update the icon buttons
+        let $volumeIcon = this.$refs.volumeIcon
+        let $playIcon = this.$refs.playIcon
+
+        const muteButton = p.elements.buttons.mute
+        const playButton = p.elements.buttons.play[0]
+
+        $volumeIcon = $volumeIcon.cloneNode(true)
+        $playIcon = $playIcon.cloneNode(true)   
+  
+        muteButton.insertBefore($volumeIcon, muteButton.childNodes[0])
+        playButton.insertBefore($playIcon, playButton.childNodes[0])
+
+        muteButton.addEventListener('click', () => {
+          if (p.volume === 0) {
+            p.volume = 1
+          } else {
+            p.volume = 0
+          }
+        })
+
         p.on('ready', e => {     
           const player = e.detail.plyr;
           const controls = player.elements.controls
 
           player.pip = false // Turn off
+          player.volume = 1
 
           if (controls) {
             controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)

@@ -119,3 +119,31 @@ body {
 .plyr__controls .plyr__controls__item.plyr__progress__container {
   padding-left: 0;
 }
+
+.plyr--video {
+  .plyr__control {
+    .icon--not-pressed,
+    .play-icon {
+      display: none;
+    }
+
+    &:not(.plyr__control--pressed) .play-icon {
+      display: block;
+    }
+  }
+
+  .plyr__volume {
+    .icon--pressed,
+    .icon--not-pressed {
+      display: none;
+    }
+  }
+
+  .plyr__volume .plyr__control .volume-icon {
+    width: auto;
+  }
+
+  .plyr__volume .plyr__control:not(.plyr__control--pressed) .volume-icon g path:first-child {
+    fill: currentColor;
+  }  
+}
