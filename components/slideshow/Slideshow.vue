@@ -173,6 +173,9 @@ export default {
           }
         })
 
+        // Add a property that we can toggle on / off ourselves
+        p._muted = true
+
         
         // Update the icon buttons
         let $volumeIcon = this.$refs.volumeIcon
@@ -188,9 +191,11 @@ export default {
         playButton.insertBefore($playIcon, playButton.childNodes[0])
 
         muteButton.addEventListener('click', () => {
-          if (p.volume === 0) {
+          if (p.volume === 0 || p._muted === true) {
+            p._muted = false
             p.volume = 1
           } else {
+            p._muted = true
             p.volume = 0
           }
         })
@@ -201,6 +206,7 @@ export default {
 
           player.pip = false // Turn off
           player.volume = 1
+          player._muted = false
 
           if (controls) {
             controls.addEventListener('mouseenter', e => this.videoControlsHovered = true)
